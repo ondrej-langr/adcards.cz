@@ -1,0 +1,116 @@
+{% extends '@modules:Adcards/layouts/site-layout/site-layout.twig' %}
+
+{% block content %}
+  <div class="loader" id="loader-wrapper">
+    <div id="loader2">
+        <div class="counter-border"> <span>{{ 'Načítám'|t }}</span>
+            <div class="absolute-loader">
+                <p id="number1" class="number">0</p>
+                <p> %</p>
+            </div>
+        </div>
+    </div>
+  </div>
+  <div class="header">
+      <div class="header-bg">
+          <div class="overlay"></div> <img loading="auto" src="/images/bg.jpg" class="img-bg">
+      </div>
+      <div class="header-content">
+          <div class="image"> <img loading="auto" src="/images/1084.png"></div>
+          <div class="text">
+            <h1>{{ 'Vytvoř si vlastní FIFA kartu'|t }}</h1>
+            <p>
+                {{ 'Dostaň se do hry vytvořením vlastní unikátní FIFA karty a připoj se tak ke hvězdám fotbalového světa. Tvorbu fotbalové karty máš plně pod kontrolou.'|t }}
+            </p> 
+            <a href="{{ url_for('builder') }}"> 
+                <button> <span>{{ 'Vytvořit vlastní kartu'|t }}</span> </button>
+            </a>
+          </div>
+      </div>
+  </div>
+  <div class="slider-around">
+      <h2>{{ 'Vyber si design'|t }}</h2>
+      <div class="slider-content">
+          <section class="slider-main slider cards-slider">{% for background in backgrounds %} <a
+                  href="{{ url_for('builder') }}?background={{ background.id }}">
+                  <div class="slide"> <img class="lazyload" loading="lazy"
+                          data-src="{{ __webRoot__ ~ 'app/carnival/var/storage/' ~ background.img.relativePath }}">
+                      <h3>{{ background.name }}</h3> <span class="price">{{ 'od 699Kč'|t }}</span>
+                  </div>
+              </a> {% endfor %}</section>
+      </div>
+  </div>
+  <div class="video-section">
+      <div class="video-inner">
+          <div class="video col-xl-6">
+              <div class="video-hide"><img class="lazyload" loading="lazy" data-src="/images/embed.png"></div>
+              <iframe loading="lazy" class="video-show" id="video" src="{{ 'video-homepage'|t }}" frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen></iframe> <span id="play-video" class="video-play-button"> <span></span> </span>
+          </div>
+          <div class="video-text col-xl-6">
+              <h2>{{ 'Jak to funguje?'|t }}</h2>
+              <p>{{ 'Podívej se na naše krátké video, ve kterém zjistíš, jak jednoduchá je tvorba vlastní FUT karty. Celý proces zvládneš doslova během pár minut. Na tobě je pouze vyplnit všechny informace v našem builderu. Po odeslání a zaplacení objednávky začíná naše práce. Profesionální grafické studio kartu upraví a samozřejmě před jejím vytištěním ti pošleme návrh ke schválení. Pokud se vzhledem budeš spokojen, posíláme hned do výroby a ještě rychleji do tvých rukou! Zaměřujeme se na kvalitu a ta je tvořena detaily. Tak pojď se do toho pustit a vytvoř si vlastní fotbalovou kartu!'|t }}
+              </p> <a href="{{ url_for('builder') }}"><button>{{ 'Vytvořit vlastní kartu'|t }}</button></a>
+          </div>
+      </div>
+  </div>
+  <div class="why-around">
+      <div class="why-content">
+          <div class="why-text">
+              <div class="why-headline">
+                  <h2>{{ 'Proč AD Cards?'|t }}</h2>
+                  <div class="hr"></div>
+              </div>
+              <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                  <h3>{{ 'Unikátní fotbalový dárek'|t }}</h3>
+                  <p>{{ 'Vytvoř si vlastní jedinečnou fotbalovou kartu, kterou nebude mít nikdo jiný kromě tebe. Pochlub se s ní pověšením na zeď, ať ji tvoji kamarádi mohou obdivovat při každé návštěvě.'|t }}
+                  </p>
+              </div>
+              <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                  <h3>{{ 'Kvalitní výroba je základ'|t }}</h3>
+                  <p>{{ 'Všechny karty jsou přímo tištěny na PVC desky. Díky tomu je zaručena jejich maximální životnost. 5 milimetrová šířka karty zase zaručuje vysokou odolnost jak při dopravě, tak i při manipulaci po doručení.'|t }}
+                  </p>
+              </div>
+              <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                  <h3>{{ 'Grafické zpracování'|t }}</h3>
+                  <p>{{ 'Všechny přijaté objednávky upravuje naše profesionální grafické studio s maximální pečlivostí. Každé kartě věnujeme tu největší pozornost.'|t }}
+                  </p>
+              </div>
+              <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                  <h3>{{ 'Úchytka na zeď'|t }}</h3>
+                  <p>{{ 'Doplň svoji objednávku o naši úchytku na zeď. Díky ní si můžeš kartu vystavit na zeď a zároveň ji kdykoliv sundat a pochlubit se s ní v ruce.'|t }}
+                  </p>
+              </div>
+          </div>
+      </div>
+  </div>
+  <div class="references-around">
+      <h2>{{ 'Spokojení majitelé vlastní FUT karty'|t }}</h2>
+      <div class="slider-content" style="max-width: 1200px !important;">
+          <section class="slider-main2 slider references-slider">
+              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/1.jpg"></div>
+              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/2.jpg"></div>
+              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/3.jpg"></div>
+              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/4.jpg"></div>
+              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/5.jpg"></div>
+              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/6.jpg"></div>
+          </section>
+      </div>
+  </div>
+  {% if __get__.success is defined and __get__.success == 'order' %}
+      <div class="alert success"> {{ 'Objednávka byla vytvořena!'|t }} </div> {% endif %}{% if __get__.error is defined and __get__.error == 'order' %}<div class="alert danger">
+      Objednávka nebyla vytvořena!</div> 
+  {% endif %}
+
+  {% if __get__.success is defined and __get__.success == 'newsletter' %}
+      <div class="alert success"> {{ 'Váš slevový kód byl vygenerován!'|t }} </div> {% endif %}{% if __get__.error is defined and __get__.error == 'order' %}<div class="alert danger">
+      Objednávka nebyla vytvořena!</div> 
+  {% endif %}
+
+  {% if __get__.fail is defined and __get__.fail == 'newsletter' %}
+      <div class="alert danger"> {{ 'Tento email je již zaregistrován!'|t }} </div> {% endif %}{% if __get__.error is defined and __get__.error == 'order' %}<div class="alert danger">
+      Objednávka nebyla vytvořena!</div> 
+  {% endif %}
+    
+{% endblock %}

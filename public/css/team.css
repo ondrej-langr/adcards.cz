@@ -1,0 +1,331 @@
+.calc-around {
+    width: 100%;
+    display: flex;
+    padding: 165px 15px 65px;
+    justify-content: center;
+    flex-wrap: wrap;
+    align-content: center;
+}
+
+.calc-inner {
+    width: 95%;
+    max-width: 1100px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+input#result {
+    font-size: 90px;
+    font-weight: 700;
+    color: #000;
+    background: transparent;
+    border: none;
+    max-width: 100%;
+    width: 210px;
+}
+
+.result-around {
+    visibility: hidden;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+}
+
+.result-around span {
+    font-size: 45px;
+    font-weight: 700;
+    padding: 40px 0px 0px 15px;
+}
+
+.input-around select {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 80px;
+    border: 1px solid transparent;
+    border-bottom: 2px solid #e4e4e4;
+    font-weight: 800;
+    font-size: 40px;
+    background: transparent;
+    text-transform: uppercase;
+    color: #000;
+    cursor: pointer;
+}
+
+.input-around input::placeholder {
+    color: #000 !important;
+}
+
+.input-around input {
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border: 1px solid transparent;
+    border-bottom: 1px solid #e4e4e4;
+    font-weight: 700;
+    padding: 10px 25px;
+    font-size: 30px;
+    background: transparent;
+    text-transform: uppercase;
+    color: #000;
+    cursor: pointer;
+}
+
+.input-around input:focus {
+    border: 1px solid transparent;
+    border-bottom: 1px solid #e4e4e4;
+    outline: none;
+}
+
+.input-around select:focus {
+    border: 1px solid transparent;
+    border-bottom: 1px solid #e4e4e4;
+    outline: none;
+}
+
+.input-around {
+    padding: 2px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    width: 100%;
+    visibility: hidden;
+    transform: translateX(100%);
+    transition: all 300ms ease-in-out;
+}
+
+.input-around.toggled {
+    visibility: visible;
+    transform: translateX(0%);
+}
+
+.input-around.slide-left {
+    transform: translateX(-100%);
+}
+
+.input-around.slide-right {
+    transform: translateX(100%);
+}
+
+.result-around.toggled {
+    visibility: visible;
+}
+
+.calc-inner .headline {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+}
+
+.info-alert {
+    color: rgb(247, 11, 53);
+    margin-top: 20px;
+    font-weight: 600;
+    font-size: 18px;
+    width: 100%;
+    text-align: center;
+}
+
+.multistep-form {
+    position: relative;
+    height: 350px;
+    width: 100%;
+    max-width: 550px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-wrap: wrap;
+    padding: 45px 15px;
+    overflow: hidden;
+}
+
+.multistep-form button {
+        margin-top: 30px;
+}
+
+.multistep-form button.dark {
+        background: #aaa;
+        margin-right: 10px;
+}
+
+.headline p {
+    max-width: 600px;
+    margin-bottom: 33px;
+}
+
+span.bigger {
+    color: #000;
+    font-size: 20px;
+    max-width: 600px;
+    font-weight: 300;
+}
+
+span.bigger b {
+    color:rgb(247, 11, 53);
+}
+
+.calc-inner .hr {
+    background: rgb(247, 11, 53);
+    width: 80px;
+    height: 2px;
+    margin-bottom: 25px;
+}
+
+.custom-select {
+    display: flex !important;
+    width: 100%;
+    max-width: 500px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    height: 50px;
+    padding: 10px;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 50px;
+    color: #000 !important;
+    vertical-align: middle;
+    border: none;
+    border-radius: 0px;
+    background: transparent !important;
+}
+
+.custom-select select {
+  display: none !important;
+}
+
+.select-selected {
+    background-color: transparent;
+    border-bottom: 1px solid  #e4e4e4 !important;
+    width: 100%;
+    padding:10px 25px;
+}
+
+.select-selected:after {
+  position: absolute;
+  content: "";
+    display: none;
+  top: 26px;
+  right: 10px;
+  width: 0;
+  height: 0;
+  border: 6px solid transparent;
+  border-color: #000 transparent transparent transparent;
+    transition: all 300ms ease-in-out;
+}
+
+/* Point the arrow upwards when the select box is open (active): */
+.select-selected.select-arrow-active:after {
+    transform: rotate(-180deg);
+    top:22px;
+}
+
+/* style the items (options), including the selected item: */
+.select-items div,.select-selected {
+    color: #000;
+    border: none;
+    border-color: transparent transparent rgba(0, 0, 0, 0.1) transparent;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+/* Style items (options): */
+.select-items {
+    position: absolute;
+    background-color: #fff;
+    top: 63px;
+    border: 1px solid #e4e4e4 !important;
+    box-shadow: 0px 2px 4px 2px rgba(0,0,0,0.2);
+    display: flex;
+    z-index: 99;
+    width: 100%;
+    flex-direction: column;
+    font-size: 18px;
+    font-weight: 400;
+}
+
+/* Hide the items when the select box is closed: */
+.select-hide {
+    display: none;    
+    visibility: hidden;
+    opacity: 0;
+}
+
+.select-items div:hover, .same-as-selected {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.select-items div:nth-child(1) span.size2, .select-items div:nth-child(1) span.size3, .select-items div:nth-child(1) span.size4 {
+    display: none;
+}
+
+.select-items div:nth-child(1) span.select-price2, .select-items div:nth-child(1) span.select-price3, .select-items div:nth-child(1) span.select-price4 {
+    display: none;
+}
+
+.select-items div:nth-child(2) span.size1, .select-items div:nth-child(2) span.size3, .select-items div:nth-child(2) span.size4 {
+    display: none;
+}
+
+.select-items div:nth-child(2) span.select-price1, .select-items div:nth-child(2) span.select-price3, .select-items div:nth-child(2) span.select-price4  {
+    display: none;
+}
+
+.select-items div:nth-child(3) span.size1, .select-items div:nth-child(3) span.size2, .select-items div:nth-child(3) span.size4 {
+    display: none;
+}
+
+.select-items div:nth-child(3) span.select-price1, .select-items div:nth-child(3) span.select-price2, .select-items div:nth-child(3) span.select-price4  {
+    display: none;
+}
+
+.select-items div:nth-child(4) span.size1, .select-items div:nth-child(4) span.size2, .select-items div:nth-child(4) span.size3 {
+    display: none;
+}
+
+.select-items div:nth-child(4) span.select-price1, .select-items div:nth-child(4) span.select-price2, .select-items div:nth-child(4) span.select-price3  {
+    display: none;
+}
+
+.select-items div:nth-child(1) {
+    border-bottom: 1px solid  #e4e4e4 ;
+}
+
+.select-items div:nth-child(2) {
+    border-bottom: 1px solid  #e4e4e4 ;
+}
+
+.select-items div:nth-child(3) {
+    border-bottom: 1px solid  #e4e4e4 ;
+}
+
+.select-price1, .select-price2, .select-price3, .select-price4 {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 23px;
+}
+
+.size1, .size2, .size3, .size4 {
+    font-size: 13px;  
+    font-weight: 400;
+    line-height: 18px;
+    margin-bottom: 10px;
+}

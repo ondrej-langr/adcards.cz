@@ -1,0 +1,480 @@
+{
+  "$schema": "https://prom",
+  "project": {
+    "name": "adcards",
+    "slug": "adcards",
+    "url": "http://localhost"
+  },
+  "database": {
+    "models": {
+      "products": {
+        "title": "Artefakty",
+        "softDelete": false,
+        "timestamp": true,
+        "sorting": true,
+        "sharable": false,
+        "draftable": true,
+        "ignoreSeeding": false,
+        "ownable": true,
+        "tableName": "artefacts",
+        "intl": true,
+        "icon": "BadgeTm",
+        "columns": {
+          "name": {
+            "required": true,
+            "editable": true,
+            "unique": true,
+            "hide": false,
+            "translations": true,
+            "type": "longText",
+            "title": "Název",
+            "admin": {
+              "fieldsType": "heading"
+            }
+          },
+          "price": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": true,
+            "type": "number",
+            "title": "Cena"
+          },
+          "description": {
+            "required": false,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": true,
+            "type": "longText",
+            "title": "Popisek"          
+          },
+          "images": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "multiple": true,
+            "type": "file",
+            "title": "Obrázky",
+            "typeFilter": "image",
+            "admin": {
+              "fieldsType": "small-image",
+              "editor": {
+                "placement": "aside"
+              }
+            }
+          }
+        }
+      },
+      "cardBackgrounds": {
+        "title": "Pozadí karet",
+        "softDelete": false,
+        "timestamp": true,
+        "sorting": true,
+        "sharable": false,
+        "draftable": true,
+        "ignoreSeeding": false,
+        "ownable": true,
+        "tableName": "card_backgrounds",
+        "intl": true,
+        "icon": "BoxMultiple1",
+        "columns": {
+          "name": {
+            "required": true,
+            "editable": true,
+            "unique": true,
+            "hide": false,
+            "translations": true,
+            "type": "longText",
+            "title": "Název",
+            "admin": {
+              "fieldsType": "heading"
+            }
+          },
+          "textColor": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": true,
+            "type": "string",
+            "title": "Barva textu"          
+          },
+          "image": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "multiple": false,
+            "type": "file",
+            "title": "Obrázek",
+            "typeFilter": "image",
+            "admin": {
+              "fieldsType": "big-image",
+              "editor": {
+                "placement": "aside"
+              }
+            }
+          }
+        }
+      },
+      "countries": {
+        "title": "Země",
+        "softDelete": false,
+        "timestamp": false,
+        "sorting": true,
+        "sharable": false,
+        "draftable": false,
+        "ignoreSeeding": false,
+        "ownable": false,
+        "tableName": "countries",
+        "intl": false,
+        "icon": "World",
+        "columns": {
+          "name": {
+            "required": true,
+            "editable": true,
+            "unique": true,
+            "hide": false,
+            "translations": true,
+            "type": "string",
+            "title": "Název",
+            "admin": {
+              "fieldsType": "heading"
+            }
+          },
+          "flag": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "multiple": false,
+            "type": "file",
+            "title": "Vlajka",
+            "typeFilter": "image",
+            "admin": {
+              "fieldsType": "big-image"
+            }
+          }
+        }
+      },
+      "cardSizes": {
+        "title": "Velikost karet",
+        "softDelete": false,
+        "timestamp": false,
+        "sorting": true,
+        "sharable": false,
+        "draftable": false,
+        "ignoreSeeding": false,
+        "ownable": true,
+        "tableName": "countries",
+        "intl": true,
+        "icon": "Dimensions",
+        "columns": {
+          "width": {
+            "required": true,
+            "translations": false,
+            "type": "number",
+            "title": "Šířka (cm)"
+          },
+          "height": {
+            "required": true,
+            "translations": false,
+            "type": "number",
+            "title": "Výška (cm)"
+          },
+          "price": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": true,
+            "type": "number",
+            "title": "Cena"
+          },
+          "image": {
+            "required": true,
+            "translations": false,
+            "multiple": false,
+            "type": "file",
+            "title": "Náhledový obrázek",
+            "typeFilter": "image",
+            "admin": {
+              "fieldsType": "small-image",
+              "editor": {
+                "placement": "aside"
+              }
+            }
+          }
+        }
+      },
+      "promoCodes": {
+        "title": "Promo Kódy",
+        "softDelete": false,
+        "timestamp": true,
+        "sorting": true,
+        "sharable": false,
+        "draftable": false,
+        "ignoreSeeding": false,
+        "ownable": true,
+        "tableName": "promo_codes",
+        "intl": false,
+        "icon": "ReceiptTax",
+        "columns": {
+          "name": {
+            "required": true,
+            "editable": true,
+            "unique": true,
+            "hide": false,
+            "translations": true,
+            "type": "string",
+            "title": "Název"          
+          },
+          "value": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "type": "number",
+            "title": "Hodnota"
+          },
+          "enabled": {
+            "required": false,
+            "editable": true,
+            "unique": false,
+            "default": true,
+            "hide": false,
+            "translations": false,
+            "type": "boolean",
+            "title": "Aktivováno"
+          }
+        }
+      },
+      "orders": {
+        "title": "Objednávky",
+        "softDelete": false,
+        "timestamp": true,
+        "sorting": true,
+        "sharable": false,
+        "draftable": false,
+        "ignoreSeeding": false,
+        "ownable": false,
+        "tableName": "orders",
+        "intl": false,
+        "icon": "BuildingStore",
+        "columns": {
+          "firstName": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "Jméno"
+          },
+          "lastName": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "Příjmení"
+          },
+          "email": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "Email"
+          },
+          "phone": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "Telefon"
+          },
+          "street": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "Ulice"
+          },
+          "buildingNumber": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "Číslo baráku"
+          },
+          "city": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "Město"
+          },
+          "postalCode": {
+            "required": true,
+            "translations": false,
+            "type": "string",
+            "title": "PSČ"
+          },
+          "note": {
+            "required": false,
+            "translations": false,
+            "type": "longText",
+            "title": "Note"
+          },
+
+          "promoCode": {
+            "required": false,
+            "translations": false,
+            "type": "relationship",
+            "targetModel": "promo_codes",
+            "labelConstructor": "id",
+            "title": "Slevový kód"
+          },
+          "cards": {
+            "required": false,
+            "translations": false,
+            "type": "relationship",
+            "multiple": true,
+            "targetModel": "cards",
+            "labelConstructor": "id",
+            "title": "Vvytvořené karty"
+          },
+          "products": {
+            "required": false,
+            "translations": false,
+            "type": "relationship",
+            "multiple": true,
+            "targetModel": "products",
+            "labelConstructor": "id",
+            "title": "Artefakty"
+          },
+
+          "finalPrice": {
+            "required": true,
+            "editable": false,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "type": "number",
+            "title": "Celková částka"
+          },
+          "currency": {
+            "required": true,
+            "editable": false,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "type": "enum",
+            "enum": ["CZK", "EUR"],
+            "title": "Měna"
+          }
+        }
+      },
+      "cards": {
+        "title": "Karty",
+        "softDelete": false,
+        "timestamp": true,
+        "sorting": true,
+        "sharable": false,
+        "draftable": false,
+        "ignoreSeeding": false,
+        "ownable": false,
+        "tableName": "cards",
+        "intl": false,
+        "icon": "Id",
+        "columns": {
+          "playerImage": {
+            "required": false,
+            "translations": false,
+            "multiple": false,
+            "type": "file",
+            "title": "Obrázek hráče",
+            "typeFilter": "image",
+            "admin": {
+              "fieldsType": "small-image"
+            }
+          },
+          "name": {
+            "required": true,
+            "editable": true,
+            "unique": true,
+            "hide": false,
+            "translations": true,
+            "type": "string",
+            "title": "Název"          
+          },
+          "rating": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "type": "number",
+            "title": "Hodnocení"
+          },
+          "background": {
+            "required": true,
+            "translations": false,
+            "type": "relationship",
+            "multiple": false,
+            "targetModel": "card_backgrounds",
+            "labelConstructor": "id",
+            "title": "Pozadí karty"
+          },
+          "country": {
+            "required": true,
+            "translations": false,
+            "type": "relationship",
+            "multiple": false,
+            "targetModel": "countries",
+            "labelConstructor": "id",
+            "title": "Země"
+          },
+          "stats": {
+            "required": true,
+            "translations": false,
+            "type": "json",
+            "title": "Stats"
+          },
+          "cardType": {
+            "required": true,
+            "translations": false,
+            "type": "enum",
+            "enum": ["goalKeeper", "realPlayer", "player", "manager"],
+            "title": "Typ karty"
+          },
+          "size": {
+            "required": true,
+            "translations": false,
+            "type": "relationship",
+            "multiple": false,
+            "targetModel": "card_sizes",
+            "labelConstructor": "id",
+            "title": "Velikost"
+          },
+          "finalPrice": {
+            "required": true,
+            "editable": false,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "type": "number",
+            "title": "Cena"
+          },
+          "currency": {
+            "required": true,
+            "editable": false,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "type": "enum",
+            "enum": ["CZK", "EUR"],
+            "title": "Měna"
+          }
+        }
+      }
+    }
+  }
+}

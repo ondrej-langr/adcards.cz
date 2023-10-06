@@ -1,0 +1,421 @@
+.cart-inner .cart-left {
+    padding: 45px 45px 45px 25px;
+}
+
+.cart-inner .cart-right {
+    padding: 45px 35px;
+    border-radius: 0;
+    border: 1px solid #e4e4e4;
+    background: #fff;
+}
+
+.cart-around {
+    width: 100%;
+    display: flex;
+    padding: 165px 15px 65px;
+    justify-content: center;
+}
+
+.cart-inner {
+    width: 95%;
+    max-width: 1100px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+form {
+    display: flex;
+    flex-wrap: wrap;
+    margin-left: -10px;
+    margin-right: -10px;
+    margin-top: 25px;
+}
+
+form .form-group input {
+    margin: 0px;
+    border: 1px solid #e4e4e4;
+    border-radius: 0px;
+    min-height: 55px;
+    font-weight: 600;
+    color: #000;
+}
+
+form .form-group textarea {
+    border-radius: 0 !important;
+    border: 1px solid #e4e4e4 !important;
+    min-height: 55px;
+    padding: 20px 15px;
+    font-size: 16px;
+    color: #000;
+    font-weight: 700;
+}
+
+form .form-group input::placeholder {
+    text-transform: uppercase;
+    font-size: 16px;
+    color: #000;
+}
+
+form .form-group textarea::placeholder {
+    text-transform: uppercase;
+    font-size: 16px;
+    color: #000;
+}
+
+.cart-inner .headline {
+    margin-bottom: 35px;
+}
+
+.full-order {
+    width: 100%;
+    margin-top: 25px;
+    border-bottom: 1px solid #e4e4e4;
+}
+
+.form-group label {
+    font-weight: 800;
+    font-size: 18px;
+}
+
+.form-check {
+    padding: 3px 0px 6px;
+}
+
+.form-check p.conditions {
+    font-size: 14px;
+}
+
+.form-check p.conditions a{
+    text-decoration: underline;
+    color: rgb(247, 11, 53);
+}
+
+.full-order .item {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-top: 1px solid #e4e4e4;
+    padding: 25px 5px;
+    align-items: center;
+}
+
+.full-order .item .image {
+    padding-right: 15px;
+}
+
+.full-order .item .image img {
+    max-width: 100%;
+}
+
+.item .info {
+    padding-right: 45px;
+}
+
+.form-check label a {
+    font-weight: 800;
+}
+
+.price-full span.number {
+    font-weight: 800;
+}
+
+.price-full span.number strike {
+    font-weight: 400;
+}
+
+.price-full {
+    width: 100%;
+    text-align: right;
+    display: flex;
+    justify-content: space-between;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+.price-full span {
+    font-size: 22px;
+    text-transform: uppercase;
+    font-weight: 800;
+}
+
+.info .size,
+.info .price {
+    font-size: 16px;
+}
+
+.cart-inner  button {
+    margin-top: 15px;
+    width: 100%;
+}
+
+form .form-group input:focus {
+    box-shadow: none;
+    border-color: #000 !important;
+}
+
+form .form-group textarea:focus {
+    box-shadow: none;
+    border-color: #000 !important;
+}
+
+.form-group label small {
+    color: #afafaf;
+}
+
+.payment-method .icon {
+    font-size: 30px;
+    position: relative;
+    padding-right: 20px;
+}
+
+.payment-method {
+    display: flex;
+    color: rgb(247, 11, 53);
+    font-weight: 300;
+    align-items: center;
+    font-size: 18px;
+}
+
+.image.w20 {
+    position: relative;
+}
+
+.player-img {
+    position: absolute;
+    width: 39px;
+    top: 20px;
+    left: 25px;
+    border-radius: 3px;
+}
+
+.extra {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    border-top: 1px solid #e4e4e4;
+    padding: 25px 5px;
+    align-items: center;
+    position: relative;
+}
+
+.add {
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 25px;
+    right: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.add:after {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background-color: #000;
+    transform: rotate(90deg);
+}
+
+.add:before {
+    content: "";
+    position: absolute;
+    width: 20px;
+    height: 2px;
+    background-color: #000;
+    transform: rotate(0deg);
+}
+
+.extras {
+    width: 100%;
+    margin-top: 25px;
+    border-bottom: 1px solid #e4e4e4;
+    padding: 0;
+}
+
+.extras h3 {
+    margin-bottom: 25px;
+}
+
+.extra img {
+    max-width: 100%;
+}
+
+input[type=radio] + label {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    border-radius: 0px;
+    cursor: pointer;
+    width: 100%;
+    border: 1px solid #e4e4e4;
+    background: #fff;
+    align-items: center;
+    justify-content: center;
+    min-height: 80px;
+    text-align: center;
+    color: #000 !important;
+    padding: 10px 5px;
+    transition: all 200ms ease-in-out;
+    margin:0;
+}
+
+input[type=radio] + label:hover {
+    color: inherit !important;
+    background-color: #eee;
+}
+
+input[type=radio]:hover span {
+    color: inherit !important;
+    background-color: inherit;
+}
+
+input[type=radio]:checked + label {
+    color: #fff !important;
+    background: rgb(247, 11, 53) !important;
+}
+
+input[type=radio].is-invalid + label {
+    border: 1px solid rgb(247, 11, 53);
+}
+
+.checkbox-around {
+    margin: 0;
+    padding: 2px;
+}
+
+input[type=radio] {
+    display: none;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 0px 15px;
+}
+
+.checkbox-group button {
+    width: 100%;
+}
+
+.checkbox-group #shippingMethodInp {
+    width: 100%;
+}
+
+.shipping-around {
+    padding: 0px 3px !important;
+}
+
+.label-name {
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.no-background {
+    color: #ccc;
+    padding: 100px 20px;
+    margin: 0px;
+    width: 100%;
+    text-align: center;
+    font-weight: 800;
+    font-size: 34px;
+}
+
+@media (max-width:767px) {
+    .cart-around {
+        padding-top: 100px;
+        padding-left: 5px;
+        padding-right: 5px;
+    }
+
+    .no-background {
+        font-size: 22px;
+        padding-top: 65px;
+    }
+    
+    .add {
+    width: 15px;
+    height: 15px;
+}
+
+.add:after {
+    width: 15px;
+}
+
+.add:before {
+    width: 15px;
+}
+    
+    .cart-inner .cart-left {
+        padding: 10px;
+    }
+
+    .cart-inner .cart-right {
+        padding: 25px 10px;
+        margin-top: 15px;
+    }
+
+    .cart-inner .headline {
+        margin-bottom: 15px;
+    }
+
+    .item .info {
+        padding-right: 30px;
+    }
+
+    .info .size,
+    .price {
+        font-size: 12px;
+        margin-bottom: 2px;
+    }
+
+    .full-order .item .image {
+        padding-right: 5px;
+        padding-left: 0px;
+    }
+
+    .payment-method {
+        font-size: 14px;
+    }
+
+    .payment-method .icon {
+        font-size: 22px;
+        padding-right: 15px;
+    }
+
+    form .form-check label {
+        font-size: 12px;
+    }
+
+    form .form-group label {
+        font-size: 12px;
+    }
+
+    form {
+        margin-top: 15px;
+    }
+
+    form .form-group input {
+        font-size: 12px;
+        min-height: 45px;
+    }
+
+    form .form-group input::placeholder {
+        font-size: 12px;
+    }
+
+    .form-group {
+        margin-bottom: 10px;
+    }
+
+    form .form-check {
+        margin-top: 15px;
+    }
+}

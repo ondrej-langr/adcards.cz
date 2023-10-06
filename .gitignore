@@ -1,0 +1,9 @@
+.temp
+cache
+uploads
+vendor
+.database
+node_modules
+.DS_Store
+*.env*
+_.*

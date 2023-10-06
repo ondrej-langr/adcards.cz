@@ -1,0 +1,145 @@
+.w10,
+.w20,
+.w25,
+.w30,
+.w40,
+.w50,
+.w60,
+.w70,
+.w75,
+.w80,
+.w84,
+.w90,
+.w100,
+.w33 {
+    position: relative;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.w10 {
+    width: 10%;
+    max-width: 10%;
+}
+
+.w20 {
+    width: 20%;
+    max-width: 20%;
+}
+
+.w25 {
+    width: 25%;
+    max-width: 25%;
+}
+
+.w30 {
+    width: 30%;
+    max-width: 30%;
+}
+
+.w40 {
+    width: 40%;
+    max-width: 40%;
+}
+
+.w50 {
+    width: 50%;
+    max-width: 50%;
+}
+
+.w60 {
+    width: 60%;
+    max-width: 60%;
+}
+
+.w70 {
+    width: 70%;
+    max-width: 70%;
+}
+
+.w75 {
+    width: 75%;
+    max-width: 75%;
+}
+
+.w80 {
+    width: 80%;
+    max-width: 80%;
+}
+
+.w90 {
+    width: 90%;
+    max-width: 90%;
+}
+
+.w100 {
+    width: 100%;
+    max-width: 100%;
+}
+
+.w33 {
+    width: 33.333333%;
+}
+
+@media (max-width:767px) {
+    .w10-mob {
+        width: 10%;
+        max-width: 10%;
+    }
+
+    .w20-mob {
+        width: 20%;
+        max-width: 20%;
+    }
+
+    .w25-mob {
+        width: 25%;
+        max-width: 25%;
+    }
+
+    .w30-mob {
+        width: 30%;
+        max-width: 30%;
+    }
+
+    .w40-mob {
+        width: 40%;
+        max-width: 40%;
+    }
+
+    .w50-mob {
+        width: 50%;
+        max-width: 50%;
+    }
+
+    .w60-mob {
+        width: 60%;
+        max-width: 60%;
+    }
+
+    .w70-mob {
+        width: 70%;
+        max-width: 70%;
+    }
+
+    .w75-mob {
+        width: 75%;
+        max-width: 75%;
+    }
+
+    .w80-mob {
+        width: 80%;
+        max-width: 80%;
+    }
+
+    .w90-mob {
+        width: 90%;
+        max-width: 90%;
+    }
+
+    .w100-mob {
+        width: 100%;
+        max-width: 100%;
+    }
+}
+

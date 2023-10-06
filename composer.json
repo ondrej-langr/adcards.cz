@@ -1,0 +1,13 @@
+{
+  "name": "prom-cms/adcards",
+  "type": "project",
+  "authors": [],
+  "require": {
+    "prom-cms/core": "dev-develop",
+    "rakit/validation": "^1.4"
+  },
+  "require-dev": {
+    "fakerphp/faker": "^1.23.0",
+    "psr/log": "^3"
+  }
+}

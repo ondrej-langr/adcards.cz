@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+    {# Info #}
+    <title>
+      AD cards | your own design
+    </title>
+
+    {# SEO #}
+    <meta name="description" content="Dostaň se do hry vytvořením vlastní unikátní FUT karty a připoj se tak ke hvězdám fotbalového světa. Tvorbu fotbalové karty máš plně pod kontrolou." />
+
+    {# Assets #}
+    {{
+      getViteAssets({
+        distFolderPath: 'dist',
+        assets: [
+          {
+            path: 'index.ts',
+            type: 'script'
+          }
+        ]
+      })|raw
+    }}
+
+    <link rel="shortcut icon" href="/images/favicon.ico" type="image/x-icon">
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+    
+    <link href="/css/bootstrap/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/main_mini.css" rel="stylesheet">
+    
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    {% if getConfig().env.development is not same as(true) %}
+      {% include("@modules:Adcards/layouts/site-layout/tracking.twig") %}
+
+      {# Cookies banner #}
+      <script src="https://cookiehub.net/c2/ae4b67a4.js"></script>
+      <script type="text/javascript">
+        document.addEventListener("DOMContentLoaded", function(event) {
+          var cpm = {};
+          window.cookiehub.load(cpm);
+        });
+      </script>
+    {% endif %}
+  </head>
+  <body>
+    {% if getConfig().env.development is not same as(true) %}
+      <noscript>
+        <img height="1" width="1" style="display:none"
+                src="https://www.facebook.com/tr?id=1198460210553277&ev=PageView&noscript=1" />
+      </noscript>
+
+      {# Define this - maybe in settings at CMS level? (maintanance_mode?) #}
+      <div class="backsoon">
+          <span>Pracujeme na aktualizacích...<br>Brzy budeme zpět</span>
+      </div>
+      <style>
+          body {
+              overflow: hidden;
+          }
+      </style>
+    {% endif %}
+
+    {% include '@modules:Adcards/layouts/site-layout/header.twig' %}
+    {% include '@modules:Adcards/layouts/site-layout/newsletter-popup.twig' %}
+
+    <main>
+      {{ block('content') }}
+    </main>
+
+    {% include '@modules:Adcards/layouts/site-layout/footer.twig' %}
+
+    {% if getConfig().env.development is not same as(true) %}
+      <div class="cookies">
+        <div class="cookies-inner">
+        {{ 'K ukládání nastavení a správnému fungování využíváme soubory cookies. Používáním
+          webu s jejich používáním souhlasíte.'|t }}
+        </div>
+        <a class="close-cookie-warning">
+          <span class="delete"></span>
+        </a>
+      </div>
+    {% endif %}
+
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
+    <script src="/scripts/slick.min.js"></script>
+    <script src="/scripts/scripts.js"></script>
+  </body>
+</html>
