@@ -7,6 +7,64 @@
   },
   "database": {
     "models": {
+      "mainPageSlides": {
+        "title": "Slider Položky",
+        "softDelete": false,
+        "timestamp": true,
+        "sorting": false,
+        "sharable": false,
+        "draftable": false,
+        "ignoreSeeding": false,
+        "ownable": true,
+        "tableName": "main_page_slides",
+        "intl": true,
+        "icon": "Slideshow",
+        "columns": {
+          "title": {
+            "required": true,
+            "editable": true,
+            "unique": true,
+            "hide": false,
+            "translations": true,
+            "type": "longText",
+            "title": "Titulek",
+            "admin": {
+              "fieldsType": "heading"
+            }
+          },
+          "subTitle": {
+            "required": false,
+            "editable": true,
+            "hide": false,
+            "translations": true,
+            "type": "string",
+            "title": "Subtitulek"
+          },
+          "buttonUrl": {
+            "required": false,
+            "editable": true,
+            "hide": false,
+            "translations": true,
+            "type": "string",
+            "title": "Odkaz pro tlačítko"
+          },
+          "image": {
+            "required": true,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "multiple": false,
+            "type": "file",
+            "title": "Obrázek",
+            "typeFilter": "image",
+            "admin": {
+              "fieldsType": "big-image"
+            }
+          }
+        }
+      },
+
       "products": {
         "title": "Artefakty",
         "softDelete": false,
