@@ -4,7 +4,8 @@
   "authors": [],
   "require": {
     "prom-cms/core": "dev-develop",
-    "rakit/validation": "^1.4"
+    "rakit/validation": "^1.4",
+    "drewm/mailchimp-api": "^2.5"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23.0",

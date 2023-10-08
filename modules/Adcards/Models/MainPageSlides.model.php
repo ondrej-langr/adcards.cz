@@ -11,6 +11,8 @@ class MainPageSlides extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = true;
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [
@@ -121,7 +123,6 @@ class MainPageSlides extends Model
   static string $title = 'Slider Položky';
 
   static string $modelIcon = 'Slideshow';
-  static $adminSettings = [];
 
   public function getSummary()
   {
@@ -131,10 +132,11 @@ class MainPageSlides extends Model
       'icon' => self::$modelIcon,
       'title' => isset(self::$title) ? self::$title : null,
       'ignoreSeeding' => self::$ignoreSeeding,
-      'admin' => self::$adminSettings,
       'columns' => static::$tableColumns,
       'hasTimestamps' => $this->hasTimestamps(),
       'hasSoftDelete' => $this->hasSoftDelete(),
+      'admin' => self::$adminSettings,
+      'enabled' => self::$enabled,
       'ownable' => true,
       'hasOrdering' => false,
       'isDraftable' => false,

@@ -11,6 +11,8 @@ class Cards extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = false;
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $casts = [
     'stats' => 'array',
@@ -172,6 +174,21 @@ class Cards extends Model
       'enum' => ['CZK', 'EUR'],
     ],
 
+    'madeForSessionId' => [
+      'title' => 'Uživatelské session',
+      'hide' => true,
+      'required' => true,
+      'unique' => false,
+      'editable' => false,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main'],
+        'fieldType' => 'normal',
+      ],
+      'type' => 'string',
+    ],
+
     'order' => [
       'title' => 'Order',
       'hide' => false,
@@ -190,7 +207,6 @@ class Cards extends Model
   static string $title = 'Karty';
 
   static string $modelIcon = 'Id';
-  static $adminSettings = [];
 
   public static function afterCreate(ModelResult $entry): ModelResult
   {
@@ -207,10 +223,11 @@ class Cards extends Model
       'icon' => self::$modelIcon,
       'title' => isset(self::$title) ? self::$title : null,
       'ignoreSeeding' => self::$ignoreSeeding,
-      'admin' => self::$adminSettings,
       'columns' => static::$tableColumns,
       'hasTimestamps' => $this->hasTimestamps(),
       'hasSoftDelete' => $this->hasSoftDelete(),
+      'admin' => self::$adminSettings,
+      'enabled' => self::$enabled,
       'ownable' => false,
       'hasOrdering' => true,
       'isDraftable' => false,

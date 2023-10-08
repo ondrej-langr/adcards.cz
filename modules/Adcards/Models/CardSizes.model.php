@@ -11,6 +11,8 @@ class CardSizes extends Model
 
   protected bool $timestamps = false;
   protected bool $translations = true;
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [
@@ -128,7 +130,6 @@ class CardSizes extends Model
   static string $title = 'Velikost karet';
 
   static string $modelIcon = 'Dimensions';
-  static $adminSettings = [];
 
   public static function afterCreate(ModelResult $entry): ModelResult
   {
@@ -145,10 +146,11 @@ class CardSizes extends Model
       'icon' => self::$modelIcon,
       'title' => isset(self::$title) ? self::$title : null,
       'ignoreSeeding' => self::$ignoreSeeding,
-      'admin' => self::$adminSettings,
       'columns' => static::$tableColumns,
       'hasTimestamps' => $this->hasTimestamps(),
       'hasSoftDelete' => $this->hasSoftDelete(),
+      'admin' => self::$adminSettings,
+      'enabled' => self::$enabled,
       'ownable' => true,
       'hasOrdering' => true,
       'isDraftable' => false,

@@ -11,6 +11,8 @@ class PromoCodes extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = false;
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [
@@ -25,8 +27,8 @@ class PromoCodes extends Model
       'autoIncrement' => true,
     ],
 
-    'name' => [
-      'title' => 'Název',
+    'code' => [
+      'title' => 'Hodnota kódu',
       'hide' => false,
       'required' => true,
       'unique' => true,
@@ -40,8 +42,8 @@ class PromoCodes extends Model
       'type' => 'string',
     ],
 
-    'value' => [
-      'title' => 'Hodnota',
+    'amount' => [
+      'title' => 'Hodnota slevy (%)',
       'hide' => false,
       'required' => true,
       'unique' => false,
@@ -53,7 +55,7 @@ class PromoCodes extends Model
     ],
 
     'enabled' => [
-      'title' => 'Aktivováno',
+      'title' => 'Aktivní',
       'hide' => false,
       'required' => false,
       'unique' => false,
@@ -62,6 +64,30 @@ class PromoCodes extends Model
       'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
       'type' => 'boolean',
       'default' => true,
+    ],
+
+    'usedTimes' => [
+      'title' => 'Počet použití',
+      'hide' => false,
+      'required' => false,
+      'unique' => false,
+      'editable' => false,
+      'translations' => false,
+      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'type' => 'number',
+      'autoIncrement' => false,
+    ],
+
+    'wasCreatedForNewsletter' => [
+      'title' => 'Bylo vytvořeno pro newsletter?',
+      'hide' => false,
+      'required' => false,
+      'unique' => false,
+      'editable' => false,
+      'translations' => false,
+      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'type' => 'boolean',
+      'default' => false,
     ],
 
     'order' => [
@@ -114,7 +140,6 @@ class PromoCodes extends Model
   static string $title = 'Promo Kódy';
 
   static string $modelIcon = 'ReceiptTax';
-  static $adminSettings = [];
 
   public static function afterCreate(ModelResult $entry): ModelResult
   {
@@ -131,10 +156,11 @@ class PromoCodes extends Model
       'icon' => self::$modelIcon,
       'title' => isset(self::$title) ? self::$title : null,
       'ignoreSeeding' => self::$ignoreSeeding,
-      'admin' => self::$adminSettings,
       'columns' => static::$tableColumns,
       'hasTimestamps' => $this->hasTimestamps(),
       'hasSoftDelete' => $this->hasSoftDelete(),
+      'admin' => self::$adminSettings,
+      'enabled' => self::$enabled,
       'ownable' => true,
       'hasOrdering' => true,
       'isDraftable' => false,

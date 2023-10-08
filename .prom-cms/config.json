@@ -284,23 +284,23 @@
         "intl": false,
         "icon": "ReceiptTax",
         "columns": {
-          "name": {
+          "code": {
             "required": true,
             "editable": true,
             "unique": true,
             "hide": false,
             "translations": true,
             "type": "string",
-            "title": "Název"          
+            "title": "Hodnota kódu"
           },
-          "value": {
+          "amount": {
             "required": true,
             "editable": true,
             "unique": false,
             "hide": false,
             "translations": false,
             "type": "number",
-            "title": "Hodnota"
+            "title": "Hodnota slevy (%)"
           },
           "enabled": {
             "required": false,
@@ -310,7 +310,26 @@
             "hide": false,
             "translations": false,
             "type": "boolean",
-            "title": "Aktivováno"
+            "title": "Aktivní"
+          },
+          "usedTimes": {
+            "required": false,
+            "editable": false,
+            "unique": false,
+            "hide": false,
+            "translations": false,
+            "type": "number",
+            "title": "Počet použití"
+          },
+          "wasCreatedForNewsletter": {
+            "required": false,
+            "editable": false,
+            "unique": false,
+            "default": false,
+            "hide": false,
+            "translations": false,
+            "type": "boolean",
+            "title": "Bylo vytvořeno pro newsletter?"
           }
         }
       },
@@ -530,6 +549,39 @@
             "type": "enum",
             "enum": ["CZK", "EUR"],
             "title": "Měna"
+          },
+          "madeForSessionId": {
+            "required": true,
+            "editable": false,
+            "unique": false,
+            "hide": true,
+            "translations": false,
+            "type": "string",
+            "title": "Uživatelské session"
+          }
+        }
+      },
+      "newsletterSubscriptions": {
+        "title": "Odběry newsletteru",
+        "softDelete": false,
+        "timestamp": true,
+        "sorting": false,
+        "sharable": false,
+        "draftable": false,
+        "ignoreSeeding": false,
+        "ownable": false,
+        "tableName": "newsletter_subscriptions",
+        "intl": false,
+        "icon": "News",
+        "columns": {
+          "email": {
+            "required": true,
+            "editable": true,
+            "unique": true,
+            "hide": false,
+            "translations": false,
+            "type": "string",
+            "title": "Email"
           }
         }
       }

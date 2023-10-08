@@ -1,12 +1,23 @@
 <div class="footer-newsletter">
-  {# <form action="{{ url_for('newsletter/set') }}" method="POST"> #}
-  <form action="" method="POST">
+  {% if success is not same as(null) %}
     <div class="footer-newsletter-content">
-    <h2>Sleva 10%<small>na první objednávku</small></h2>
-      <div class="newsletter-input">
-        <input type="text" name="email" placeholder="Váš email" class="form-control">
-        <button type="submit" class="btn btn-primary">Chci slevu</button>
-      </div>
+      <h2 class="text-center">
+        {% if success %}
+          Byli jste úspěšně přihlášeni k newsletteru. <br/> Děkujeme!
+        {% else %}
+          Stala se neočekávaná chyba. <br/> Zkuste to prosím znovu za chvíli.
+        {% endif %}
+      </h2>
     </div>
-  </form>
+  {% else %}
+    <form action="{{ url_for('newsletterSubscribe') }}" method="POST" hx-post="/api/newsletter/subscribe" hx-target="this">
+      <div class="footer-newsletter-content">
+        <h2>Sleva 10%<small>na první objednávku</small></h2>
+        <div class="newsletter-input">
+          <input type="email" name="email" placeholder="Váš email" class="form-control">
+          <button type="submit" class="btn btn-primary">Chci slevu</button>
+        </div>
+      </div>
+    </form>
+  {% endif %}
 </div>

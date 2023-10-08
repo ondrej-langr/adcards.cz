@@ -6,38 +6,38 @@
 <div class="cart-around" id="app-cart">
     <div class="cart-inner">
         <div class="headline">
-            <h1 class="le-node" id="leTlqwG7T7XQ" data-le-name="leTlqwG7T7XQ" {{ liveEdit.leTlqwG7T7XQ.isInterlanguage() }} {{ liveEdit.leTlqwG7T7XQ.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.leTlqwG7T7XQ|raw }}</h1>
+            <h1>{{'Dokončení objednávky'|t}}</h1>
         </div>
 
         {% if cards|length == 0 %}
-            <h1 class="no-background">{{ 'Košík je prázdný...'|t }}</h1>
+            <h1 class="no-background">{{ 'Váš košík je prázdný...'|t }}</h1>
         {% else %}
             <div class="cart-left w50 w100-mob">
-                <h3 class="le-node" id="le99eJh9ESyN" data-le-name="le99eJh9ESyN" {{ liveEdit.le99eJh9ESyN.isInterlanguage() }} {{ liveEdit.le99eJh9ESyN.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.le99eJh9ESyN|raw }}</h3>
-                <form role="form" action="{{ url_for('order') }}" method="POST" id="cart-form">
+                <h3>{{ "Kontaktní údaje"|t }}</h3>
+                <form role="form" action="{{ url_for('finish-order') }}" method="POST" id="cart-form">
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <input name="firstname" type="text" onblur="validateField(event)" class="form-control input-required" placeholder="{{ 'Jméno'|t }}">
+                        <input name="firstname" type="text" class="form-control input-required" placeholder="{{ 'Jméno'|t }}">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <input name="lastname" type="text" onblur="validateField(event)" class="form-control input-required" placeholder="{{ 'Příjmení'|t }}">
+                        <input name="lastname" type="text" class="form-control input-required" placeholder="{{ 'Příjmení'|t }}">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <input name="email" type="text" onblur="validateField(event)" class="form-control input-required" placeholder="E-mail">
+                        <input name="email" type="text" class="form-control input-required" placeholder="E-mail">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <input name="phone" type="tel" onblur="validateField(event)" class="form-control input-required" placeholder="{{ 'Telefonní číslo'|t }}">
+                        <input name="phone" type="tel" class="form-control input-required" placeholder="{{ 'Telefonní číslo'|t }}">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                        <input name="street" type="text" onblur="validateField(event)" class="form-control input-required" placeholder="{{ 'Ulice'|t }}">
+                        <input name="street" type="text" class="form-control input-required" placeholder="{{ 'Ulice'|t }}">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                        <input name="houseNumber" type="number" onblur="validateField(event)" class="form-control input-required" placeholder="{{ 'Číslo popisné'|t }}">
+                        <input name="houseNumber" type="number" class="form-control input-required" placeholder="{{ 'Číslo popisné'|t }}">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                        <input name="city" type="text" onblur="validateField(event)" class="form-control input-required" placeholder="{{ 'Město'|t }}">
+                        <input name="city" type="text" class="form-control input-required" placeholder="{{ 'Město'|t }}">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                        <input name="postalCode" type="number" onblur="validateField(event)" class="form-control input-required" placeholder="{{ 'PSČ'|t }}">
+                        <input name="postalCode" type="number" class="form-control input-required" placeholder="{{ 'PSČ'|t }}">
                     </div>
                     <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
                         <textarea name="note" class="form-control" rows="3" placeholder="{{ 'Poznámka k objednávce'|t }}"></textarea>
@@ -111,35 +111,31 @@
             </div>
 
             <div class="cart-right w50 w100-mob">
-                <h3 class="le-node" id="lesc51Y0LkbQ" data-le-name="lesc51Y0LkbQ" {{ liveEdit.lesc51Y0LkbQ.isInterlanguage() }} {{ liveEdit.lesc51Y0LkbQ.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.lesc51Y0LkbQ|raw }}</h3>
+                <h3>{{ "Přehled objednávky"|t }}</h3>
                 <div class="full-order">
-
                     {{ items }}
-
                 </div>
                 
                 <div class="w100 extras">
                 {# <input type="hidden" id="extra-url" value="{{ url_form('cart/extra') }}"> #}
+                    <h3>{{ "Přidejte si k objednávce"|t }}</h3>
 
-                <h3 class="le-node" id="leEgyPGARg6c" data-le-name="leEgyPGARg6c" {{ liveEdit.leEgyPGARg6c.isInterlanguage() }} {{ liveEdit.leEgyPGARg6c.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.leEgyPGARg6c|raw }}</h3>
+                    {% for extra in extras %}
+                        <div class="extra w100">
+                            <div class="w20">
+                                <img src="{{ __webRoot__ }}app/carnival/var/storage/{{ extra.img.relativePath }}" alt="">
+                            </div>
+                            <div class="w80 w80-mob">
+                                <h4>{{ extra.name }}</h4>
+                                <p>{{ 'Cena'|t }}: <b>{{ extra.price }}{{ 'Kč'|t }}</b></p>
+                            </div>
 
-                {% for extra in extras %}
-                    <div class="extra w100">
-                        <div class="w20">
-                            <img src="{{ __webRoot__ }}app/carnival/var/storage/{{ extra.img.relativePath }}" alt="">
+                            <!-- <button class="btn btn-primary" type="button" onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}">Add</button> -->
+                            
+                            <a onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}" class="add"></a>
                         </div>
-                        <div class="w80 w80-mob">
-                            <h4>{{ extra.name }}</h4>
-                            <p>{{ 'Cena'|t }}: <b>{{ extra.price }}{{ 'Kč'|t }}</b></p>
-                        </div>
-
-                        <!-- <button class="btn btn-primary" type="button" onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}">Add</button> -->
-                        
-                        <a onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}" class="add"></a>
-                    </div>
-                {% endfor %}
-
-            </div>
+                    {% endfor %}
+                </div>
                 
                 <div class="price-full">
                     <span>{{ 'Cena celkem'|t }}:</span>
@@ -171,14 +167,15 @@
                     </div>
                 </form>
                 <div class="form-check col-xl-12">
-                        <p class="conditions le-node" id="leZcFIM9Rltm" data-le-name="leZcFIM9Rltm" {{ liveEdit.leZcFIM9Rltm.isInterlanguage() }} {{ liveEdit.leZcFIM9Rltm.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.leZcFIM9Rltm|raw }}</p>
+                        <p>{{ "Odesláním formuláře souhlasíte se všeobecnými podmíkami a se zpracováním osobních údajů."|t }}</p>
                     </div>
-                <button onclick="submitForm()">
+                <button type="submit">
                     <span>{{ 'Odeslat objednávku'|t }}</span>
                 </button>
             </div>
         {% endif %}
 
+{# TODO: use htmx to add this when user removes item #}
         {% if __get__.removed is defined and __get__.removed == 'card' %}
             <div class="alert success">{{ 'Úspěch! Karta byla odstraněna z košíku!'|t }}</div>
         {% endif %}
@@ -186,8 +183,6 @@
     </div>
 </div>
 
-<script src="/scripts/validate.min.js"></script>
-<script src="/scripts/vue.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
 <script src="/scripts/packeta.js"></script>

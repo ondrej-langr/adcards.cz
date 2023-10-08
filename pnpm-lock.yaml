@@ -4,16 +4,24 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+dependencies:
+  htmx.org:
+    specifier: ^1.9.6
+    version: 1.9.6
+
 devDependencies:
   '@prettier/plugin-php':
     specifier: ^0.20.1
     version: 0.20.1(prettier@3.0.3)
+  '@prom-cms/admin':
+    specifier: ^0.12.5
+    version: 0.12.5(postcss@8.4.31)
   '@prom-cms/cli':
-    specifier: ^0.20.4
-    version: 0.20.4(@types/node@20.8.2)(postcss@8.4.31)
+    specifier: ^0.21.0
+    version: 0.21.0(@types/node@20.8.2)(postcss@8.4.31)
   '@prom-cms/vite-plugin':
-    specifier: ^0.7.0
-    version: 0.7.0(axios@0.27.2)(vite@4.4.10)
+    specifier: ^0.7.1
+    version: 0.7.1(axios@0.27.2)(vite@4.4.11)
   prettier-plugin-twig-melody:
     specifier: ^0.4.6
     version: 0.4.6(melody-idom@1.7.5)(melody-runtime@1.7.5)
@@ -21,8 +29,8 @@ devDependencies:
     specifier: ^5.2.2
     version: 5.2.2
   vite:
-    specifier: ^4.4.10
-    version: 4.4.10(@types/node@20.8.2)
+    specifier: ^4.4.11
+    version: 4.4.11(@types/node@20.8.2)
   vite-plugin-live-reload:
     specifier: ^3.0.2
     version: 3.0.2
@@ -1861,8 +1869,8 @@ packages:
       prettier: 3.0.3
     dev: true
 
-  /@prom-cms/admin@0.12.3(postcss@8.4.31):
-    resolution: {integrity: sha512-msHp6dDPXraeethuvSKN6WWT4sctpce9DKR/B2SsTPiRzE/P4edbrjNRaJjC60715FPmDZyu6l495n8vFhJXSg==}
+  /@prom-cms/admin@0.12.5(postcss@8.4.31):
+    resolution: {integrity: sha512-eW/WUhypQLs662taedL99ntjMrLvuiwGca4D1s8Ct/RC1UBkkwAe6nqSDvV1dEXJl/62UeRj491txTWOW5yHBA==}
     dependencies:
       '@calumk/editorjs-columns': 0.2.4
       '@editorjs/editorjs': 2.28.0
@@ -1931,12 +1939,12 @@ packages:
       axios: 0.24.0
     dev: true
 
-  /@prom-cms/cli@0.20.4(@types/node@20.8.2)(postcss@8.4.31):
-    resolution: {integrity: sha512-84y33mBoWLjFjySOcssnAd+tAwhn6CXhcHCKAVKLg5mGtFyjQlP9LbyFXM3yJhVwQ4U5VABmDhXumWkb4a8RTw==}
+  /@prom-cms/cli@0.21.0(@types/node@20.8.2)(postcss@8.4.31):
+    resolution: {integrity: sha512-hs4x/C9Cxl0de6LtHMlKVSJJQ7uIE3NF2g9RJ4/dWup+M4icm2CgpGzN41KGOGb1Tw4FZqkfT2om5JL4x7XOuA==}
     hasBin: true
     dependencies:
       '@faker-js/faker': 7.6.0
-      '@prom-cms/admin': 0.12.3(postcss@8.4.31)
+      '@prom-cms/admin': 0.12.5(postcss@8.4.31)
       '@prom-cms/config': 0.1.7(prettier@3.0.3)
       '@prom-cms/shared': 2.0.0
       chalk: 5.3.0
@@ -1989,11 +1997,11 @@ packages:
       zod: 3.22.4
     dev: true
 
-  /@prom-cms/vite-plugin@0.7.0(axios@0.27.2)(vite@4.4.10):
-    resolution: {integrity: sha512-rsOap8qsmx4i5ZwOw1+HJcBecYNSb2JQjwyemtH3sM0yKZXon4BHDyurkHm5S19qfanG7ggM7vSrHi9NXqWEeQ==}
+  /@prom-cms/vite-plugin@0.7.1(axios@0.27.2)(vite@4.4.11):
+    resolution: {integrity: sha512-4BMNp9TJbaQqh/IbCWNo0KoVaPxtAiwxDPbEUzF9NK5xarmg/NMsnzf6mfI/WOnS5ldlGexpnMKfMRmMB1HNkw==}
     peerDependencies:
-      axios: ^0.27.2
-      vite: ^3.0.2
+      axios: ^0.27
+      vite: ^4.4.11
     dependencies:
       axios: 0.27.2
       execa: 6.1.0
@@ -2001,7 +2009,7 @@ packages:
       http-proxy: 1.18.1
       mime: 3.0.0
       node-fetch: 3.3.2
-      vite: 4.4.10(@types/node@20.8.2)
+      vite: 4.4.11(@types/node@20.8.2)
     transitivePeerDependencies:
       - debug
     dev: true
@@ -3386,6 +3394,10 @@ packages:
     dependencies:
       void-elements: 3.1.0
     dev: true
+
+  /htmx.org@1.9.6:
+    resolution: {integrity: sha512-4Zebo9nzg8u2ZHuIJmvB/nQS6kIMLIoEfhTg/oRwyCIJhL5MLA/jPU1EPEBtGOmG4ZG0k05Vpd3sab2+zfvteQ==}
+    dev: false
 
   /http-proxy@1.18.1:
     resolution: {integrity: sha512-7mz/721AbnJwIVbnaSv1Cz3Am0ZLT/UBwkC92VlxhXv/k/BBQfM2fXElQNC27BVGr0uwUpplYPQM9LnaBMR5NQ==}
@@ -5070,8 +5082,8 @@ packages:
       picocolors: 1.0.0
     dev: true
 
-  /vite@4.4.10(@types/node@20.8.2):
-    resolution: {integrity: sha512-TzIjiqx9BEXF8yzYdF2NTf1kFFbjMjUSV0LFZ3HyHoI3SGSPLnnFUKiIQtL3gl2AjHvMrprOvQ3amzaHgQlAxw==}
+  /vite@4.4.11(@types/node@20.8.2):
+    resolution: {integrity: sha512-ksNZJlkcU9b0lBwAGZGGaZHCMqHsc8OpgtoYhsQ4/I2v5cnpmmmqe5pM4nv/4Hn6G/2GhTdj0DhZh2e+Er1q5A==}
     engines: {node: ^14.18.0 || >=16.0.0}
     hasBin: true
     peerDependencies:

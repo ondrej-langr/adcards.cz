@@ -11,6 +11,8 @@ class Orders extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = false;
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [
@@ -246,7 +248,6 @@ class Orders extends Model
   static string $title = 'Objednávky';
 
   static string $modelIcon = 'BuildingStore';
-  static $adminSettings = [];
 
   public static function afterCreate(ModelResult $entry): ModelResult
   {
@@ -263,10 +264,11 @@ class Orders extends Model
       'icon' => self::$modelIcon,
       'title' => isset(self::$title) ? self::$title : null,
       'ignoreSeeding' => self::$ignoreSeeding,
-      'admin' => self::$adminSettings,
       'columns' => static::$tableColumns,
       'hasTimestamps' => $this->hasTimestamps(),
       'hasSoftDelete' => $this->hasSoftDelete(),
+      'admin' => self::$adminSettings,
+      'enabled' => self::$enabled,
       'ownable' => false,
       'hasOrdering' => true,
       'isDraftable' => false,

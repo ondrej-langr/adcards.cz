@@ -11,6 +11,8 @@ class Countries extends Model
 
   protected bool $timestamps = false;
   protected bool $translations = false;
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [
@@ -75,7 +77,6 @@ class Countries extends Model
   static string $title = 'Země';
 
   static string $modelIcon = 'World';
-  static $adminSettings = [];
 
   public static function afterCreate(ModelResult $entry): ModelResult
   {
@@ -92,10 +93,11 @@ class Countries extends Model
       'icon' => self::$modelIcon,
       'title' => isset(self::$title) ? self::$title : null,
       'ignoreSeeding' => self::$ignoreSeeding,
-      'admin' => self::$adminSettings,
       'columns' => static::$tableColumns,
       'hasTimestamps' => $this->hasTimestamps(),
       'hasSoftDelete' => $this->hasSoftDelete(),
+      'admin' => self::$adminSettings,
+      'enabled' => self::$enabled,
       'ownable' => false,
       'hasOrdering' => true,
       'isDraftable' => false,

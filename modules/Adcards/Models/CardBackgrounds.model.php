@@ -11,6 +11,8 @@ class CardBackgrounds extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = true;
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [
@@ -129,7 +131,6 @@ class CardBackgrounds extends Model
   static string $title = 'Pozadí karet';
 
   static string $modelIcon = 'BoxMultiple1';
-  static $adminSettings = [];
 
   public static function afterCreate(ModelResult $entry): ModelResult
   {
@@ -146,10 +147,11 @@ class CardBackgrounds extends Model
       'icon' => self::$modelIcon,
       'title' => isset(self::$title) ? self::$title : null,
       'ignoreSeeding' => self::$ignoreSeeding,
-      'admin' => self::$adminSettings,
       'columns' => static::$tableColumns,
       'hasTimestamps' => $this->hasTimestamps(),
       'hasSoftDelete' => $this->hasSoftDelete(),
+      'admin' => self::$adminSettings,
+      'enabled' => self::$enabled,
       'ownable' => true,
       'hasOrdering' => true,
       'isDraftable' => true,
