@@ -2,7 +2,7 @@
 
 use DrewM\MailChimp\MailChimp;
 use PromCMS\Core\Config;
-use PromCMS\Core\Http\ResponseHelper;
+use PromCMS\Core\Mailer;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Core\Services\EntryTypeService;
 use Psr\Http\Message\ResponseInterface;
@@ -20,6 +20,7 @@ return function (App $app, RouteCollectorProxy $router) {
      * @var RenderingService
      */
     $renderingService = $container->get(RenderingService::class);
+    $emailService = $container->get(Mailer::class);
 
     $router
         ->get('/order/finish', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
@@ -38,6 +39,39 @@ return function (App $app, RouteCollectorProxy $router) {
             return $response;
         })
         ->setName('promoCode');
+
+    $router
+        ->post('/contact-us/send', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($config, $renderingService, $emailService) {
+            $body = $request->getParsedBody();
+            $success = false;
+
+            $emailService->isHtml();
+            $emailService->addAddress($body["email"], $body["name"]);
+            $emailService->Subject = 'Děkujeme za Vaši zprávu!';
+            $emailService->Body = $renderingService->getEnvironment()->render(
+                '@modules:Adcards/email/contact-us/user.twig',
+                $body,
+            );
+
+            $success = $emailService->send();
+
+            $emailService->isHtml();
+            $emailService->addAddress($_ENV["MAIL_ADDRESS"] ?? $_ENV["MAIL_USER"]);
+            $emailService->Subject = 'Nový kontakt z kontaktního formuláře!';
+            $emailService->Body = $renderingService->getEnvironment()->render(
+                '@modules:Adcards/email/contact-us/owner.twig',
+                $body,
+            );
+
+            $success = $emailService->send();
+
+            $renderingService->render($response, '@modules:Adcards/partials/pages/kontakt/form.twig', [
+                'success' => $success,
+            ]);
+
+            return $response;
+        })
+        ->setName('contactUsMessage');
 
     $router
         ->post('/newsletter/subscribe', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($config, $renderingService) {
@@ -63,7 +97,7 @@ return function (App $app, RouteCollectorProxy $router) {
                         'PROMOCODE' => $payload['code'],
                     ],
                 ]);
-    
+
                 if ($result['status'] !== 400) {
                     $success = true;
                 }
@@ -72,15 +106,13 @@ return function (App $app, RouteCollectorProxy $router) {
             }
 
             if ($success === false) {
-                $service->delete([
-                    ["id", "=", $createdItem->id]
-                ]);
+                $service->delete([['id', '=', $createdItem->id]]);
             }
 
-            $renderingService->render($response, "@modules:Adcards/layouts/site-layout/footer-newsletter-subscribe.twig", [
-                "success" => $success
+            $renderingService->render($response, '@modules:Adcards/layouts/site-layout/footer-newsletter-subscribe.twig', [
+                'success' => $success,
             ]);
- 
+
             return $response;
         })
         ->setName('newsletterSubscribe');

@@ -7,50 +7,29 @@
 <div class="contact-around">
     <div class="contact-inner">
         <div class="headline">
-            <h1 class="le-node" id="leOQGOpLwD6B" data-le-name="leOQGOpLwD6B" {{ liveEdit.leOQGOpLwD6B.isInterlanguage() }} {{ liveEdit.leOQGOpLwD6B.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.leOQGOpLwD6B|raw }}</h1>
+            <h1>{{ "Kontakt"|t }}</h1>
         </div>
         <div class="contact-box-around col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
             <div class="contact-box col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                 <i class="fa-phone-alt fas"></i>
-                <h3 class="le-node" id="levJqas2vb1P" data-le-name="levJqas2vb1P" {{ liveEdit.levJqas2vb1P.isInterlanguage() }} {{ liveEdit.levJqas2vb1P.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.levJqas2vb1P|raw }}</h3>
+                <h3>{{ "Volejte na"|t }}</h3>
                 <span class="text"><a href="tel:+420775025295">+420 775 025 295</a></span>
             </div>
             <div class="contact-box col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                 <i class="fa-envelope far"></i>
-                <h3 class="le-node" id="leskBjdduRpO" data-le-name="leskBjdduRpO" {{ liveEdit.leskBjdduRpO.isInterlanguage() }} {{ liveEdit.leskBjdduRpO.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.leskBjdduRpO|raw }}</h3>
+                <h3>{{ "Pište na"|t }}</h3>
                 <span class="text"><a href="mailto:info@adcards.cz">info@adcards.cz</a></span>
             </div>
             <div class="contact-box col-12 col-sm-4 col-md-4 col-lg-4 col-xl-4">
                 <i class="fas fa-align-center"></i>
-                <h3 class="le-node" id="le7OPT6O5d2Y" data-le-name="le7OPT6O5d2Y" {{ liveEdit.le7OPT6O5d2Y.isInterlanguage() }} {{ liveEdit.le7OPT6O5d2Y.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.le7OPT6O5d2Y|raw }}</h3>
+                <h3>{{ "Fakturační údaje"|t }}</h3>
                 <ul>
                     <li><p class="text">Raducan, spol. s r.o.</p></li>
                     <li><p class="text"><b>IČ:</b> 17106991</p></li>
                 </ul>
             </div>
         </div>
-        <div class="w100 w100-mob">
-            <h3 class="le-node" id="lef88Bfj2ekf" data-le-name="lef88Bfj2ekf" {{ liveEdit.lef88Bfj2ekf.isInterlanguage() }} {{ liveEdit.lef88Bfj2ekf.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.lef88Bfj2ekf|raw }}</h3>
-            <form role="form">
-                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input type="text" class="form-control" id="exampleInputName1" placeholder="{{ 'Jméno'|trans('common/contact') }}">
-                </div>
-                <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
-                    <input type="email" class="form-control" id="exampleInputEmail1" placeholder="E-mail">
-                </div>
-                <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <textarea class="form-control" rows="3" placeholder="{{ 'Zpráva'|trans('common/contact') }}"></textarea>
-                </div>
-                <div class="form-check col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <p class="conditions le-node" id="leTjIONzYAuS" data-le-name="leTjIONzYAuS" {{ liveEdit.leTjIONzYAuS.isInterlanguage() }} {{ liveEdit.leTjIONzYAuS.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.leTjIONzYAuS|raw }}</p>
-                </div>
-                <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                    <button>
-                        <span>{{ 'Odeslat zprávu'|trans('common/contact') }}</span>
-                    </button>
-                </div>
-            </form>
-        </div>
+        {% include("@modules:Adcards/partials/pages/kontakt/form.twig") %}
     </div>
 </div>
 {% endblock %}

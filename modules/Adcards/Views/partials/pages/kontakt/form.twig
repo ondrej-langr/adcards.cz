@@ -1,0 +1,36 @@
+<div class="w100 w100-mob" id="contact-us-form">
+    {% if success is not same as(null) %}
+      <h2 class="text-center">
+        {% if success %}
+          Děkujeme za zprávu!<br/> Brzo Vás budeme kontaktovat
+        {% else %}
+          Stala se neočekávaná chyba. <br/> Zkuste to prosím znovu za chvíli.
+        {% endif %}
+      </h2>
+    {% else %}
+      <h3>{{ 'Napište nám' | t }}</h3>
+      <form role="form" action="{{ url_for('contactUsMessage') }}" method="POST"
+          hx-post="{{ url_for('contactUsMessage') }}" hx-swap="outerHTML scroll:top" hx-target="#contact-us-form">
+          <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+              <input type="text" name="name" autocomplete="name" class="form-control" id="exampleInputName1"
+                  placeholder="{{ 'Jméno' | t }}">
+          </div>
+          <div class="form-group col-12 col-sm-6 col-md-6 col-lg-6 col-xl-6">
+              <input type="email" name="email" class="form-control" id="exampleInputEmail1" placeholder="E-mail">
+          </div>
+          <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <textarea class="form-control" name="message" rows="3" placeholder="{{ 'Zpráva' | t }}"></textarea>
+          </div>
+          <div class="form-check col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <p class="conditions">
+                  {{ 'Odesláním formuláře souhlasíte se všeobecnými podmíkami a se zpracováním osobních údajů.' | raw }}</p>
+          </div>
+          <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+              <button>
+                  <span class="hx-hide-on-request">{{ 'Odeslat zprávu' | t }}</span>
+                  <span class="hx-show-on-request">{{ 'Odesílám...' | t }}</span>
+              </button>
+          </div>
+      </form>
+    {% endif %}
+</div>
