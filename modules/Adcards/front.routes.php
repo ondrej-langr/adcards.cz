@@ -6,7 +6,10 @@ use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
-return function (App $app, RouteCollectorProxy $router) {
+// FIXME: This file is being run twice for some reason - fix this
+$runCount = 0;
+
+return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
   $container = $app->getContainer();
   $twig = $container->get(RenderingService::class);
 
@@ -63,4 +66,10 @@ return function (App $app, RouteCollectorProxy $router) {
 
     return $twig->render($response, '@modules:Adcards/pages/team.twig');
   })->setName("team");
+
+  if ($runCount == 0) {
+    $app->redirect('/obchodni-podminky', '/pdf/trade-agreement.pdf', 301)->setName("trade-agreement");
+    $app->redirect('/gdpr', '/pdf/gdpr.pdf', 301)->setName("gdpr");
+  }
+  $runCount++;
 };

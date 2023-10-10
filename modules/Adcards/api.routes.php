@@ -88,7 +88,7 @@ return function (App $app, RouteCollectorProxy $router) {
 
             $createdItem = $service->create($payload);
 
-            if ($config->env->development) {
+            if ($config->env->development && isset($_ENV['MAILCHIMP_API_KEY'])) {
                 $mailChimp = new MailChimp($_ENV['MAILCHIMP_API_KEY']);
                 $result = $mailChimp->post('lists/6ca0ac3cf6/members', [
                     'email_address' => $body['email'],
