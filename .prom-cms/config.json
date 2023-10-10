@@ -416,7 +416,7 @@
             "multiple": true,
             "targetModel": "cards",
             "labelConstructor": "id",
-            "title": "Vvytvořené karty"
+            "title": "Vytvořené karty"
           },
           "products": {
             "required": false,
