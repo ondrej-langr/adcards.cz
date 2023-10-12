@@ -77,6 +77,15 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     return $twig->render($response, '@modules:Adcards/pages/team.twig');
   })->setName("team");
 
+  $router->get('/produkty', function (
+    ServerRequestInterface $request,
+    ResponseInterface $response,
+    $args,
+  ) use ($twig) {
+
+    return $twig->render($response, '@modules:Adcards/pages/produkty.twig');
+  })->setName("products");
+
   if ($runCount == 0) {
     $app->redirect('/obchodni-podminky', '/pdf/trade-agreement.pdf', 301)->setName("trade-agreement");
     $app->redirect('/gdpr', '/pdf/gdpr.pdf', 301)->setName("gdpr");

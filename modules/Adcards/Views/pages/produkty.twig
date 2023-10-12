@@ -1,0 +1,32 @@
+{% extends '@modules:Adcards/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+	<link rel="stylesheet" href="/css/pages/products.css">
+{% endblock %}
+
+{% block content %}
+	<div class="shop">
+		<h2>{{"Obchod"|t}}</h2>
+		<div class="shop-content">
+      {% for product in products %}
+        <div data-product-id="{{ product.id }}" class="col-12 col-lg-4 col-md-4 col-sm-6 col-xl-4 shop-box">
+          {% set currentImage = image(product.images[0], 440) %}
+          <img src="{{ currentImage.src }}" width="{{ currentImage.width }}" height="{{ currentImage.height }}" alt="Obrázek produktu">
+          <h2>{{ product.name }}</h2>
+          <div class="price">{{ product.price }} Kč</div>
+          <p>{{ product.description }}</p>
+          <div class="add-to-cart">
+            <input class="add-to-cart__value" type="number" min="1" step="1" value="1" />
+            <button class="">
+              Vložit do košíku
+            </button>
+          </div>
+        </div>
+      {% endfor %}
+
+      {% if products|length == 0 %}
+        Zatím žádné produkty...
+      {% endif %}
+		</div>
+	</div>
+{% endblock %}
