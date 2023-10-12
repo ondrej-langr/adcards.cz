@@ -1,5 +1,6 @@
 <?php
 
+use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\RenderingService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,14 +19,23 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     ResponseInterface $response,
     $args,
   ) use ($twig) {
+    $cardMaterialService = new EntryTypeService(new CardMaterial());
+    $sliderItemsService = new EntryTypeService(new MainPageSlides());
 
-    return $twig->render($response, '@modules:Adcards/pages/home.twig');
+    return $twig->render($response, '@modules:Adcards/pages/home.twig', [
+      "cards" => [
+        "materials" => $cardMaterialService->getMany([], 1, 999)["data"],
+      ],
+      "slider" => [
+        "items" => $sliderItemsService->getMany([], 1, 999, ["order" => "desc", "id" => "desc"])["data"]
+      ],
+    ]);
   });
 
   $router->get('/karty/builder', function (
     ServerRequestInterface $request,
     ResponseInterface $response,
-    $args,
+    $args
   ) use ($twig) {
 
     return $twig->render($response, '@modules:Adcards/pages/builder.twig');

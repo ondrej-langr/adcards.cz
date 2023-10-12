@@ -73,7 +73,7 @@ class CardSizes extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'aside'],
-        'fieldType' => 'normal',
+        'fieldType' => 'small-image',
       ],
       'type' => 'file',
       'multiple' => false,

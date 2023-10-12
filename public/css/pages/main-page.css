@@ -403,8 +403,13 @@
 }
 
 .slide img {
-  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
   position: absolute;
+  object-position: center;
+  object-fit: cover;
 }
 
 .slider-container {

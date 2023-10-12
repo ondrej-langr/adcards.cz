@@ -9,7 +9,7 @@ class MainPageSlides extends Model
   protected string $tableName = 'main_page_slides';
   protected bool $softDelete = false;
 
-  protected bool $timestamps = true;
+  protected bool $timestamps = false;
   protected bool $translations = true;
   protected static bool $enabled = true;
   protected static array $adminSettings = ['hidden' => false];
@@ -34,8 +34,12 @@ class MainPageSlides extends Model
       'unique' => true,
       'editable' => true,
       'translations' => true,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
-      'type' => 'longText',
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main'],
+        'fieldType' => 'heading',
+      ],
+      'type' => 'string',
     ],
 
     'subTitle' => [
@@ -78,51 +82,38 @@ class MainPageSlides extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main'],
-        'fieldType' => 'normal',
+        'fieldType' => 'big-image',
       ],
       'type' => 'file',
       'multiple' => false,
       'typeFilter' => 'image',
     ],
 
-    'created_by' => [
-      'title' => 'Created by',
+    'order' => [
+      'title' => 'Order',
       'hide' => false,
       'required' => false,
       'unique' => false,
       'editable' => false,
       'translations' => false,
       'admin' => ['isHidden' => true, 'editor' => ['placement' => 'main']],
-      'type' => 'relationship',
-      'targetModel' => 'user',
-      'labelConstructor' => 'name',
-      'multiple' => false,
-      'fill' => false,
-      'foreignKey' => 'id',
-    ],
-
-    'updated_by' => [
-      'title' => 'Updated by',
-      'hide' => false,
-      'required' => false,
-      'unique' => false,
-      'editable' => false,
-      'translations' => false,
-      'admin' => ['isHidden' => true, 'editor' => ['placement' => 'main']],
-      'type' => 'relationship',
-      'targetModel' => 'user',
-      'labelConstructor' => 'name',
-      'multiple' => false,
-      'fill' => false,
-      'foreignKey' => 'id',
+      'type' => 'number',
+      'autoIncrement' => true,
     ],
   ];
 
   static bool $ignoreSeeding = false;
 
-  static string $title = 'Slider Položky';
+  static string $title = 'Položky slideru na hlavní stránce';
 
   static string $modelIcon = 'Slideshow';
+
+  public static function afterCreate(ModelResult $entry): ModelResult
+  {
+    $entry->update(['order' => $entry->id]);
+
+    return $entry;
+  }
 
   public function getSummary()
   {
@@ -138,7 +129,7 @@ class MainPageSlides extends Model
       'admin' => self::$adminSettings,
       'enabled' => self::$enabled,
       'ownable' => true,
-      'hasOrdering' => false,
+      'hasOrdering' => true,
       'isDraftable' => false,
       'isSharable' => false,
     ];

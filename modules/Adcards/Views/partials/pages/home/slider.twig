@@ -2,46 +2,25 @@
     <div class="slider-container">
         <div class="overlay"></div>
         <div class="col-12 col-lg-9 col-md-12 col-sm-12 col-xl-9 slider-left">
-            <div class="slide active" id="slide-0">
-                <img src="https://images.unsplash.com/photo-1518091043644-c1d4457512c6?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyMDkyMnwwfDF8c2VhcmNofDIzfHxmaWZhJTIwY2FyZHxlbnwwfHx8fDE2OTYzMjQ2NjN8MA&ixlib=rb-4.0.3&q=80&w=1080"
-                    alt="Obrázek 1">
-                <div class="slider-content">
-                    <h1>Nově spuštěný web</h1>
-                    <p>Do 30.10. platí zaváděcí sleva 20% na všechny produkty z naší nabídky. </p>
-                    <button>Nakupovat</button>
+            {% for slide in slider.items %}
+                <div class="slide {% if loop.index == 1 %}active{% endif %}" id="slide-{{loop.index0}}">
+                    {% set currentImage = image(slide.image, null,500) %}
+                    <img src="{{currentImage.src}}" width="{{currentImage.width}}" height="{{currentImage.height}}"
+                        alt="Obrázek">
+                    <div class="slider-content">
+                        <h1>{{ slide.title }}</h1>
+                        <p>{{ slide.subTitle }}</p>
+                        <button>Nakupovat</button>
+                    </div>
                 </div>
-            </div>
-            <div class="slide" id="slide-1">
-                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyMDkyMnwwfDF8c2VhcmNofDJ8fGZpZmF8ZW58MHx8fHwxNjk2MzE5NTg0fDA&ixlib=rb-4.0.3&q=80&w=1080"
-                    alt="Obrázek 2">
-                <div class="overlay"></div>
-                <div class="slider-content">
-                    <h1>Přihlašte se k newsletteru a získejte 10% slevu</h1>
-                    <p>Popis Slide 2</p>
-                    <button>Přihlásit k newsletteru</button>
-                </div>
-            </div>
-            <div class="slide" id="slide-2">
-                <img src="https://images.unsplash.com/photo-1493711662062-fa541adb3fc8?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3wyMDkyMnwwfDF8c2VhcmNofDJ8fGZpZmF8ZW58MHx8fHwxNjk2MzE5NTg0fDA&ixlib=rb-4.0.3&q=80&w=1080"
-                    alt="Obrázek 3">
-                <div class="overlay"></div>
-                <div class="slider-content">
-                    <h1>Nadpis Slide 3</h1>
-                    <p>Popis Slide 3</p>
-                    <button>Tlačítko</button>
-                </div>
-            </div>
+            {% endfor %}
         </div>
         <div class="col-12 col-lg-3 col-md-12 col-sm-12 col-xl-3 slider-right">
-            <div class="slider-box active" onclick="changeSlide(0)">
-                <h2>Nově spuštěný web se <br>záváděcí slevou 20%</h2>
-            </div>
-            <div class="slider-box" onclick="changeSlide(1)">
-                <h2>Přihlašte se k newsletteru<br>a získejte 10% slevu</h2>
-            </div>
-            <div class="slider-box" onclick="changeSlide(2)">
-                <h2>Box 3</h2>
-            </div>
+            {% for slide in slider.items %}
+                <div class="slider-box {% if loop.index == 1 %}active{% endif %}" onclick="changeSlide({{loop.index0}})">
+                    <h2>{{slide.title}}</h2>
+                </div>
+            {% endfor %}
         </div>
     </div>
 </div>

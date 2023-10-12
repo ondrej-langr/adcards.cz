@@ -1,5 +1,5 @@
 {
-  "$schema": "https://prom",
+  "$schema": "https://schema.prom-cms.cz/versions/0/schema.json",
   "project": {
     "name": "adcards",
     "slug": "adcards",
@@ -8,14 +8,11 @@
   "database": {
     "models": {
       "mainPageSlides": {
-        "title": "Slider Položky",
+        "title": "Položky slideru na hlavní stránce",
         "softDelete": false,
-        "timestamp": true,
-        "sorting": false,
+        "sorting": true,
         "sharable": false,
         "draftable": false,
-        "ignoreSeeding": false,
-        "ownable": true,
         "tableName": "main_page_slides",
         "intl": true,
         "icon": "Slideshow",
@@ -26,10 +23,10 @@
             "unique": true,
             "hide": false,
             "translations": true,
-            "type": "longText",
+            "type": "string",
             "title": "Titulek",
             "admin": {
-              "fieldsType": "heading"
+              "fieldType": "heading"
             }
           },
           "subTitle": {
@@ -59,7 +56,7 @@
             "title": "Obrázek",
             "typeFilter": "image",
             "admin": {
-              "fieldsType": "big-image"
+              "fieldType": "big-image"
             }
           }
         }
@@ -84,10 +81,10 @@
             "unique": true,
             "hide": false,
             "translations": true,
-            "type": "longText",
+            "type": "string",
             "title": "Název",
             "admin": {
-              "fieldsType": "heading"
+              "fieldType": "heading"
             }
           },
           "price": {
@@ -119,7 +116,7 @@
             "title": "Obrázky",
             "typeFilter": "image",
             "admin": {
-              "fieldsType": "small-image",
+              "fieldType": "small-image",
               "editor": {
                 "placement": "aside"
               }
@@ -147,10 +144,10 @@
             "unique": true,
             "hide": false,
             "translations": true,
-            "type": "longText",
+            "type": "string",
             "title": "Název",
             "admin": {
-              "fieldsType": "heading"
+              "fieldType": "heading"
             }
           },
           "description": {
@@ -171,10 +168,7 @@
             "title": "Obrázek",
             "typeFilter": "image",
             "admin": {
-              "fieldsType": "big-image",
-              "editor": {
-                "placement": "aside"
-              }
+              "fieldType": "big-image"
             }
           }
         }
@@ -199,10 +193,10 @@
             "unique": true,
             "hide": false,
             "translations": true,
-            "type": "longText",
+            "type": "string",
             "title": "Název",
             "admin": {
-              "fieldsType": "heading"
+              "fieldType": "heading"
             }
           },
           "textColor": {
@@ -225,7 +219,7 @@
             "title": "Obrázek",
             "typeFilter": "image",
             "admin": {
-              "fieldsType": "big-image",
+              "fieldType": "big-image",
               "editor": {
                 "placement": "aside"
               }
@@ -255,7 +249,7 @@
             "type": "string",
             "title": "Název",
             "admin": {
-              "fieldsType": "heading"
+              "fieldType": "heading"
             }
           },
           "flag": {
@@ -269,7 +263,7 @@
             "title": "Vlajka",
             "typeFilter": "image",
             "admin": {
-              "fieldsType": "big-image"
+              "fieldType": "big-image"
             }
           }
         }
@@ -316,7 +310,7 @@
             "title": "Náhledový obrázek",
             "typeFilter": "image",
             "admin": {
-              "fieldsType": "small-image",
+              "fieldType": "small-image",
               "editor": {
                 "placement": "aside"
               }
@@ -523,7 +517,7 @@
             "title": "Obrázek hráče",
             "typeFilter": "image",
             "admin": {
-              "fieldsType": "small-image"
+              "fieldType": "small-image"
             }
           },
           "name": {

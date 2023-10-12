@@ -37,7 +37,7 @@ class Countries extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main'],
-        'fieldType' => 'normal',
+        'fieldType' => 'heading',
       ],
       'type' => 'string',
     ],
@@ -52,7 +52,7 @@ class Countries extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main'],
-        'fieldType' => 'normal',
+        'fieldType' => 'big-image',
       ],
       'type' => 'file',
       'multiple' => false,

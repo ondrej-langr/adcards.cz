@@ -41,7 +41,7 @@ class Cards extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main'],
-        'fieldType' => 'normal',
+        'fieldType' => 'small-image',
       ],
       'type' => 'file',
       'multiple' => false,

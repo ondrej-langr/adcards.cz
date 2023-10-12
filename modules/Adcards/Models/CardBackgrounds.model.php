@@ -34,8 +34,12 @@ class CardBackgrounds extends Model
       'unique' => true,
       'editable' => true,
       'translations' => true,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
-      'type' => 'longText',
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main'],
+        'fieldType' => 'heading',
+      ],
+      'type' => 'string',
     ],
 
     'textColor' => [
@@ -63,7 +67,7 @@ class CardBackgrounds extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'aside'],
-        'fieldType' => 'normal',
+        'fieldType' => 'big-image',
       ],
       'type' => 'file',
       'multiple' => false,

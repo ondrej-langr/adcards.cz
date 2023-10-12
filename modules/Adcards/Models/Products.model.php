@@ -34,8 +34,12 @@ class Products extends Model
       'unique' => true,
       'editable' => true,
       'translations' => true,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
-      'type' => 'longText',
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main'],
+        'fieldType' => 'heading',
+      ],
+      'type' => 'string',
     ],
 
     'price' => [
@@ -71,7 +75,7 @@ class Products extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'aside'],
-        'fieldType' => 'normal',
+        'fieldType' => 'small-image',
       ],
       'type' => 'file',
       'multiple' => true,
