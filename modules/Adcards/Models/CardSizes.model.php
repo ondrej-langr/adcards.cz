@@ -11,8 +11,8 @@ class CardSizes extends Model
 
   protected bool $timestamps = false;
   protected bool $translations = true;
-  protected bool $enabled = true;
-  protected array $adminSettings = ['hidden' => false];
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [

@@ -17,8 +17,8 @@ devDependencies:
     specifier: ^0.12.5
     version: 0.12.5(postcss@8.4.31)
   '@prom-cms/cli':
-    specifier: ^0.21.0
-    version: 0.21.0(@types/node@20.8.2)(postcss@8.4.31)
+    specifier: ^0.21.1
+    version: 0.21.1(@types/node@20.8.2)(postcss@8.4.31)
   '@prom-cms/schema':
     specifier: ^0.2.1
     version: 0.2.1
@@ -1942,8 +1942,8 @@ packages:
       axios: 0.24.0
     dev: true
 
-  /@prom-cms/cli@0.21.0(@types/node@20.8.2)(postcss@8.4.31):
-    resolution: {integrity: sha512-hs4x/C9Cxl0de6LtHMlKVSJJQ7uIE3NF2g9RJ4/dWup+M4icm2CgpGzN41KGOGb1Tw4FZqkfT2om5JL4x7XOuA==}
+  /@prom-cms/cli@0.21.1(@types/node@20.8.2)(postcss@8.4.31):
+    resolution: {integrity: sha512-K404gEbvNbJJ7FyTCHmZxFn/jYI4Q7+D8JyFjSPk9ndq78ghGjKeF43yFZOr+tdzvU1rpF2IT6CFsg5AewgUXQ==}
     hasBin: true
     dependencies:
       '@faker-js/faker': 7.6.0

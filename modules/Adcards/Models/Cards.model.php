@@ -11,8 +11,8 @@ class Cards extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = false;
-  protected bool $enabled = true;
-  protected array $adminSettings = ['hidden' => false];
+  protected static bool $enabled = true;
+  protected static array $adminSettings = ['hidden' => false];
 
   public static array $casts = [
     'stats' => 'array',
