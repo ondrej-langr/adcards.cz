@@ -1,0 +1,591 @@
+{% extends '@modules:Adcards/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+	<link rel="stylesheet" href="/css/pages/main-page.css">
+{% endblock %}
+
+{% block content %}
+
+  <div class="card-preview-app" ref="builder">
+		<section class="backgrounds">
+			<div class="overlay"></div>
+			<img loading="lazy" src="{{ __img__ }}bg.jpg" class="img-bg"/><div class="slider-content">
+				<section class="slider-main slider cards-slider">
+					{% for background in backgrounds %}
+						<div class="slide">
+							<img src="{{ __webRoot__ ~ 'app/carnival/var/storage/' ~ background.img.relativePath }}" alt="" @click="background = `{{ __webRoot__ ~ 'app/carnival/var/storage/' ~ background.img.relativePath }}`, backgroundId= `{{ background.id }}`, textColor = `{{ background.textColor }}`, backgroundName = `{{ background.name }}`"><h3>{{ background.name }}</h3>
+						</div>
+					{% endfor %}
+				</section>
+			</div>
+		</section>
+		<section class="builder container" v-show="background">
+			<div class="row">
+				<div class="card-preview-around">
+					<div class="alert-box">
+						<h4>
+							<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24" viewbox="0 0 172 172">
+								<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+									<path d="M0,172v-172h172v172z" fill="none"></path>
+									<g fill="#ffffff">
+										<path d="M86.17497,7.16667c-1.38595,-0.04325 -2.735,0.45073 -3.7653,1.37874c0,0 -26.90323,23.70459 -59.118,23.70459c-2.96841,0.0003 -5.3747,2.40659 -5.375,5.375v43.93083c0,23.92967 11.0704,63.30545 65.99772,86.44091c1.33373,0.56144 2.83749,0.56144 4.17122,0c54.92732,-23.13547 65.99772,-62.51124 65.99772,-86.44091v-43.93083c-0.0003,-2.96841 -2.40659,-5.3747 -5.375,-5.375c-32.21477,0 -59.118,-23.70459 -59.118,-23.70459c-0.94058,-0.84743 -2.15007,-1.33569 -3.41536,-1.37874zM86,19.44938c7.39229,5.94343 29.06534,21.17555 57.33333,23.1027v39.00374c0,20.57642 -7.90683,53.77121 -57.33333,75.48795c-49.42651,-21.71675 -57.33333,-54.91153 -57.33333,-75.48795v-39.00374c28.268,-1.92716 49.94104,-17.15928 57.33333,-23.1027zM85.91601,53.67302c-2.96578,0.04633 -5.33356,2.48614 -5.29101,5.45198v35.83333c-0.02741,1.93842 0.99102,3.74144 2.66532,4.71865c1.6743,0.97721 3.74507,0.97721 5.41937,0c1.6743,-0.97721 2.69273,-2.78023 2.66532,-4.71865v-35.83333c0.02085,-1.45347 -0.54782,-2.85342 -1.57635,-3.88062c-1.02852,-1.0272 -2.4292,-1.59408 -3.88264,-1.57136zM86,111.08333c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667z"></path>
+									</g>
+								</g>
+							</svg>
+							{{ 'Pouze náhled'|t }}</h4>
+						<span>
+							{{ 'Všechny karty projdou před tiskem grafickými úpravami. Fotografie, loga, ap.. budou upraveny profesionálními grafiky.'|t }}</span>
+					</div>
+					<div class="card-preview" v-bind:style="{ backgroundImage: 'url(' + background + ')', color: textColor }">
+						<div class="name">
+							<span class="stats-show">${ name }</span>
+							<span class="info-hide name-info">{{ 'Jméno hráče'|t }}</span>
+						</div>
+						<div class="rating-position">
+							<div class="rating">
+								<span class="stats-show">${ rating }</span>
+								<span class="info-hide ch">{{ 'Celkové hodnocení'|t }}</span>
+							</div>
+							<div class="position">
+								<span class="stats-show">${ position }</span>
+								<span class="info-hide pos">{{ 'Pozice'|t }}</span>
+							</div>
+							<div class="country stats-show"><img v-bind:src="country.src" alt=""/></div>
+							<span class="info-hide nation">{{ 'Země'|t }}</span>
+							<div class="club stats-show"><img v-bind:src="club.src" alt=""/></div>
+							<span class="info-hide team">{{ 'Tým'|t }}</span>
+						</div>
+						<div class="image">
+							<div id="card-image"></div>
+						</div>
+						<div class="stats container">
+							<div style="position: relative;" v-if="cardType == 'player'">
+								<div v-if="textColor == 'white'" class="line-white"></div>
+								<div v-if="textColor == 'black'" class="line-black"></div>
+								<div class="row">
+									<div class="col">
+										<p class="stats-show">${ stats.player[0].value }
+											<b>${ stats.player[0].name }</b>
+										</p>
+										<p class="info-hide">{{ 'rychlost'|t }}</p>
+										<p class="stats-show">${ stats.player[2].value }
+											<b>${ stats.player[2].name }</b>
+										</p>
+										<p class="info-hide">{{ 'střela'|t }}</p>
+										<p class="stats-show">${ stats.player[4].value }
+											<b>${ stats.player[4].name }</b>
+										</p>
+										<p class="info-hide">{{ 'přihrávka'|t }}</p>
+									</div>
+									<div class="col">
+										<p class="stats-show">${ stats.player[1].value }
+											<b>${ stats.player[1].name }</b>
+										</p>
+										<p class="info-hide">{{ 'dribling'|t }}</p>
+										<p class="stats-show">${ stats.player[3].value }
+											<b>${ stats.player[3].name }</b>
+										</p>
+										<p class="info-hide">{{ 'obrana'|t }}</p>
+										<p class="stats-show">${ stats.player[5].value }
+											<b>${ stats.player[5].name }</b>
+										</p>
+										<p class="info-hide">{{ 'fyzička'|t }}</p>
+									</div>
+								</div>
+							</div>
+							<div v-if="cardType == 'goalKeeper'">
+								<div v-if="textColor == 'white'" class="line-white"></div>
+								<div v-if="textColor == 'black'" class="line-black"></div>
+								<div class="row">
+									<div class="col">
+										<p class="stats-show">${ stats.goalKeeper[0].value }
+											<b>${ stats.goalKeeper[0].name }</b>
+										</p>
+										<p class="info-hide">{{ 'skoky'|t }}</p>
+										<p class="stats-show">${ stats.goalKeeper[2].value }
+											<b>${ stats.goalKeeper[2].name }</b>
+										</p>
+										<p class="info-hide">{{ 'chytání'|t }}</p>
+										<p class="stats-show">${ stats.goalKeeper[4].value }
+											<b>${ stats.goalKeeper[4].name }</b>
+										</p>
+										<p class="info-hide">{{ 'technika'|t }}</p>
+									</div>
+									<div class="col">
+										<p class="stats-show">${ stats.goalKeeper[1].value }
+											<b>${ stats.goalKeeper[1].name }</b>
+										</p>
+										<p class="info-hide">{{ 'reflexy'|t }}</p>
+										<p class="stats-show">${ stats.goalKeeper[3].value }
+											<b>${ stats.goalKeeper[3].name }</b>
+										</p>
+										<p class="info-hide">{{ 'rychlost'|t }}</p>
+										<p class="stats-show">${ stats.goalKeeper[5].value }
+											<b>${ stats.goalKeeper[5].name }</b>
+										</p>
+										<p class="info-hide">{{ 'pozice'|t }}</p>
+									</div>
+								</div>
+							</div>
+							<div style="height: 110px; display: flex; justify-content: center; align-items: center; line-height: 110px;" v-if="cardType == 'manager'">
+								<div class="row">
+									<div class="col">
+										<p>
+											<b>{{ 'Manažer'|t }}</b>
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col card-info">
+					<div class="card">
+						<div class="card-body">
+							<div class="price-around">
+								<h1>
+									${ backgroundName }<br/>
+									<small class="total-price" v-if="size == 1">(19x30cm)</small>
+									<small class="total-price" v-if="size == 2">(27x42cm)</small>
+									<small class="total-price" v-if="size == 3">(37x59cm)</small>
+									<small class="total-price" v-if="size == 4">(53x84cm)</small>
+								</h1>
+								<span class="total-price" v-if="size == 1">{{ cards.prices[1] }},-
+									{{ 'Kč'|t }}</span>
+								<span class="total-price" v-if="size == 2">{{ cards.prices[2] }},-
+									{{ 'Kč'|t }}</span>
+								<span class="total-price" v-if="size == 3">{{ cards.prices[3] }},-
+									{{ 'Kč'|t }}</span>
+								<span class="total-price" v-if="size == 4">{{ cards.prices[4] }},-
+									{{ 'Kč'|t }}</span>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<div class="card-body">
+							<div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
+								<input type="radio" value="1" id="sizeS" name="size" v-model="size" v-on:change="validateForm"/>
+								<label for="sizeS">
+									<div class="label-image"><img src="{{ __img__ }}1.png"/></div>
+									<div class="info">
+										<span class="label-name">
+											<small>19x30cm</small>
+										</span>
+										<span class="label-price">{{ cards.prices[1] }},-
+											{{ 'Kč'|t }}</span>
+									</div>
+								</label>
+							</div>
+							<div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
+								<input type="radio" value="2" id="sizeM" name="size" v-model="size" v-on:change="validateForm"/>
+								<label for="sizeM">
+									<div class="label-image"><img src="{{ __img__ }}2.png"/></div>
+									<div class="info">
+										<span class="label-name">
+											<small>27x42cm</small>
+										</span>
+										<span class="label-price">{{ cards.prices[2] }},-
+											{{ 'Kč'|t }}</span>
+									</div>
+								</label>
+							</div>
+							<div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
+								<input type="radio" value="3" id="sizeL" name="size" v-model="size" v-on:change="validateForm"/>
+								<label for="sizeL">
+									<div class="label-image"><img src="{{ __img__ }}3.png"/></div>
+									<div class="info">
+										<span class="label-name">
+											<small>37x59cm</small>
+										</span>
+										<span class="label-price">{{ cards.prices[3] }},-
+											{{ 'Kč'|t }}</span>
+									</div>
+								</label>
+							</div>
+							<div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
+								<input type="radio" value="4" id="sizeXL" name="size" v-model="size" v-on:change="validateForm"/>
+								<label for="sizeXL">
+									<div class="label-image"><img src="{{ __img__ }}4.png"/></div>
+									<div class="info">
+										<span class="label-name">
+											<small>53x84cm</small>
+										</span>
+										<span class="label-price">{{ cards.prices[4] }},-
+											{{ 'Kč'|t }}</span>
+									</div>
+								</label>
+							</div>
+						</div>
+					</div>
+					<div class="card worko-tabs">
+						<input class="state" type="radio" title="tab-one" value="0" v-model="realPlayer" v-on:change="validateForm" name="tabs-state" id="tab-one" checked/>
+						<input class="state" type="radio" title="tab-two" value="1" v-model="realPlayer" v-on:change="validateForm" name="tabs-state" id="tab-two"/><div class="tabs flex-tabs">
+							<label for="tab-one" id="tab-one-label" class="tab tab1">{{ 'Vlastní karta'|t }}</label>
+							<label for="tab-two" id="tab-two-label" class="tab tab2">{{ 'Karta reálného hráče'|t }}</label>
+							<div id="tab-one-panel" class="panel active">
+								<div class="card flexi">
+									<div class="card-body col-xl-12">
+										<div class="form-input-around">
+											<div class="checkbox-around col-lg-4 col-sm-4 col-xl-4">
+												<input type="radio" name="typeOfCard" value="player" id="player" v-model="cardType" v-on:change="validateForm"/>
+												<label for="player">
+													<span class="label-name">{{ 'Hráč'|t }}</span>
+												</label>
+											</div>
+											<div class="checkbox-around col-lg-4 col-sm-4 col-xl-4">
+												<input type="radio" name="typeOfCard" value="goalKeeper" id="goalKeeper" v-model="cardType" v-on:change="validateForm"/>
+												<label for="goalKeeper">
+													<span class="label-name">{{ 'Brankář'|t }}</span>
+												</label>
+											</div>
+											<div class="checkbox-around col-lg-4 col-sm-4 col-xl-4">
+												<input type="radio" name="typeOfCard" value="manager" id="manager" v-model="cardType" v-on:change="validateForm"/>
+												<label for="manager">
+													<span class="label-name">{{ 'Manažer'|t }}</span>
+												</label>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="card flexi" style="padding: 0;">
+									<div class="card-body col-xl-6">
+										<div style="width: 100%; position: relative; padding: 2px;">
+											<div id="country-dropdown-btn" class="dropdown country-dropdown-btn">
+												<span>{{ 'Kliknutím vyberte zemi'|t }}</span>
+												<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewbox="0 0 172 172" style=" fill:#000000;">
+													<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+														<path d="M0,172v-172h172v172z" fill="none"></path>
+														<g fill="#000000">
+															<path d="M86,100.84217l-32.75883,-32.75883l-10.75,10.75l43.50883,43.50883l43.50883,-43.50883l-10.75,-10.75z"></path>
+														</g>
+													</g>
+												</svg>
+											</div>
+											<div class="dropdown-content country-dropdown-content" v-on:scroll="scrollingCountries">
+												<input id="custom-country" type="checkbox" v-model="country.custom" v-on:change="validateForm"/>
+												<label for="custom-country">
+													<span class="label-name">
+														<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewbox="0 0 172 172">
+															<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+																<path d="M0,172v-172h172v172z" fill="none"></path>
+																<g fill="#ffffff">
+																	<path d="M28.66667,28.66667c-7.91917,0 -14.33333,6.41417 -14.33333,14.33333v86c0,7.91917 6.41417,14.33333 14.33333,14.33333h58.64909c-0.80267,-2.25033 -1.31576,-4.644 -1.31576,-7.16667c0,-3.25367 0.74611,-6.31831 2.05761,-9.07031c1.17533,-2.44383 -0.59438,-5.26302 -3.30338,-5.26302h-41.60026c-2.98133,0 -4.64814,-3.43026 -2.81348,-5.78093l17.83268,-22.95573c1.40467,-1.806 4.13013,-1.83981 5.58496,-0.08398l15.0752,18.14063l22.19987,-28.61068c1.44767,-1.8705 4.27794,-1.83601 5.69694,0.05599l10.792,14.38932c3.698,-6.52167 10.62503,-10.98795 18.64453,-10.98795c6.57183,0 12.45612,2.96308 16.40494,7.62858c1.7415,2.05683 5.09506,0.79102 5.09506,-1.90365v-48.72493c0,-7.91917 -6.41417,-14.33333 -14.33333,-14.33333zM136.16667,100.33333c-3.956,0 -7.16667,3.21067 -7.16667,7.16667v21.5h-21.5c-3.956,0 -7.16667,3.21067 -7.16667,7.16667c0,3.956 3.21067,7.16667 7.16667,7.16667h21.5v21.5c0,3.956 3.21067,7.16667 7.16667,7.16667c3.956,0 7.16667,-3.21067 7.16667,-7.16667v-21.5h21.5c3.956,0 7.16667,-3.21067 7.16667,-7.16667c0,-3.956 -3.21067,-7.16667 -7.16667,-7.16667h-21.5v-21.5c0,-3.956 -3.21067,-7.16667 -7.16667,-7.16667z"></path>
+																</g>
+															</g>
+														</svg>
+														<b>{{ 'Nahrát vlastní zemi'|t }}</b>
+													</span>
+												</label>
+												<div class="search-around">
+													<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewbox="0 0 172 172">
+														<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+															<path d="M0,172v-172h172v172z" fill="none"></path>
+															<g fill="#666666">
+																<path d="M73.45833,21.5c-28.61092,0 -51.95833,23.34743 -51.95833,51.95833c0,28.6109 23.34741,51.95833 51.95833,51.95833c11.72882,0 22.53529,-3.96669 31.24919,-10.56803l33.55876,33.55176c1.79752,1.87223 4.46675,2.62641 6.97825,1.97168c2.5115,-0.65472 4.47282,-2.61605 5.12755,-5.12755c0.65472,-2.5115 -0.09946,-5.18073 -1.97168,-6.97825l-33.55176,-33.55876c6.60135,-8.7139 10.56803,-19.52038 10.56803,-31.24919c0,-28.6109 -23.34741,-51.95833 -51.95833,-51.95833zM73.45833,35.83333c20.86462,0 37.625,16.76039 37.625,37.625c0,10.01796 -3.89127,19.06549 -10.2181,25.7902c-0.61586,0.44585 -1.15686,0.98684 -1.6027,1.6027c-6.72616,6.33487 -15.77907,10.2321 -25.8042,10.2321c-20.86462,0 -37.625,-16.76039 -37.625,-37.625c0,-20.86461 16.76038,-37.625 37.625,-37.625z"></path>
+															</g>
+														</g>
+													</svg>
+													<input class="search-bar" type="text" v-on:change="searchCountry" placeholder="{{ 'Vyhledávání..'|t }}" title="Type in a term"/></div>
+												<div class="upload-around" v-if="country.custom">
+													<div class="upload">
+														<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewbox="0 0 172 172">
+															<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+																<path d="M0,172v-172h172v172z" fill="none"></path>
+																<g fill="#ddd">
+																	<path d="M0,17.2v137.6h172v-137.6zM6.88,24.08h158.24v89.44h-36.73812l-24.08,-17.2h-20.3175l-14.05563,-14.05562l-16.74312,3.35937l-14.80813,-22.22562l-31.4975,31.4975zM129,44.72c-8.50594,0 -15.48,6.97406 -15.48,15.48c0,8.50594 6.97406,15.48 15.48,15.48c8.50594,0 15.48,-6.97406 15.48,-15.48c0,-8.50594 -6.97406,-15.48 -15.48,-15.48zM129,51.6c4.78375,0 8.6,3.81625 8.6,8.6c0,4.78375 -3.81625,8.6 -8.6,8.6c-4.78375,0 -8.6,-3.81625 -8.6,-8.6c0,-4.78375 3.81625,-8.6 8.6,-8.6zM37.3025,74.20188l12.71188,19.05437l17.65687,-3.52062l13.46438,13.46437h20.9625l24.08,17.2h38.94187v27.52h-158.24v-43.29562z"></path>
+																</g>
+															</g>
+														</svg>
+														<span>{{ 'Kliknutím nahrajte obrázek'|t }}</span>
+													</div>
+													<input id="fileup" name="fileup" type="file" onchange="readURL(this, 'country')"/></div>
+												{# Search - Country #}
+												<div class="search-results-around" v-if="searching.country">
+													<span v-for="country in countries.search">
+														<input v-on:change="validateForm" type="radio" v-bind:value="country.id" v-bind:id="'country-' + country.id" v-on:click="insertFlag($event, '{{ __webRoot__}}' + 'app/carnival/var/storage/' + country.flag.relativePath, 'country')" name="country"/>
+														<label class="dropdown-item dropdown-item-country" v-bind:for="'country-' + country.id">
+															<div class="dropdown-icon-container">
+																<img loading="lazy" class="dropdown-icon" v-bind:src="'{{ __webRoot__}}app/carnival/var/storage/' + country.flag.relativePath" alt=""/></div>
+															<span class="label-name">${ country.name }</span>
+														</label>
+													</span>
+												</div>
+												{# List - Countries #}
+												<div v-else>
+													<span v-for="country in countries.list">
+														<input v-on:change="validateForm" type="radio" v-bind:value="country.id" v-bind:id="'country-' + country.id" v-on:click="insertFlag($event, '{{ __webRoot__}}' + 'app/carnival/var/storage/' + country.flag.relativePath, 'country')" name="country"/>
+														<label class="dropdown-item dropdown-item-country" v-bind:for="'country-' + country.id">
+															<div class="dropdown-icon-container">
+																<img loading="lazy" class="dropdown-icon" v-bind:src="'{{ __webRoot__}}app/carnival/var/storage/' + country.flag.relativePath" alt=""/></div>
+															<span class="label-name">${ country.name }</span>
+														</label>
+													</span>
+													<div v-if="loading.scroll.countries">Loading...</div>
+												</div>
+											</div>
+										</div>
+										<div style="width: 100%; position: relative; padding: 2px;">
+											<div id="club-dropdown-btn" class="dropdown club-dropdown-btn">
+												<span>{{ 'Kliknutím vyberte klub'|t }}</span>
+												<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewbox="0 0 172 172">
+													<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+														<path d="M0,172v-172h172v172z" fill="none"></path>
+														<g fill="#000000">
+															<path d="M86,100.84217l-32.75883,-32.75883l-10.75,10.75l43.50883,43.50883l43.50883,-43.50883l-10.75,-10.75z"></path>
+														</g>
+													</g>
+												</svg>
+											</div>
+											<div class="dropdown-content club-dropdown-content" v-on:scroll="scrollingClubs">
+												<input id="custom-club" type="checkbox" v-model="club.custom" v-on:change="validateForm"/>
+												<label for="custom-club">
+													<span class="label-name">
+														<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewbox="0 0 172 172">
+															<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+																<path d="M0,172v-172h172v172z" fill="none"></path>
+																<g fill="#ffffff">
+																	<path d="M28.66667,28.66667c-7.91917,0 -14.33333,6.41417 -14.33333,14.33333v86c0,7.91917 6.41417,14.33333 14.33333,14.33333h58.64909c-0.80267,-2.25033 -1.31576,-4.644 -1.31576,-7.16667c0,-3.25367 0.74611,-6.31831 2.05761,-9.07031c1.17533,-2.44383 -0.59438,-5.26302 -3.30338,-5.26302h-41.60026c-2.98133,0 -4.64814,-3.43026 -2.81348,-5.78093l17.83268,-22.95573c1.40467,-1.806 4.13013,-1.83981 5.58496,-0.08398l15.0752,18.14063l22.19987,-28.61068c1.44767,-1.8705 4.27794,-1.83601 5.69694,0.05599l10.792,14.38932c3.698,-6.52167 10.62503,-10.98795 18.64453,-10.98795c6.57183,0 12.45612,2.96308 16.40494,7.62858c1.7415,2.05683 5.09506,0.79102 5.09506,-1.90365v-48.72493c0,-7.91917 -6.41417,-14.33333 -14.33333,-14.33333zM136.16667,100.33333c-3.956,0 -7.16667,3.21067 -7.16667,7.16667v21.5h-21.5c-3.956,0 -7.16667,3.21067 -7.16667,7.16667c0,3.956 3.21067,7.16667 7.16667,7.16667h21.5v21.5c0,3.956 3.21067,7.16667 7.16667,7.16667c3.956,0 7.16667,-3.21067 7.16667,-7.16667v-21.5h21.5c3.956,0 7.16667,-3.21067 7.16667,-7.16667c0,-3.956 -3.21067,-7.16667 -7.16667,-7.16667h-21.5v-21.5c0,-3.956 -3.21067,-7.16667 -7.16667,-7.16667z"></path>
+																</g>
+															</g>
+														</svg>
+														<b>{{ 'Nahrát vlastní klub'|t }}</b>
+													</span>
+												</label>
+												<div class="search-around">
+													<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20" height="20" viewbox="0 0 172 172">
+														<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+															<path d="M0,172v-172h172v172z" fill="none"></path>
+															<g fill="#666666">
+																<path d="M73.45833,21.5c-28.61092,0 -51.95833,23.34743 -51.95833,51.95833c0,28.6109 23.34741,51.95833 51.95833,51.95833c11.72882,0 22.53529,-3.96669 31.24919,-10.56803l33.55876,33.55176c1.79752,1.87223 4.46675,2.62641 6.97825,1.97168c2.5115,-0.65472 4.47282,-2.61605 5.12755,-5.12755c0.65472,-2.5115 -0.09946,-5.18073 -1.97168,-6.97825l-33.55176,-33.55876c6.60135,-8.7139 10.56803,-19.52038 10.56803,-31.24919c0,-28.6109 -23.34741,-51.95833 -51.95833,-51.95833zM73.45833,35.83333c20.86462,0 37.625,16.76039 37.625,37.625c0,10.01796 -3.89127,19.06549 -10.2181,25.7902c-0.61586,0.44585 -1.15686,0.98684 -1.6027,1.6027c-6.72616,6.33487 -15.77907,10.2321 -25.8042,10.2321c-20.86462,0 -37.625,-16.76039 -37.625,-37.625c0,-20.86461 16.76038,-37.625 37.625,-37.625z"></path>
+															</g>
+														</g>
+													</svg>
+													<input class="search-bar" type="text" v-on:change="searchClub" placeholder="{{ 'Vyhledávání..'|t }}" title="Type in a term"/></div>
+												<div class="upload-around" v-if="club.custom">
+													<div class="upload">
+														<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewbox="0 0 172 172">
+															<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+																<path d="M0,172v-172h172v172z" fill="none"></path>
+																<g fill="#ddd">
+																	<path d="M0,17.2v137.6h172v-137.6zM6.88,24.08h158.24v89.44h-36.73812l-24.08,-17.2h-20.3175l-14.05563,-14.05562l-16.74312,3.35937l-14.80813,-22.22562l-31.4975,31.4975zM129,44.72c-8.50594,0 -15.48,6.97406 -15.48,15.48c0,8.50594 6.97406,15.48 15.48,15.48c8.50594,0 15.48,-6.97406 15.48,-15.48c0,-8.50594 -6.97406,-15.48 -15.48,-15.48zM129,51.6c4.78375,0 8.6,3.81625 8.6,8.6c0,4.78375 -3.81625,8.6 -8.6,8.6c-4.78375,0 -8.6,-3.81625 -8.6,-8.6c0,-4.78375 3.81625,-8.6 8.6,-8.6zM37.3025,74.20188l12.71188,19.05437l17.65687,-3.52062l13.46438,13.46437h20.9625l24.08,17.2h38.94187v27.52h-158.24v-43.29562z"></path>
+																</g>
+															</g>
+														</svg>
+														<span>{{ 'Kliknutím nahrajte obrázek'|t }}</span>
+													</div>
+													<input id="fileup" name="fileup" type="file" onchange="readURL(this, 'club')"/></div>
+												{# Search - Club #}
+												<div class="search-results-around" v-if="searching.club">
+													<span v-for="club in clubs.search">
+														<input v-on:change="validateForm" type="radio" v-bind:value="club.id" v-bind:id="'club-' + club.id" v-on:click="insertFlag($event, '{{ __webRoot__}}' + 'app/carnival/var/storage/' + club.flag.relativePath, 'club')" name="club"/>
+														<label class="dropdown-item dropdown-item-club" v-bind:for="'club-' + club.id">
+															<div class="dropdown-icon-container"><img loading="lazy" class="dropdown-icon" v-bind:src="'{{ __webRoot__}}app/carnival/var/storage/' + club.flag.relativePath" alt=""/></div>
+															<span class="label-name">${ club.name }</span>
+														</label>
+													</span>
+												</div>
+												{# List - Clubs #}
+												<div v-else>
+													<span v-for="club in clubs.list">
+														<input v-on:change="validateForm" type="radio" v-bind:value="club.id" v-bind:id="'club-' + club.id" name="club" v-on:click="insertFlag($event, '{{ __webRoot__}}' + 'app/carnival/var/storage/' + club.flag.relativePath, 'club')"/>
+														<label class="dropdown-item dropdown-item-club" v-bind:for="'club-' + club.id">
+															<div class="dropdown-icon-container"><img loading="lazy" class="dropdown-icon" v-bind:src="'{{ __webRoot__}}app/carnival/var/storage/' + club.flag.relativePath" alt=""/></div>
+															<span class="label-name">${ club.name }</span>
+														</label>
+													</span>
+													<div v-if="loading.scroll.clubs">Loading...</div>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div class="card-body no-padding-side flexi col-xl-6">
+										<div class="input-around col-6 col-lg-12 col-sm-12 col-xl-12">
+											<input class="form-control required-field" onblur="validateField(event)" onblur="validateField(event)" type="text" v-model="name" v-on:input="validateForm" data-initial="true" placeholder="{{ 'Jméno'|t }}"/></div>
+										<div class="input-around col-3 col-lg-6 col-sm-6 col-xl-6">
+											<input class="form-control required-field" onblur="validateField(event)" onblur="validateField(event)" type="text" v-model="rating" v-on:input="validateForm" data-initial="true" placeholder="99" data-placeholder="99"/></div>
+										<div class="input-around col-3 col-lg-6 col-sm-6 col-xl-6">
+											<input class="form-control position-input required-field" onblur="validateField(event)" type="text" v-model="position" v-on:input="validateForm" data-initial="true" placeholder="CAM" data-placeholder="CAM"/></div>
+									</div>
+								</div>
+								<div class="card">
+									<div class="card-body">
+										<div class="image-editor">
+											<div class="image-editor-content">
+												<span class="close" onclick="toggleImageEditor()"></span>
+												<div class="card-preview-around">
+													<div class="card-preview" v-bind:style="{ backgroundImage: 'url(' + background + ')', color: textColor }">
+														<div class="name">${ name }</div>
+														<div class="rating-position">
+															<div class="rating">${ rating }</div>
+															<div class="position">${ position }</div>
+															<div class="country"><img v-bind:src="country.src" alt=""/></div>
+															<div class="club"><img v-bind:src="club.src" alt=""/></div>
+														</div>
+														<div class="image">
+															<div id="card-image"></div>
+														</div>
+														<div class="stats container">
+															<div v-if="cardType == 'player'">
+																<div class="row">
+																	<div class="col">
+																		<p>${ stats.player[0].value }
+																			<b>${ stats.player[0].name }</b>
+																		</p>
+																		<p>${ stats.player[1].value }
+																			<b>${ stats.player[1].name }</b>
+																		</p>
+																		<p>${ stats.player[2].value }
+																			<b>${ stats.player[2].name }</b>
+																		</p>
+																	</div>
+																	<div class="col">
+																		<p>${ stats.player[3].value }
+																			<b>${ stats.player[3].name }</b>
+																		</p>
+																		<p>${ stats.player[4].value }
+																			<b>${ stats.player[4].name }</b>
+																		</p>
+																		<p>${ stats.player[5].value }
+																			<b>${ stats.player[5].name }</b>
+																		</p>
+																	</div>
+																</div>
+															</div>
+															<div v-if="cardType == 'goalKeeper'">
+																<div class="row">
+																	<div class="col">
+																		<p>${ stats.goalKeeper[0].value }
+																			<b>${ stats.goalKeeper[0].name }</b>
+																		</p>
+																		<p>${ stats.goalKeeper[1].value }
+																			<b>${ stats.goalKeeper[1].name }</b>
+																		</p>
+																		<p>${ stats.goalKeeper[2].value }
+																			<b>${ stats.goalKeeper[2].name }</b>
+																		</p>
+																	</div>
+																	<div class="col">
+																		<p>${ stats.goalKeeper[3].value }
+																			<b>${ stats.goalKeeper[3].name }</b>
+																		</p>
+																		<p>${ stats.goalKeeper[4].value }
+																			<b>${ stats.goalKeeper[4].name }</b>
+																		</p>
+																		<p>${ stats.goalKeeper[5].value }
+																			<b>${ stats.goalKeeper[5].name }</b>
+																		</p>
+																	</div>
+																</div>
+															</div>
+															<div v-if="cardType == 'manager'">
+																<div class="row">
+																	<div class="col">
+																		<p>
+																			<b>{{ 'Manažer'|t }}</b>
+																		</p>
+																	</div>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="alert-box">
+													<h4>
+														<i class="fas fa-exclamation-triangle"></i>
+														{{ 'Pouze náhled'|t }}</h4>
+													<span>{{ 'Všechny karty projdou před tiskem grafickými úpravami. Fotografie, loga, ap.. budou upraveny profesionálními grafiky.'|t }}</span>
+												</div>
+												<div class="edit">
+													<img v-bind:src="image" alt="" class="image-preview"/><div class="buttons-around">
+														<label class="file-input col-6 col-lg-7 col-sm-7 col-xl-7">
+															{{ 'Kliknutím nahrajte fotografii'|t }}<input name="fileup" type="file" onchange="readURL(this, 'image')"/>
+														</label>
+														<button class="save col-4 col-lg-3 col-sm-3 col-xl-3" onclick="javascript:toggleImageEditor()" v-on:click="validateForm">{{ 'Uložit'|t }}</button>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="card flexi" style="padding: 0px 2px;">
+									<div class="card-body col-xl-7">
+										<div class="upload-around relative" onclick="toggleImageEditor()">
+											<input name="fileup" type="file" onchange="readURL(this, 'image')"/><div class="upload relative">
+												<svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50" height="50" viewbox="0 0 172 172">
+													<g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt" stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none" text-anchor="none" style="mix-blend-mode: normal">
+														<path d="M0,172v-172h172v172z" fill="none"></path>
+														<g fill="#000000">
+															<path d="M0,17.2v84.57563l38.3775,-38.3775l14.80813,22.22562l16.74312,-3.35937l14.05563,14.05562h20.3175l24.08,17.2h43.61812v-96.32zM129,48.16c6.65156,0 12.04,5.38844 12.04,12.04c0,6.65156 -5.38844,12.04 -12.04,12.04c-6.65156,0 -12.04,-5.38844 -12.04,-12.04c0,-6.65156 5.38844,-12.04 12.04,-12.04zM37.3025,74.20188l-37.3025,37.3025v43.29562h172v-34.4h-45.82187l-24.08,-17.2h-20.9625l-13.46438,-13.46437l-17.65687,3.52062z"></path>
+														</g>
+													</g>
+												</svg>
+												<span>
+													{{ 'Kliknutím nahrajte svou fotografii'|t }}</span>
+											</div>
+										</div>
+									</div>
+									<div class="card-body col-xl-5">
+										<div class="stats-set stats-standard" v-if="cardType == 'player'">
+											<div class="input-around col-6 col-lg-6 col-sm-6 col-xl-6" style="padding: 2px 2px 2px 0px;" v-for="(stat, key) in stats.player">
+												<div class="number input-around col-lg-6 col-sm-6 col-xl-6" style="padding: 2px 2px 2px 0px;">
+													<input class="form-control required-field" onblur="validateField(event)" type="text" v-model="stat.value" v-on:input="validateForm" placeholder="99" data-placeholder="99" maxlength="2" data-initial="true"/></div>
+												<div class="kind input-around col-lg-6 col-sm-6 col-xl-6" style="padding: 2px 0px 2px 2px;">
+													<input class="form-control required-field" type="text" v-model="stat.name" v-on:input="validateForm" v-bind:data-placeholder="stat.name" maxlength="3"/></div>
+											</div>
+										</div>
+										<div class="stats-set stats-goalkeeper" v-if="cardType == 'goalKeeper'">
+											<div class="input-around col-6 col-lg-6 col-sm-6 col-xl-6" style="padding: 2px 2px 2px 0px;" v-for="(stat, key) in stats.goalKeeper">
+												<div class="number input-around col-lg-6 col-sm-6 col-xl-6" style="padding: 2px 2px 2px 0px;">
+													<input class="form-control required-field" onblur="validateField(event)" type="text" v-model="stat.value" v-on:input="validateForm" placeholder="99" data-placeholder="99" maxlength="2" data-initial="true"/></div>
+												<div class="kind input-around col-lg-6 col-sm-6 col-xl-6" style="padding: 2px 0px 2px 2px;">
+													<input class="form-control required-field" type="text" v-model="stat.name" v-on:input="validateForm" v-bind:data-placeholder="stat.name" maxlength="3"/></div>
+											</div>
+										</div>
+										<div class="stats-set stats-goalkeeper" v-if="cardType == 'manager'"></div>
+									</div>
+								</div>
+							</div>
+							<div id="tab-two-panel" class="panel">
+								<div class="card">
+									<div class="card-body no-padding-side flexi">
+										<div class="input-around col-lg-12 col-sm-12 col-xl-12">
+											<input class="form-control required-field" onblur="validateField(event)" type="text" v-model="name" v-on:input="validateForm" data-initial="true" placeholder="Jméno reálného hráče"/></div>
+										<div class="alert-around">
+											<span class="alert-text">
+												<i class="fas fa-exclamation-triangle"></i>
+												{{ 'Veškeré údaje doplní náš tým.'|t }}</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="card">
+						<form id="builder-form" action="{{ url_for('builder') }}" method="POST">
+							<input type="hidden" name="images[player]" v-model="image"/>
+							<input type="hidden" name="images[country]" v-model="country.data"/>
+							<input type="hidden" name="images[club]" v-model="club.data"/>
+							<input type="hidden" name="rating" v-model="rating"/>
+							<input type="hidden" name="position" v-model="position"/>
+							<input type="hidden" name="name" v-model="name"/>
+							<input type="hidden" name="background" v-model="backgroundId"/>
+							<input type="hidden" name="cardType" v-model="cardType"/>
+							<input type="hidden" name="size" v-model="size"/>
+							<input type="hidden" name="realPlayer" v-model="realPlayer"/><input type="hidden" v-for="stat in stats[cardType]" v-bind:name="'stats[' + stat.name + ']'" v-bind:value="stat.value"/>
+							<button class="btn btn-primary" type="submit" id="add-to-cart-btn" disabled>{{ 'Přidat do košíku'|t }}</button>
+							<div style="width: 100%; text-align: center; margin-top: 8px;">
+								<p class="conditions le-node" id="lecMvbMMGbic" data-le-name="lecMvbMMGbic" {{ liveEdit.lecMvbMMGbic.isInterlanguage() }} {{ liveEdit.lecMvbMMGbic.isCorrectLanguage() }} data-le-type="text">
+									{{ liveEdit.lecMvbMMGbic|raw }}</p>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</section>
+		{% if __get__.success is defined %}
+			<div class="alert success">{{ 'Úspěch! Karta vytvořena!'|t }}</div>
+		{% endif %}
+		<h1 class="no-background" v-show="!background">{{ 'Prosím vyberte pozadí...'|t }}</h1>
+	</div>
+
+{% endblock %}

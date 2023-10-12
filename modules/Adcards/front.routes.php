@@ -28,7 +28,7 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     $args,
   ) use ($twig) {
 
-    return $twig->render($response, '@modules:Adcards/pages/home.twig');
+    return $twig->render($response, '@modules:Adcards/pages/builder.twig');
   })->setName("builder");
 
   $router->get('/faq', function (
