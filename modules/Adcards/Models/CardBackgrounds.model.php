@@ -11,8 +11,8 @@ class CardBackgrounds extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = true;
-  protected static bool $enabled = true;
-  protected static array $adminSettings = ['hidden' => false];
+  protected bool $enabled = true;
+  protected array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [

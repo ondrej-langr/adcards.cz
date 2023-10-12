@@ -4,9 +4,9 @@ use PromCMS\Core\Database\Model;
 use PromCMS\Core\Database\SingletonModel;
 use PromCMS\Core\Database\ModelResult;
 
-class Products extends Model
+class CardMaterial extends Model
 {
-  protected string $tableName = 'products';
+  protected string $tableName = 'card_material';
   protected bool $softDelete = false;
 
   protected bool $timestamps = true;
@@ -38,22 +38,10 @@ class Products extends Model
       'type' => 'longText',
     ],
 
-    'price' => [
-      'title' => 'Cena',
-      'hide' => false,
-      'required' => true,
-      'unique' => false,
-      'editable' => true,
-      'translations' => true,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
-      'type' => 'number',
-      'autoIncrement' => false,
-    ],
-
     'description' => [
       'title' => 'Popisek',
       'hide' => false,
-      'required' => false,
+      'required' => true,
       'unique' => false,
       'editable' => true,
       'translations' => true,
@@ -61,8 +49,8 @@ class Products extends Model
       'type' => 'longText',
     ],
 
-    'images' => [
-      'title' => 'Obrázky',
+    'image' => [
+      'title' => 'Obrázek',
       'hide' => false,
       'required' => true,
       'unique' => false,
@@ -74,19 +62,8 @@ class Products extends Model
         'fieldType' => 'normal',
       ],
       'type' => 'file',
-      'multiple' => true,
+      'multiple' => false,
       'typeFilter' => 'image',
-    ],
-
-    'is_published' => [
-      'title' => 'Is published',
-      'hide' => false,
-      'required' => false,
-      'unique' => false,
-      'editable' => true,
-      'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
-      'type' => 'boolean',
     ],
 
     'order' => [
@@ -136,9 +113,9 @@ class Products extends Model
 
   static bool $ignoreSeeding = false;
 
-  static string $title = 'Produkty';
+  static string $title = 'Materiál karet';
 
-  static string $modelIcon = 'BadgeTm';
+  static string $modelIcon = 'Cell';
 
   public static function afterCreate(ModelResult $entry): ModelResult
   {
@@ -162,7 +139,7 @@ class Products extends Model
       'enabled' => self::$enabled,
       'ownable' => true,
       'hasOrdering' => true,
-      'isDraftable' => true,
+      'isDraftable' => false,
       'isSharable' => false,
     ];
   }

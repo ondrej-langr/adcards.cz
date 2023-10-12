@@ -19,6 +19,9 @@ devDependencies:
   '@prom-cms/cli':
     specifier: ^0.21.0
     version: 0.21.0(@types/node@20.8.2)(postcss@8.4.31)
+  '@prom-cms/schema':
+    specifier: ^0.2.1
+    version: 0.2.1
   '@prom-cms/vite-plugin':
     specifier: ^0.7.1
     version: 0.7.1(axios@0.27.2)(vite@4.4.11)
@@ -1891,7 +1894,7 @@ packages:
       '@mantine/notifications': 5.10.5(@mantine/core@5.10.5)(@mantine/hooks@5.10.5)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.0
       '@prom-cms/api-client': 0.7.1(axios@0.24.0)
-      '@prom-cms/schema': 0.1.0
+      '@prom-cms/schema': 0.2.1
       '@prom-cms/shared': 2.0.0
       '@svgr/webpack': 6.5.1
       '@tanstack/react-query': 4.2.3(react-dom@18.2.0)(react@18.2.0)
@@ -1983,8 +1986,8 @@ packages:
       - prettier
     dev: true
 
-  /@prom-cms/schema@0.1.0:
-    resolution: {integrity: sha512-18tmoKtTj5pTgZw+a7z3PEMkW3zoVNq98Kl754R16cRlAh4H4EQlXDaTjz1cP2+aYcKp8kTXk+xz/WNtGvHMHQ==}
+  /@prom-cms/schema@0.2.1:
+    resolution: {integrity: sha512-tMATFLc+/B/zeSk3xdTyWaouLXCQD8cO3VmKD6Pbq4zLK7CZVWEIPHgJGui8jegMq1XZ4M2uSPGBOwf9FEwNcA==}
     dependencies:
       lodash.kebabcase: 4.1.1
       zod: 3.22.4

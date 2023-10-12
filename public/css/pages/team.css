@@ -1,0 +1,152 @@
+.header h1 {
+font-weight: 800;
+font-size: 50px;
+color: #fff;
+text-transform: uppercase
+}
+
+.header p {
+font-size: 20px;
+font-weight: 300
+}
+
+.header-bg {
+width: 100%;
+height: 100%;
+position: absolute;
+overflow: hidden
+}
+
+
+.header button {
+border-color: transparent;
+margin-top: 25px;
+padding: 15px 35px;
+color: #fff;
+background: rgb(247, 11, 53)
+}
+
+
+.header {
+height: 650px;
+width: 100%;
+position: relative;
+display: flex;
+align-items: center;
+justify-content: center;
+padding-top: 40px;
+min-height: 650px
+}
+
+.header-content {
+position: relative;
+display: flex;
+text-align: left;
+z-index: 2;
+flex-wrap: wrap
+}
+
+.header .img-bg {
+position: absolute;
+z-index: 0;
+min-height: 100%;
+min-width: 100%
+}
+
+.header .overlay {
+width: 100%;
+height: 100%;
+bottom: 0;
+right: 0;
+left: 0;
+top: 0;
+position: absolute;
+background: #15191c;
+z-index: 1;
+opacity: .8;
+padding-left: 15px;
+padding-right: 15px;
+padding-top: 100px
+}
+
+.header .image img {
+max-height: 650px;
+margin-bottom: -180px;
+position: relative
+}
+
+.header .text {
+max-width: 500px;
+display: flex;
+flex-direction: column;
+align-items: flex-start;
+justify-content: center;
+color: #fff;
+padding-left: 45px
+}
+
+@media (min-width:768px) and (max-width:1004px) {
+.header .text {
+max-width: 47%;
+padding: 15px;
+align-items: flex-start;
+text-align: left
+}
+.header-content .image {
+width: 47%;
+height: auto;
+position: relative;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 15px 15px 0
+}
+.header .image img {
+max-height: 500px;
+margin-bottom: 0
+}
+.header-content {
+padding-top: 80px;
+padding-bottom: 40px
+}
+.header {
+padding-top: 80px;
+height: auto
+}
+}
+
+
+@media (max-width:767px) {
+.header {
+height: auto;
+padding-top: 0
+}
+.header .image img {
+max-height: 350px;
+margin-bottom: 0
+}
+.header .text {
+max-width: 100%;
+padding: 15px;
+align-items: center;
+text-align: center
+}
+.header-content .image {
+width: 100%;
+height: auto;
+position: relative;
+display: flex;
+align-items: center;
+justify-content: center;
+padding: 15px 15px 0
+}
+.header-content {
+flex-direction: column-reverse;
+padding-top: 100px;
+padding-bottom: 40px
+}
+
+.header h1 {
+margin-bottom: 25px
+}
+}

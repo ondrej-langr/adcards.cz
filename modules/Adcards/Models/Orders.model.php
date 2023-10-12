@@ -11,8 +11,8 @@ class Orders extends Model
 
   protected bool $timestamps = true;
   protected bool $translations = false;
-  protected static bool $enabled = true;
-  protected static array $adminSettings = ['hidden' => false];
+  protected bool $enabled = true;
+  protected array $adminSettings = ['hidden' => false];
 
   public static array $tableColumns = [
     'id' => [
@@ -175,7 +175,7 @@ class Orders extends Model
     ],
 
     'cards' => [
-      'title' => 'Vvytvořené karty',
+      'title' => 'Vytvořené karty',
       'hide' => false,
       'required' => false,
       'unique' => false,

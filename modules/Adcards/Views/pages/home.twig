@@ -1,35 +1,13 @@
 {% extends '@modules:Adcards/layouts/site-layout/site-layout.twig' %}
 
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/main-page.css">
+{% endblock %}
+
 {% block content %}
-  <div class="header">
-      <div class="header-bg">
-          <div class="overlay"></div> <img loading="auto" src="/images/bg.jpg" class="img-bg">
-      </div>
-      <div class="header-content">
-          <div class="image"> <img loading="auto" src="/images/1084.png"></div>
-          <div class="text">
-            <h1>{{ 'Vytvoř si vlastní FIFA kartu'|t }}</h1>
-            <p>
-                {{ 'Dostaň se do hry vytvořením vlastní unikátní FIFA karty a připoj se tak ke hvězdám fotbalového světa. Tvorbu fotbalové karty máš plně pod kontrolou.'|t }}
-            </p> 
-            <a href="{{ url_for('builder') }}"> 
-                <button> <span>{{ 'Vytvořit vlastní kartu'|t }}</span> </button>
-            </a>
-          </div>
-      </div>
-  </div>
-  <div class="slider-around">
-      <h2>{{ 'Vyber si design'|t }}</h2>
-      <div class="slider-content">
-          <section class="slider-main slider cards-slider">{% for background in backgrounds %} <a
-                  href="{{ url_for('builder') }}?background={{ background.id }}">
-                  <div class="slide"> <img class="lazyload" loading="lazy"
-                          data-src="{{ __webRoot__ ~ 'app/carnival/var/storage/' ~ background.img.relativePath }}">
-                      <h3>{{ background.name }}</h3> <span class="price">{{ 'od 699Kč'|t }}</span>
-                  </div>
-              </a> {% endfor %}</section>
-      </div>
-  </div>
+  {% include('@modules:Adcards/partials/pages/home/slider.twig') %}
+  {% include('@modules:Adcards/partials/pages/home/material-select.twig') %}
+ 
   <div class="video-section">
       <div class="video-inner">
           <div class="video col-xl-6">
@@ -49,7 +27,7 @@
       <div class="why-content">
           <div class="why-text">
               <div class="why-headline">
-                  <h2>{{ 'Proč AD Cards?'|t }}</h2>
+                  <h2>{{ 'Proč vi vybrat nás?'|t }}</h2>
                   <div class="hr"></div>
               </div>
               <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
@@ -75,32 +53,4 @@
           </div>
       </div>
   </div>
-  <div class="references-around">
-      <h2>{{ 'Spokojení majitelé vlastní FUT karty'|t }}</h2>
-      <div class="slider-content" style="max-width: 1200px !important;">
-          <section class="slider-main2 slider references-slider">
-              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/1.jpg"></div>
-              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/2.jpg"></div>
-              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/3.jpg"></div>
-              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/4.jpg"></div>
-              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/5.jpg"></div>
-              <div class="slide"> <img class="lazyload" loading="lazy" data-src="/images/portfolio/6.jpg"></div>
-          </section>
-      </div>
-  </div>
-  {% if __get__.success is defined and __get__.success == 'order' %}
-      <div class="alert success"> {{ 'Objednávka byla vytvořena!'|t }} </div> {% endif %}{% if __get__.error is defined and __get__.error == 'order' %}<div class="alert danger">
-      Objednávka nebyla vytvořena!</div> 
-  {% endif %}
-
-  {% if __get__.success is defined and __get__.success == 'newsletter' %}
-      <div class="alert success"> {{ 'Váš slevový kód byl vygenerován!'|t }} </div> {% endif %}{% if __get__.error is defined and __get__.error == 'order' %}<div class="alert danger">
-      Objednávka nebyla vytvořena!</div> 
-  {% endif %}
-
-  {% if __get__.fail is defined and __get__.fail == 'newsletter' %}
-      <div class="alert danger"> {{ 'Tento email je již zaregistrován!'|t }} </div> {% endif %}{% if __get__.error is defined and __get__.error == 'order' %}<div class="alert danger">
-      Objednávka nebyla vytvořena!</div> 
-  {% endif %}
-    
 {% endblock %}

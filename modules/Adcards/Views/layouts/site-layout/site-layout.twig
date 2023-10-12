@@ -48,6 +48,7 @@
         });
       </script>
     {% endif %}
+    {% block head %}{% endblock %}
   </head>
   <body>
     {% if getConfig().env.development is not same as(true) %}
