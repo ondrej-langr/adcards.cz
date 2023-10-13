@@ -24,6 +24,7 @@
   ## non www to www
   RewriteCond %{HTTP_HOST} !=localhost:3001
   RewriteCond %{HTTP_HOST} !^test\.
+  RewriteCond %{HTTP_HOST} !^adcards\.
   RewriteCond %{HTTP_HOST} !^www\.
   RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
 
