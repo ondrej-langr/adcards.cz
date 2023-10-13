@@ -15,18 +15,24 @@
           <h2>{{ product.name }}</h2>
           <div class="price">{{ product.price }} Kč</div>
           <p>{{ product.description }}</p>
-          <div class="add-to-cart">
-            <input class="add-to-cart__value" type="number" min="1" step="1" value="1" />
-            <button class="">
-              Vložit do košíku
+          <form role="form" class="add-to-cart" 
+            hx-swap="outerHTML" 
+            hx-target="#mini-cart" 
+            action="{{ url_for('add-to-cart') }}" 
+            method="POST"
+            hx-post="{{ url_for('add-to-cart') }}"
+          >
+            <input class="d-none" name="product-id" value="{{ product.id }}" />
+            <input class="add-to-cart__value" name="quantity" type="number" min="1" step="1" value="1" />
+            <button type="submit">
+              <span class="hx-hide-on-request">{{ 'Přidat do košíku' | t }}</span>
+              <span class="hx-show-on-request">{{ 'Přidávám...' | t }}</span>
             </button>
-          </div>
+          </form>
         </div>
-      {% endfor %}
-
-      {% if products|length == 0 %}
+      {% else %}
         Zatím žádné produkty...
-      {% endif %}
+      {% endfor %}
 		</div>
 	</div>
 {% endblock %}

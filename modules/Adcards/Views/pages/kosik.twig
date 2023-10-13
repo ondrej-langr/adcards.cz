@@ -11,7 +11,7 @@
             <h1>{{'Dokončení objednávky'|t}}</h1>
         </div>
 
-        {% if cards|length == 0 %}
+        {% if cartSize == 0 %}
             <h1 class="no-background">{{ 'Váš košík je prázdný...'|t }}</h1>
         {% else %}
             <div class="cart-left w50 w100-mob">
@@ -115,7 +115,9 @@
             <div class="cart-right w50 w100-mob">
                 <h3>{{ "Přehled objednávky"|t }}</h3>
                 <div class="full-order">
-                    {{ items }}
+                    {% for itemId, item in cart.products %}
+                        {{item|json_encode}}
+                    {% endfor %}
                 </div>
                 
                 <div class="w100 extras">

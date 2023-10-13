@@ -57,6 +57,9 @@
 .shop .add-to-cart {
   display: flex;
   margin-top: 1rem;
+  flex-wrap: nowrap;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .shop .add-to-cart button {

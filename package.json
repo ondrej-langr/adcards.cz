@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "prom:update": "pnpx @prom-cms/cli project update",
+    "prom:update": "pnpx @prom-cms/cli project update --no-admin",
     "dev": "vite"
   },
   "devDependencies": {

@@ -54,17 +54,6 @@ class Products extends Model
       'autoIncrement' => false,
     ],
 
-    'description' => [
-      'title' => 'Popisek',
-      'hide' => false,
-      'required' => false,
-      'unique' => false,
-      'editable' => true,
-      'translations' => true,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
-      'type' => 'longText',
-    ],
-
     'images' => [
       'title' => 'Obrázky',
       'hide' => false,
@@ -74,12 +63,23 @@ class Products extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'aside'],
-        'fieldType' => 'small-image',
+        'editor' => ['placement' => 'main'],
+        'fieldType' => 'big-image',
       ],
       'type' => 'file',
       'multiple' => true,
       'typeFilter' => 'image',
+    ],
+
+    'description' => [
+      'title' => 'Popisek',
+      'hide' => false,
+      'required' => false,
+      'unique' => false,
+      'editable' => true,
+      'translations' => true,
+      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'type' => 'longText',
     ],
 
     'is_published' => [

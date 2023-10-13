@@ -21,6 +21,25 @@ return function (App $app, RouteCollectorProxy $router) {
      */
     $renderingService = $container->get(RenderingService::class);
     $emailService = $container->get(Mailer::class);
+    $cartFromSession = $container->get(Cart::class);
+
+    $router
+        ->post('/cart/add', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($renderingService, $cartFromSession) {
+            $body = $request->getParsedBody();
+
+            if (!isset($body["product-id"])) {
+                $response->withStatus(401);
+            }
+
+            $cartFromSession->addItem("product", $body["product-id"], $body["quantity"]);
+
+            $renderingService->render($response, '@modules:Adcards/partials/mini-cart.twig', [
+                'cartSizeAfterCartUpdate', $cartFromSession->getCount()
+            ]);
+
+            return $response;
+        })
+        ->setName('add-to-cart');
 
     $router
         ->get('/order/finish', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
@@ -44,6 +63,10 @@ return function (App $app, RouteCollectorProxy $router) {
         ->post('/contact-us/send', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($config, $renderingService, $emailService) {
             $body = $request->getParsedBody();
             $success = false;
+
+            if (!isset($body["email"]) || !isset($body["name"]) || !isset($body["message"])) {
+                $response->withStatus(401);
+            }
 
             $emailService->isHtml();
             $emailService->addAddress($body["email"], $body["name"]);

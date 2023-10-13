@@ -13,6 +13,7 @@ $runCount = 0;
 return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
   $container = $app->getContainer();
   $twig = $container->get(RenderingService::class);
+  $cart = $container->get(Cart::class);
 
   $router->get('/', function (
     ServerRequestInterface $request,
@@ -63,9 +64,14 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     ServerRequestInterface $request,
     ResponseInterface $response,
     $args,
-  ) use ($twig) {
+  ) use ($twig, $cart) {
 
-    return $twig->render($response, '@modules:Adcards/pages/kosik.twig');
+    return $twig->render($response, '@modules:Adcards/pages/kosik.twig', [
+      "cart" => [
+        "size" => $cart->getCount(),
+        "products" => $cart->getState()["product"]
+      ]
+    ]);
   })->setName("cart");
 
   $router->get('/team', function (
@@ -82,8 +88,11 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     ResponseInterface $response,
     $args,
   ) use ($twig) {
+    $productsService = new EntryTypeService(new Products());
 
-    return $twig->render($response, '@modules:Adcards/pages/produkty.twig');
+    return $twig->render($response, '@modules:Adcards/pages/produkty.twig', [
+      "products" => $productsService->getMany([], 1, 999)["data"],
+    ]);
   })->setName("products");
 
   if ($runCount == 0) {

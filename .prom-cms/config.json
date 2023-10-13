@@ -96,15 +96,6 @@
             "type": "number",
             "title": "Cena"
           },
-          "description": {
-            "required": false,
-            "editable": true,
-            "unique": false,
-            "hide": false,
-            "translations": true,
-            "type": "longText",
-            "title": "Popisek"          
-          },
           "images": {
             "required": true,
             "editable": true,
@@ -116,11 +107,17 @@
             "title": "Obrázky",
             "typeFilter": "image",
             "admin": {
-              "fieldType": "small-image",
-              "editor": {
-                "placement": "aside"
-              }
+              "fieldType": "big-image"
             }
+          },
+          "description": {
+            "required": false,
+            "editable": true,
+            "unique": false,
+            "hide": false,
+            "translations": true,
+            "type": "longText",
+            "title": "Popisek"          
           }
         }
       },
