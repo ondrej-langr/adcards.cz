@@ -107,6 +107,22 @@ class Cards extends Model
       'foreignKey' => 'id',
     ],
 
+    'sport' => [
+      'title' => 'Sport',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'type' => 'relationship',
+      'targetModel' => 'sports',
+      'labelConstructor' => 'id',
+      'multiple' => false,
+      'fill' => true,
+      'foreignKey' => 'id',
+    ],
+
     'stats' => [
       'title' => 'Stats',
       'hide' => false,
