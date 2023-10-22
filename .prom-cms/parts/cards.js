@@ -1,6 +1,6 @@
 /**
  *
- * @type {import("@prom-cms/schema").DatabaseConfigModel}
+ * @type {(typeof import("@prom-cms/schema").databaseConfigModelSchema)["_input"]}
  */
 const cardsModel = {
   "title": "Objednané karty",
@@ -61,6 +61,15 @@ const cardsModel = {
       "targetModel": "countries",
       "labelConstructor": "id",
       "title": "Země"
+    },
+    "sport": {
+      "required": true,
+      "translations": false,
+      "type": "relationship",
+      "multiple": false,
+      "targetModel": "sports",
+      "labelConstructor": "id",
+      "title": "Sport"
     },
     "stats": {
       "required": true,

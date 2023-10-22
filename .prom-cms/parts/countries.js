@@ -1,6 +1,6 @@
 /**
  *
- * @type {import("@prom-cms/schema").DatabaseConfigModel}
+ * @type {(typeof import("@prom-cms/schema").databaseConfigModelSchema)["_input"]}
  */
 const countriesModel = {
   "title": "Země",
