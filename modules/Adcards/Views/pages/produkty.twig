@@ -10,7 +10,7 @@
 		<div class="shop-content">
       {% for product in products %}
         <div data-product-id="{{ product.id }}" class="col-12 col-lg-4 col-md-4 col-sm-6 col-xl-4 shop-box">
-          {% set currentImage = image(product.images[0], 440) %}
+          {% set currentImage = getImage(product.images[0], 440) %}
           <img src="{{ currentImage.src }}" width="{{ currentImage.width }}" height="{{ currentImage.height }}" alt="Obrázek produktu">
           <h2>{{ product.name }}</h2>
           <div class="price">{{ product.price }} Kč</div>

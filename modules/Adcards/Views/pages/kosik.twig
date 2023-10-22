@@ -1,56 +1,65 @@
 {% extends '@modules:Adcards/layouts/site-layout/site-layout.twig' %}
 
 {% block head %}
-<link rel="stylesheet" href="/css/cart.css">
+    <link rel="stylesheet" href="/css/pages/cart.css">
 {% endblock %}
 
 {% block content %}
-<div class="cart-around" id="app-cart">
-    <div class="cart-inner">
-        <div class="headline">
-            <h1>{{'Dokončení objednávky'|t}}</h1>
-        </div>
+    <div class="cart-around" id="app-cart">
+        <div class="cart-inner">
+            <div class="headline">
+                <h1>{{ 'Dokončení objednávky'|t }}</h1>
+            </div>
 
-        {% if cartSize == 0 %}
-            <h1 class="no-background">{{ 'Váš košík je prázdný...'|t }}</h1>
-        {% else %}
-            <div class="cart-left w50 w100-mob">
-                <h3>{{ "Kontaktní údaje"|t }}</h3>
-                <form role="form" action="{{ url_for('finish-order') }}" method="POST" id="cart-form">
-                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <input name="firstname" type="text" class="form-control input-required" placeholder="{{ 'Jméno'|t }}">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <input name="lastname" type="text" class="form-control input-required" placeholder="{{ 'Příjmení'|t }}">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <input name="email" type="text" class="form-control input-required" placeholder="E-mail">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
-                        <input name="phone" type="tel" class="form-control input-required" placeholder="{{ 'Telefonní číslo'|t }}">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                        <input name="street" type="text" class="form-control input-required" placeholder="{{ 'Ulice'|t }}">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                        <input name="houseNumber" type="number" class="form-control input-required" placeholder="{{ 'Číslo popisné'|t }}">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
-                        <input name="city" type="text" class="form-control input-required" placeholder="{{ 'Město'|t }}">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
-                        <input name="postalCode" type="number" class="form-control input-required" placeholder="{{ 'PSČ'|t }}">
-                    </div>
-                    <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                        <textarea name="note" class="form-control" rows="3" placeholder="{{ 'Poznámka k objednávce'|t }}"></textarea>
-                    </div>
+            {% if cartSize == 0 %}
+                <h1 class="no-background">{{ 'Váš košík je prázdný...'|t }}</h1>
+            {% else %}
+                <div class="cart-left w50 w100-mob">
+                    <h3>{{ "Kontaktní údaje"|t }}</h3>
+                    <form role="form" action="{{ url_for('finish-order') }}" method="POST" id="cart-form">
+                        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <input name="firstname" type="text" class="form-control input-required"
+                                   placeholder="{{ 'Jméno'|t }}">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <input name="lastname" type="text" class="form-control input-required"
+                                   placeholder="{{ 'Příjmení'|t }}">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <input name="email" type="text" class="form-control input-required" placeholder="E-mail">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+                            <input name="phone" type="tel" class="form-control input-required"
+                                   placeholder="{{ 'Telefonní číslo'|t }}">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+                            <input name="street" type="text" class="form-control input-required"
+                                   placeholder="{{ 'Ulice'|t }}">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <input name="houseNumber" type="number" class="form-control input-required"
+                                   placeholder="{{ 'Číslo popisné'|t }}">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+                            <input name="city" type="text" class="form-control input-required"
+                                   placeholder="{{ 'Město'|t }}">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+                            <input name="postalCode" type="number" class="form-control input-required"
+                                   placeholder="{{ 'PSČ'|t }}">
+                        </div>
+                        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <textarea name="note" class="form-control" rows="3"
+                                      placeholder="{{ 'Poznámka k objednávce'|t }}"></textarea>
+                        </div>
 
-                    <script> $('input[name="shippingMethodBtn"]').prop('checked', false); </script>
-                    <div class="checkbox-group col-xl-12">
-                        <div class="form-group col-xl-12" style="padding: 0px;margin-bottom: 10px;margin-top: 5px;"><h4>Výběr dopravy</h4></div>
-                        
-                        {% if shipping.prices.zasilkovna  %}
-                            <!-- <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
+                        <script> $('input[name="shippingMethodBtn"]').prop('checked', false) </script>
+                        <div class="checkbox-group col-xl-12">
+                            <div class="form-group col-xl-12" style="padding: 0px;margin-bottom: 10px;margin-top: 5px;">
+                                <h4>Výběr dopravy</h4></div>
+
+                            {% if shipping.prices.zasilkovna %}
+                                <!-- <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
                                 <input type="radio" name="shippingMethodBtn" v-on:change="setShipping('personal', 0)" id="transport1"> 
                                 <label for="transport1" id="transport1-label" class="tab">
                                     <span class="label-name">{{ 'Osobní odběr'|t }}
@@ -61,135 +70,89 @@
                                     </span>
                                 </label>
                             </div> -->
-                        
-                            <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio" name="shippingMethodBtn" v-on:change="setShipping('zasilkovna', {{ shipping.prices.zasilkovna }})" id="transport4"> 
-                            <label for="transport4" id="transport4-label" class="tab"><span class="label-name">{{ 'Zásilkovna'|t }}<br><small>({{ shipping.prices.zasilkovna }}{{ 'Kč'|t }})</small></span></label></div>
-                        {% endif %}
 
-                        <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio" name="shippingMethodBtn" v-on:change="setShipping('cashOnDelivery', {{ shipping.prices.cashOnDelivery }})" id="transport2"> 
-                        <label for="transport2" id="transport2-label" class="tab"><span class="label-name">{{ 'DPD'|t }} <br><small>({{ shipping.prices.cashOnDelivery }}{{ 'Kč'|t }})</small></span></label></div>
+                                <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
+                                                                                               name="shippingMethodBtn"
+                                                                                               v-on:change="setShipping('zasilkovna', {{ shipping.prices.zasilkovna }})"
+                                                                                               id="transport4">
+                                    <label for="transport4" id="transport4-label" class="tab"><span
+                                                class="label-name">{{ 'Zásilkovna'|t }}<br><small>({{ shipping.prices.zasilkovna }}{{ 'Kč'|t }})</small></span></label>
+                                </div>
+                            {% endif %}
 
-                        <div class="form-group w40 w100-mob" v-if="shippingMethod.code == 'personal'">
-                            <input type="hidden" class="input-required" value="personal" name="shippingMethod[code]">
+                            <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
+                                                                                           name="shippingMethodBtn"
+                                                                                           v-on:change="setShipping('cashOnDelivery', {{ shipping.prices.cashOnDelivery }})"
+                                                                                           id="transport2">
+                                <label for="transport2" id="transport2-label" class="tab"><span
+                                            class="label-name">{{ 'DPD'|t }} <br><small>({{ shipping.prices.cashOnDelivery }}{{ 'Kč'|t }})</small></span></label>
+                            </div>
+
+                            <div class="form-group w40 w100-mob" v-if="shippingMethod.code == 'personal'">
+                                <input type="hidden" class="input-required" value="personal"
+                                       name="shippingMethod[code]">
+                            </div>
+
+                            <div class="form-group w40 w100-mob" v-else-if="shippingMethod.code == 'cashOnDelivery'">
+                                <input type="hidden" class="input-required" name="shippingMethod[code]"
+                                       value="cashOnDelivery">
+                            </div>
+
+                            <div class="form-group shipping-around w100 w100-mob"
+                                 v-else-if="shippingMethod.code == 'zasilkovna'">
+                                <button type="button" onclick="zasilkovna()"
+                                        id="zasilkovnaBtn">{{ 'Vybrat místo'|t }}</button>
+
+                                <input type="hidden" class="input-required" name="shippingMethod[code]"
+                                       value="zasilkovna">
+                                <input style="display:none;" type="text" name="shippingMethod[value]" value=""
+                                       id="shippingMethodInp">
+                            </div>
+
+                            <input type="hidden" name="shippingMethod[code]" class="input-required" v-else>
                         </div>
-
-                        <div class="form-group w40 w100-mob" v-else-if="shippingMethod.code == 'cashOnDelivery'">
-                            <input type="hidden" class="input-required" name="shippingMethod[code]" value="cashOnDelivery">
-                        </div>
-
-                        <div class="form-group shipping-around w100 w100-mob" v-else-if="shippingMethod.code == 'zasilkovna'">
-                            <button type="button" onclick="zasilkovna()" id="zasilkovnaBtn">{{ 'Vybrat místo'|t }}</button>
-                            
-                            <input type="hidden" class="input-required" name="shippingMethod[code]" value="zasilkovna">
-                            <input style ="display:none;" type="text" name="shippingMethod[value]" value="" id="shippingMethodInp">
-                        </div>
-
-                        <input type="hidden" name="shippingMethod[code]" class="input-required" v-else>
-                    </div>
-                    <div class="checkbox-group payment-around col-xl-12">
-                        <div class="form-group col-xl-12" style="padding: 0px;margin-bottom: 10px;margin-top: 15px;"><h4>Výběr platby</h4></div>
-                        <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio" class="input-required" name="paymentMethod" value="gopay" id="payment1"> 
-                            <label for="payment1" class="tab" id="payment1-label">
-                                <span class="label-name">{{ 'GoPay'|t }}
+                        <div class="checkbox-group payment-around col-xl-12">
+                            <div class="form-group col-xl-12"
+                                 style="padding: 0px;margin-bottom: 10px;margin-top: 15px;"><h4>Výběr platby</h4></div>
+                            <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
+                                                                                           class="input-required"
+                                                                                           name="paymentMethod"
+                                                                                           value="gopay" id="payment1">
+                                <label for="payment1" class="tab" id="payment1-label">
+                                <span class="label-name">{{ 'Kartou (GoPay)'|t }}
                                     <br>
                                     <small></small>
                                 </span>
-                            </label>
-                        </div>
+                                </label>
+                            </div>
 
-                        <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio" class="input-required" name="paymentMethod" value="transfer" id="payment2"> 
-                            <label for="payment2" class="tab" id="payment2-label">
+                            <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
+                                                                                           class="input-required"
+                                                                                           name="paymentMethod"
+                                                                                           value="transfer"
+                                                                                           id="payment2">
+                                <label for="payment2" class="tab" id="payment2-label">
                                 <span class="label-name">{{ 'Bankovní převod'|t }}
                                     <br>
                                     <small></small>
                                 </span>
-                            </label>
-                        </div>
-
-                    </div>
-
-                    <input type="hidden" name="promoCode" v-model="promoCode">
-                </form>
-            </div>
-
-            <div class="cart-right w50 w100-mob">
-                <h3>{{ "Přehled objednávky"|t }}</h3>
-                <div class="full-order">
-                    {% for itemId, item in cart.products %}
-                        {{item|json_encode}}
-                    {% endfor %}
-                </div>
-                
-                <div class="w100 extras">
-                {# <input type="hidden" id="extra-url" value="{{ url_form('cart/extra') }}"> #}
-                    <h3>{{ "Přidejte si k objednávce"|t }}</h3>
-
-                    {% for extra in extras %}
-                        <div class="extra w100">
-                            <div class="w20">
-                                <img src="{{ __webRoot__ }}app/carnival/var/storage/{{ extra.img.relativePath }}" alt="">
-                            </div>
-                            <div class="w80 w80-mob">
-                                <h4>{{ extra.name }}</h4>
-                                <p>{{ 'Cena'|t }}: <b>{{ extra.price }}{{ 'Kč'|t }}</b></p>
+                                </label>
                             </div>
 
-                            <!-- <button class="btn btn-primary" type="button" onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}">Add</button> -->
-                            
-                            <a onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}" class="add"></a>
                         </div>
-                    {% endfor %}
+
+                        <input type="hidden" name="promoCode" v-model="promoCode">
+                    </form>
                 </div>
-                
-                <div class="price-full">
-                    <span>{{ 'Cena celkem'|t }}:</span>
-                    <input type="hidden" id="priceTotal" value="{{ priceTotal }}" data-comment="this is for JS only, you don't have to bother changing it :-)">
-                    
-                    <span v-if="!promoCodeValid" class="number">${ priceTotal.old }{{ 'Kč'|t }}</span>
-                    <span v-else class="number">
-                        <strike>${ priceTotal.old }{{ 'Kč'|t }}</strike>
-                        ${ priceTotal.new }{{ 'Kč'|t }}
-                    </span>
 
-                </div>
-                <!-- <div class="payment-method">
-                    <span class="icon"><i class="fa-exclamation-circle fas"></i></span>
-                    <p class="le-node" id="leWbpE05lHAV" data-le-name="leWbpE05lHAV" {{ liveEdit.leWbpE05lHAV.isInterlanguage() }} {{ liveEdit.leWbpE05lHAV.isCorrectLanguage() }} data-le-type="text">{{ liveEdit.leWbpE05lHAV|raw }}</p>
-                </div> -->
-                <form role="form">
-                    <input type="hidden" id="pc-url" value="{{ url_for('promoCode') }}">
+                {{ include("@modules:Adcards/partials/pages/cart/right-side/right-side.twig") }}
+            {% endif %}
 
-                    <div class="form-group w100">
-                        <label for="exampleInputCode1">{{ 'Máte promokód?'|t }}
-                            <small>{{ 'Cena bude odečtena automaticky.'|t }}</small>
-                        </label>
+            {# TODO: use htmx to add this when user removes item #}
+            {% if __get__.removed is defined and __get__.removed == 'card' %}
+                <div class="alert success">{{ 'Úspěch! Karta byla odstraněna z košíku!'|t }}</div>
+            {% endif %}
 
-                        <div class="alert success" v-if="promoCodeValid == true">{{ 'Promokód je platný!'|t }}</div>
-                        <!-- <div class="alert danger" v-else >${ message }</div> -->
-
-                        <input type="text" class="form-control promo" id="exampleInputCode1" placeholder="{{ 'Zadejte promokód'|t }}" v-model="promoCode" v-on:keyup="checkPromoCode">
-                    </div>
-                </form>
-                <div class="form-check col-xl-12">
-                        <p>{{ "Odesláním formuláře souhlasíte se všeobecnými podmíkami a se zpracováním osobních údajů."|t }}</p>
-                    </div>
-                <button type="submit">
-                    <span>{{ 'Odeslat objednávku'|t }}</span>
-                </button>
-            </div>
-        {% endif %}
-
-{# TODO: use htmx to add this when user removes item #}
-        {% if __get__.removed is defined and __get__.removed == 'card' %}
-            <div class="alert success">{{ 'Úspěch! Karta byla odstraněna z košíku!'|t }}</div>
-        {% endif %}
-
+        </div>
     </div>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/lodash@4.13.1/lodash.min.js"></script>
-<script src="/scripts/packeta.js"></script>
-<script src="/scripts/cart.js"></script>
-
 {% endblock %}

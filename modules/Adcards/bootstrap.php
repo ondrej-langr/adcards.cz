@@ -1,67 +1,42 @@
 <?php
 // In this file you can tell what this module contains or have here something that should be loaded before your models, routes, ..etc
+use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Mailer;
 use PromCMS\Core\Services\RenderingService;
+use PromCMS\Modules\Adcards\Cart;
 use Slim\App;
 
-/**
- * Cart implementation that stores data of current cart for current session
- */
-class Cart
-{
-    public static array $defaultState = ['products' => []];
-    protected array $state;
+function getCartStateForTemplates(Cart $cart): array {
+    $productsFromCart = $cart->getProducts();
+    $promoCode = $cart->getPromoCode();
+    $totalWithoutPromo = $cart->getTotal(false);
 
-    public function __construct(array|null $initialState = null)
-    {
-        $this->state = $initialState ?? Cart::$defaultState;
-    }
-
-    public function setState(array $nextState)
-    {
-        $this->state = $nextState;
-    }
-
-    public function addItem($type, $value, $addQuantity = 1)
-    {
-        if (!isset($this->state[$type])) {
-            $this->state[$type] = [];
-        }
-
-        if (!isset($this->state[$type][$value])) {
-            $this->state[$type][$value] = ["count" => 0];
-        }
-
-        $this->state[$type][$value]["count"] += $addQuantity;
-    }
-
-    public function getCount()
-    {
-        $count = 0;
-
-        foreach ($this->state as $typeGroup) {
-            foreach ($typeGroup as $item) {
-                $count += $item["count"];
-            }
-        }
-
-        return $count;
-    }
-
-    public function getState()
-    {
-        return $this->state;
-    }
+    return [
+        "size" => $cart->getCount(),
+        "products" => $productsFromCart,
+        "promoCode" => $promoCode ? [
+            "isset" => true,
+            "value" => $promoCode["code"],
+            "percentage" => $promoCode["amount"],
+        ] : [
+            "isset" => false
+        ],
+        "total" => [
+            // This will be striken through if promocode.isset === true
+            "withoutPromo" => $totalWithoutPromo,
+            // This is always shown
+            "withPromo" => $promoCode ? $cart->getTotal(true) : $totalWithoutPromo
+        ]
+    ];
 }
 
 return function (App $app) {
     /**
-     * @var DI\Container;
+     * @var $container DI\Container;
      */
     $container = $app->getContainer();
     $mailer = $container->get(Mailer::class);
     $rendering = $container->get(RenderingService::class);
-
 
     // Special condition - mailtrap does not transfer messages via SSL and thats okay in development
     if (str_contains($_ENV['MAIL_HOST'], 'mailtrap')) {
@@ -70,7 +45,7 @@ return function (App $app) {
 
     $container->set(Cart::class, new Cart());
 
-    $adcardsMiddleware = function ($request, $handler) use ($rendering, $container) {
+    $customApplicationMiddleware = function ($request, $handler) use ($rendering, $container) {
         $session = $container->get('session');
         $cartFromSession = $container->get(Cart::class);
 
@@ -87,5 +62,5 @@ return function (App $app) {
         return $response;
     };
 
-    $app->add($adcardsMiddleware);
+    $app->add($customApplicationMiddleware);
 };

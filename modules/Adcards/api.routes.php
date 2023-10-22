@@ -8,30 +8,46 @@ use PromCMS\Core\Services\EntryTypeService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\App;
+use PromCMS\Modules\Adcards\Cart;
 use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app, RouteCollectorProxy $router) {
     /**
-     * @var DI\Container;
+     * @var $container DI\Container;
      */
     $container = $app->getContainer();
     $config = $container->get(Config::class);
-    /**
-     * @var RenderingService
-     */
     $renderingService = $container->get(RenderingService::class);
     $emailService = $container->get(Mailer::class);
     $cartFromSession = $container->get(Cart::class);
 
     $router
-        ->post('/cart/add', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($renderingService, $cartFromSession) {
+        ->post('/cart/product/add', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($renderingService, $cartFromSession) {
             $body = $request->getParsedBody();
 
             if (!isset($body["product-id"])) {
                 $response->withStatus(401);
             }
 
-            $cartFromSession->addItem("product", $body["product-id"], $body["quantity"]);
+            $cartFromSession->appendProduct($body["product-id"], $body["quantity"]);
+
+            $renderingService->render($response, '@modules:Adcards/partials/mini-cart.twig', [
+                'cartSizeAfterCartUpdate', $cartFromSession->getCount()
+            ]);
+
+            return $response->withHeader("Cache-Control", "no-cache");
+        })
+        ->setName('add-to-cart');
+
+    $router
+        ->post('/cart/product/remove', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($renderingService, $cartFromSession) {
+            $body = $request->getParsedBody();
+
+            if (!isset($body["product-id"])) {
+                $response->withStatus(401);
+            }
+
+            $cartFromSession->removeProduct($body["product-id"]);
 
             $renderingService->render($response, '@modules:Adcards/partials/mini-cart.twig', [
                 'cartSizeAfterCartUpdate', $cartFromSession->getCount()
@@ -39,25 +55,52 @@ return function (App $app, RouteCollectorProxy $router) {
 
             return $response;
         })
-        ->setName('add-to-cart');
+        ->setName('removeFromCart');
 
     $router
-        ->get('/order/finish', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
+        ->post('/cart/toggle-promo-code', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($cartFromSession, $renderingService) {
+            $body = $request->getParsedBody();
+
+            if (!isset($body["code"])) {
+                $response->withStatus(401);
+            }
+
+            $userHasPromoCodeAlready = !!$cartFromSession->getPromoCode();
+            $template = "@modules:Adcards/partials/pages/cart/right-side/right-side.twig";
+            $resultPayload = [
+                "state" => [
+                    "success" => [],
+                    "errors" => [],
+                ]
+            ];
+
+
+            if ($userHasPromoCodeAlready) {
+                $cartFromSession->deletePromoCode();
+
+                $resultPayload["state"]["success"]["promoCode"] = "Promo kód odebrán";
+            } else {
+                $successfullyAdded = $cartFromSession->setPromoCode($body["code"]);
+
+                if ($successfullyAdded) {
+                    $resultPayload["state"]["success"]["promoCode"] = "Promo kód přidán!";
+                } else {
+                    $resultPayload["state"]["errors"]["promoCode"] = "Neplatný promo kód!";
+                }
+            }
+
+            $resultPayload["cart"] = getCartStateForTemplates($cartFromSession);
+            $renderingService->render($response, $template, $resultPayload);
+
+            return $response;
+        })
+        ->setName('toggle-promo-code');
+
+    $router
+        ->get('/cart/checkout-order', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
             return $response;
         })
         ->setName('finish-order');
-
-    $router
-        ->get('/verify-promo-code', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
-            return $response;
-        })
-        ->setName('verifyPromoCode');
-
-    $router
-        ->get('/promo-code', function (ServerRequestInterface $request, ResponseInterface $response, $args) {
-            return $response;
-        })
-        ->setName('promoCode');
 
     $router
         ->post('/contact-us/send', function (ServerRequestInterface $request, ResponseInterface $response, $args) use ($config, $renderingService, $emailService) {

@@ -4,7 +4,7 @@
         <div class="col-12 col-lg-9 col-md-12 col-sm-12 col-xl-9 slider-left">
             {% for slide in slider.items %}
                 <div class="slide {% if loop.index == 1 %}active{% endif %}" id="slide-{{loop.index0}}">
-                    {% set currentImage = image(slide.image, null,500) %}
+                    {% set currentImage = getImage(slide.image, null,500) %}
                     <img src="{{currentImage.src}}" width="{{currentImage.width}}" height="{{currentImage.height}}"
                         alt="Obrázek">
                     <div class="slider-content">

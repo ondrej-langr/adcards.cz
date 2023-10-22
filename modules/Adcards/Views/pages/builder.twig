@@ -1,12 +1,61 @@
 {% extends '@modules:Adcards/layouts/site-layout/site-layout.twig' %}
 
 {% block head %}
-	<link rel="stylesheet" href="/css/pages/main-page.css">
+	<link rel="stylesheet" href="/css/pages/builder.css">
+	<script>
+		window.application.builder = {
+			materialIds: ['{{ materials|map( material => material.id )|join("', '")|raw }}'],
+			backgroundIds: ['{{ backgrounds|map( material => material.id )|join("', '")|raw }}'],
+			countryIds: ['{{ countries|map( material => material.id )|join("', '")|raw }}'],
+		}
+	</script>
 {% endblock %}
 
 {% block content %}
 
-  <div class="card-preview-app" ref="builder">
+	<div class='builder' x-data="cardBuilder">
+		<nav class='builder__steps-navigation'>
+			<ul class='align-items-center flex'>
+				<li>1</li>
+				<li>2</li>
+				<li>3</li>
+			</ul>
+		</nav>
+		<div class='builder__steps'>
+{#			Material select #}
+			<div class='builder__steps__step' x-show='!materialId'>
+				<h3 class='text-center'>{{ "Vyberte materiál"|t }}</h3>
+				<div class="builder__grid">
+					{% for material in materials %}
+						<div class="builder__grid-item" @click='materialId = {{ material.id }}'>
+							<div class='builder__grid-item-image_wrapper'>
+								{% set currentImage = getImage(material.image, 440) %}
+								<img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}" height="{{ currentImage.height }}">
+							</div>
+							<h4>{{ material.name }}</h4>
+							<p>{{ material.description }}</p>
+						</div>
+					{% endfor %}
+				</div>
+			</div>
+
+{#			Sport select #}
+			<div class='builder__steps__step' x-show='!!materialId && !sizeId'>
+
+			</div>
+
+{#			Background select #}
+			<div class='builder__steps__step' x-show='!!materialId && !sizeId'>
+
+			</div>
+
+			<div class='builder__steps__step' x-show='!!materialId && !!sizeId'>
+
+			</div>
+		</div>
+	</div>
+
+  <div class="card-preview-app d-none" ref="builder" >
 		<section class="backgrounds">
 			<div class="overlay"></div>
 			<img loading="lazy" src="{{ __img__ }}bg.jpg" class="img-bg"/><div class="slider-content">

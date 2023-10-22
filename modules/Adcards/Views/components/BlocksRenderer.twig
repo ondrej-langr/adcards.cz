@@ -41,8 +41,8 @@
               {{ block.data.text }}
             </p>
           {% elseif block.type == 'image' %}
-            {% set fullImage = image(block.data.fileId, 1240) %}
-            {% set thumbnail = image(block.data.fileId, 1240, null, 85) %}
+            {% set fullImage = getImage(block.data.fileId, 1240) %}
+            {% set thumbnail = getImage(block.data.fileId, 1240, null, 85) %}
             <div class="big-image w-full gallery-photoswipe">
               <a class="w-full" href="{{ fullImage.src }}" data-pswp-width="{{fullImage.width}}" data-pswp-height="{{fullImage.height}}">
                   <img src="{{thumbnail.src}}" width="{{thumbnail.width}}" height="{{thumbnail.height}}" alt="{{ block.data.label }}" />
@@ -72,8 +72,8 @@
                 </label>
                 <div class="tab gallery-photoswipe portfolio-gallery">
                   {% for file in gallery.data.fileIds %}
-                    {% set fullImage = image(file.id, 1240) %}
-                    {% set thumbnail = image(file.id, 400, null, 60) %}
+                    {% set fullImage = getImage(file.id, 1240) %}
+                    {% set thumbnail = getImage(file.id, 400, null, 60) %}
                     <a href="{{ fullImage.src }}"
                       class="gallery-item"
                       data-pswp-width="{{ fullImage.width }}"
@@ -101,8 +101,8 @@
           {% elseif block.type == 'gallery' %}
             <div class="gallery gallery-photoswipe">
               {% for file in block.data.fileIds %}
-                {% set fullImage = image(file.id, 1240) %}
-                {% set thumbnail = image(file.id, 400, null, 60) %}
+                {% set fullImage = getImage(file.id, 1240) %}
+                {% set thumbnail = getImage(file.id, 400, null, 60) %}
                 <a href="{{ fullImage.src }}"
                   data-pswp-width="{{ fullImage.width }}"
                   data-pswp-height="{{ fullImage.height }}">

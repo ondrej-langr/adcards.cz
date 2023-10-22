@@ -1,0 +1,12 @@
+<div class="price-full">
+    <span>{{ 'Cena celkem'|t }}:</span>
+    <input type="hidden" id="priceTotal" value="{{ priceTotal }}"
+           data-comment="this is for JS only, you don't have to bother changing it :-)">
+
+    <span class="number">
+                            {% if cart.promoCode.isset %}
+                                <strike>{{ cart.total.withoutPromo }}{{ 'Kč'|t }}</strike>
+                            {% endif %}
+        {{ cart.total.withPromo }}{{ 'Kč'|t }}
+                        </span>
+</div>

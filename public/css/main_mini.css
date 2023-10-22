@@ -26,6 +26,8 @@ body {
     background-size: 350px 350px;
     padding: 0;
     width: 100vw;
+
+    ---colors-brand-signature: rgb(247, 11, 53);
 }
 
 button, a.appearance-button {
@@ -35,7 +37,7 @@ button, a.appearance-button {
     color: #fff;
     font-weight: 700;
     text-transform: uppercase;
-    background: rgb(247, 11, 53);
+    background: var(---colors-brand-signature);
     min-height: 55px;
     margin-top: 10px;
     display: inline-block;
@@ -59,7 +61,7 @@ button span {
     letter-spacing: 2px
 }
 
-nav {
+body>nav {
     width: 100%;
     position: fixed;
     z-index: 99;
@@ -448,7 +450,7 @@ nav ul li.btn-cart {
     .price {
         font-size: 10px
     }
-    nav {
+    body>nav {
         height: 55px
     }
     .mob-menu {
@@ -3494,9 +3496,9 @@ form .form-group textarea::placeholder {
     font-size: 16px
 }
 
-.cart-inner button {
-    margin-top: 15px;
-    width: 100%
+.field-error {
+    color: var(---colors-brand-signature);
+    font-size: 1.1rem;
 }
 
 form .form-group input:focus {

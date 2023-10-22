@@ -2,6 +2,11 @@
   "name": "prom-cms/adcards",
   "type": "project",
   "authors": [],
+  "autoload": {
+    "psr-4": {
+      "PromCMS\\Modules\\": "modules/"
+    }
+  },
   "require": {
     "prom-cms/core": "dev-develop",
     "rakit/validation": "^1.4",

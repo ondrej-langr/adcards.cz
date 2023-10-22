@@ -1,0 +1,45 @@
+<form role="form"
+      action="{{ url_for('toggle-promo-code') }}"
+      method="POST"
+      hx-post="{{ url_for('toggle-promo-code') }}"
+      hx-target="#cart-right-side"
+      hx-swap='outerHTML'
+>
+    <div class="form-group w100">
+        <label for="promo-code-input">{{ 'Máte promokód?'|t }}
+            <small>{{ 'Cena bude odečtena po přidání.'|t }}</small>
+        </label>
+
+        <div class='d-flex w-full align-items-start'>
+            <div class='w-100'>
+                <input required type="text" class="form-control promo" id="promo-code-input"
+                       placeholder="{{ 'Zadejte promokód'|t }}" name='code' {% if cart.promoCode.isset %}value="{{ cart.promoCode.value }} ( - {{ cart.promoCode.percentage }}%)" disabled{% endif %}>
+
+                {% if state.errors.promoCode %}
+                    <small class="field-error">
+                        {{ state.errors.promoCode|t }}
+                    </small>
+                {% endif %}
+
+                {% if cart.success.promoCode %}
+                    <div id='alert-promo-code-success' class="alert success">
+                        {{ cart.success.promoCode|t }}
+                        <script>
+                          setTimeout(() => {
+                            window.document.getElementById("alert-promo-code-success").remove()
+                          }, 4000)
+                        </script>
+                    </div>
+                {% endif %}
+            </div>
+
+            <button type="submit" class='flex-none' style='width: auto;margin-top: 0;height: 66px;'>
+                {% if cart.promoCode.isset %}
+                    Odebrat
+                {% else %}
+                    Přidat
+                {% endif %}
+            </button>
+        </div>
+    </div>
+</form>

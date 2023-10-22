@@ -5,6 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport"
       content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <base href="{{ getConfig().app.url }}" />
 
     {# Info #}
     <title>
@@ -36,6 +37,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200;300;400;500;600;700&display=swap"
         rel="stylesheet">
 
+    <script>
+      window.application ??= {}
+    </script>
     {% if getConfig().env.development is not same as(true) %}
       {% include("@modules:Adcards/layouts/site-layout/tracking.twig") %}
 

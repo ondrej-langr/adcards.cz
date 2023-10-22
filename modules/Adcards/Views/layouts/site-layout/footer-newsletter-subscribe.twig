@@ -10,7 +10,7 @@
       </h2>
     </div>
   {% else %}
-    <form action="{{ url_for('newsletterSubscribe') }}" method="POST" hx-post="/api/newsletter/subscribe" hx-target="this">
+    <form action="{{ url_for('newsletterSubscribe') }}" method="POST" hx-post="{{ url_for('newsletterSubscribe') }}" hx-target="this">
       <div class="footer-newsletter-content">
         <h2>Sleva 10%<small>na první objednávku</small></h2>
         <div class="newsletter-input">

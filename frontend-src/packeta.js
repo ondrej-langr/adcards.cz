@@ -1,4 +1,4 @@
-Packeta = window.Packeta || {};
+const Packeta = window?.Packeta || {};
 Packeta.Viewport = {
 	element: null,
 	originalValue: null,
