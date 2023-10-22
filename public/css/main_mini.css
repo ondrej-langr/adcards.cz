@@ -1711,7 +1711,7 @@ a:focus {
     border-bottom: 1px solid #e4e4e4;
     padding: 0;
     transition: max-height 300ms ease-in-out, min-height 300ms ease-in-out, visibility 300ms ease-in-out;
-    box-shadow: 0 7px 6px 5px rgba(0, 0, 0, .2))
+    box-shadow: 0 7px 6px 5px rgba(0, 0, 0, .2));
 }
 
 .club-dropdown-content.toggled {

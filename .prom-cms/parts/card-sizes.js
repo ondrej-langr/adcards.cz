@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const cardSizesModel = {
   "title": "Velikost karet",
   "softDelete": false,
   "timestamp": false,
@@ -52,3 +52,5 @@ module.exports = {
     }
   }
 }
+
+export default cardSizesModel

@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const cardBackgroundsModel = {
   "title": "Pozadí karet",
   "softDelete": false,
   "timestamp": true,
@@ -55,3 +55,5 @@ module.exports = {
     }
   }
 }
+
+export default  cardBackgroundsModel

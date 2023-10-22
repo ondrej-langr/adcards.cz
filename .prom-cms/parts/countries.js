@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const countriesModel = {
   "title": "Země",
   "softDelete": false,
   "timestamp": false,
@@ -43,3 +43,5 @@ module.exports = {
     }
   }
 }
+
+export default countriesModel

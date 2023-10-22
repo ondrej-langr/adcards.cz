@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const cardsModel = {
   "title": "Objednané karty",
   "softDelete": false,
   "timestamp": true,
@@ -105,3 +105,5 @@ module.exports = {
     }
   }
 }
+
+export default  cardsModel

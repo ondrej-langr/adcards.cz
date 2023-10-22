@@ -174,21 +174,6 @@ class Cards extends Model
       'enum' => ['CZK', 'EUR'],
     ],
 
-    'madeForSessionId' => [
-      'title' => 'Uživatelské session',
-      'hide' => true,
-      'required' => true,
-      'unique' => false,
-      'editable' => false,
-      'translations' => false,
-      'admin' => [
-        'isHidden' => false,
-        'editor' => ['placement' => 'main'],
-        'fieldType' => 'normal',
-      ],
-      'type' => 'string',
-    ],
-
     'order' => [
       'title' => 'Order',
       'hide' => false,
@@ -204,7 +189,7 @@ class Cards extends Model
 
   static bool $ignoreSeeding = false;
 
-  static string $title = 'Karty';
+  static string $title = 'Objednané karty';
 
   static string $modelIcon = 'Id';
 

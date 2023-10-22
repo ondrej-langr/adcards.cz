@@ -1,8 +1,19 @@
+import mainPageSlidesModel from './parts/main-page-slides.js'
+import cardMaterialModel from './parts/card-material.js'
+import cardSizesModel from './parts/card-sizes.js'
+import cardsModel from './parts/cards.js'
+import countriesModel from './parts/countries.js'
+import newsletterSubscriptionsModel from './parts/newsletter-subscriptions.js'
+import ordersModel from './parts/orders.js'
+import productsModel from './parts/products.js'
+import promoCodesModel from './parts/promo-codes.js'
+import cardBackgroundsModel from './parts/card-backgrounds.js'
+
 /**
  *
  * @type {import("@prom-cms/schema").GeneratorConfig}
  */
-module.exports = {
+const config = {
   "project": {
     "name": "adcards",
     "slug": "adcards",
@@ -10,16 +21,18 @@ module.exports = {
   },
   database: {
     models: {
-      "cardBackgrounds": require("./parts/main-page-slides.js"),
-      "cardMaterial": require("./parts/card-material.js"),
-      "cardSizes": require("./parts/card-sizes.js"),
-      "cards": require("./parts/cards.js"),
-      "countries": require("./parts/countries.js"),
-      "mainPageSlides": require("./parts/main-page-slides.js"),
-      "newsletterSubscriptions": require("./parts/newsletter-subscriptions.js"),
-      "orders": require("./parts/orders.js"),
-      "products": require("./parts/products.js"),
-      "promoCodes": require("./parts/promo-codes.js"),
+      "cardBackgrounds": cardBackgroundsModel,
+      "cardMaterial": cardMaterialModel,
+      "cardSizes": cardSizesModel,
+      "cards": cardsModel,
+      "countries": countriesModel,
+      "mainPageSlides": mainPageSlidesModel,
+      "newsletterSubscriptions": newsletterSubscriptionsModel,
+      "orders": ordersModel,
+      "products":productsModel,
+      "promoCodes": promoCodesModel,
     }
   }
 }
+
+export default config

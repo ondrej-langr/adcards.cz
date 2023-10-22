@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const cardMaterialModel = {
   "title": "Materiál karet",
   "softDelete": false,
   "timestamp": true,
@@ -50,3 +50,5 @@ module.exports = {
     }
   }
 }
+
+export default  cardMaterialModel

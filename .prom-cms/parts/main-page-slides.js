@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const mainPageSlidesModel = {
   "title": "Položky slideru na hlavní stránce",
   "softDelete": false,
   "sorting": true,
@@ -56,3 +56,5 @@ module.exports = {
     }
   }
 }
+
+export default  mainPageSlidesModel

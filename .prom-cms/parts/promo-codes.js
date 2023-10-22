@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const promoCodesModel = {
   "title": "Promo Kódy",
   "softDelete": false,
   "timestamp": true,
@@ -64,3 +64,5 @@ module.exports = {
     }
   }
 }
+
+export default  promoCodesModel

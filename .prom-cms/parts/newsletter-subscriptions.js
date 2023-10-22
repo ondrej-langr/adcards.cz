@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const newsletterSubscriptionsModel = {
   "title": "Odběry newsletteru",
   "softDelete": false,
   "timestamp": true,
@@ -26,3 +26,5 @@ module.exports = {
     }
   }
 }
+
+export default  newsletterSubscriptionsModel

@@ -2,7 +2,7 @@
  *
  * @type {import("@prom-cms/schema").DatabaseConfigModel}
  */
-module.exports = {
+const productsModel = {
   "title": "Produkty",
   "softDelete": false,
   "timestamp": true,
@@ -61,3 +61,5 @@ module.exports = {
     }
   }
 }
+
+export default productsModel
