@@ -66,7 +66,7 @@ class CardBackgrounds extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'aside'],
+        'editor' => ['placement' => 'main'],
         'fieldType' => 'big-image',
       ],
       'type' => 'file',

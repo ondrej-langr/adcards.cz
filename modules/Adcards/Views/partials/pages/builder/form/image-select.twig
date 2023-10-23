@@ -1,0 +1,21 @@
+<div class="card-body col-xl-7">
+    <div class="upload-around relative" @click="imageUploaderOpen = !imageUploaderOpen">
+        <input name="fileup" type="file" @change="readPlayerImage($event)" />
+        <div class="upload relative">
+            <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50"
+                 height="50" viewbox="0 0 172 172">
+                <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1"
+                   stroke-linecap="butt" stroke-linejoin="miter"
+                   stroke-miterlimit="10" stroke-dasharray="" stroke-dashoffset="0"
+                   font-family="none" font-weight="none" font-size="none"
+                   text-anchor="none" style="mix-blend-mode: normal">
+                    <path d="M0,172v-172h172v172z" fill="none"></path>
+                    <g fill="#000000">
+                        <path d="M0,17.2v84.57563l38.3775,-38.3775l14.80813,22.22562l16.74312,-3.35937l14.05563,14.05562h20.3175l24.08,17.2h43.61812v-96.32zM129,48.16c6.65156,0 12.04,5.38844 12.04,12.04c0,6.65156 -5.38844,12.04 -12.04,12.04c-6.65156,0 -12.04,-5.38844 -12.04,-12.04c0,-6.65156 5.38844,-12.04 12.04,-12.04zM37.3025,74.20188l-37.3025,37.3025v43.29562h172v-34.4h-45.82187l-24.08,-17.2h-20.9625l-13.46438,-13.46437l-17.65687,3.52062z"></path>
+                    </g>
+                </g>
+            </svg>
+            <span>{{ 'Kliknutím nahrajte svou fotografii'|t }}</span>
+        </div>
+    </div>
+</div>

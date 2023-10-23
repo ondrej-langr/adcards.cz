@@ -23,6 +23,7 @@
   },
   "dependencies": {
     "alpinejs": "^3.13.2",
+    "cropperjs": "^1.6.1",
     "htmx.org": "^1.9.6",
     "zod": "^3.22.4"
   }

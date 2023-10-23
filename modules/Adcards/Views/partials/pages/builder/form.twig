@@ -1,0 +1,107 @@
+<section class="container">
+    <div class="row">
+        <div class="card-preview-around">
+            <div class="alert-box">
+                <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="24" height="24"
+                         viewbox="0 0 172 172">
+                        <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1" stroke-linecap="butt"
+                           stroke-linejoin="miter" stroke-miterlimit="10" stroke-dasharray=""
+                           stroke-dashoffset="0" font-family="none" font-weight="none" font-size="none"
+                           text-anchor="none" style="mix-blend-mode: normal">
+                            <path d="M0,172v-172h172v172z" fill="none"></path>
+                            <g fill="#ffffff">
+                                <path d="M86.17497,7.16667c-1.38595,-0.04325 -2.735,0.45073 -3.7653,1.37874c0,0 -26.90323,23.70459 -59.118,23.70459c-2.96841,0.0003 -5.3747,2.40659 -5.375,5.375v43.93083c0,23.92967 11.0704,63.30545 65.99772,86.44091c1.33373,0.56144 2.83749,0.56144 4.17122,0c54.92732,-23.13547 65.99772,-62.51124 65.99772,-86.44091v-43.93083c-0.0003,-2.96841 -2.40659,-5.3747 -5.375,-5.375c-32.21477,0 -59.118,-23.70459 -59.118,-23.70459c-0.94058,-0.84743 -2.15007,-1.33569 -3.41536,-1.37874zM86,19.44938c7.39229,5.94343 29.06534,21.17555 57.33333,23.1027v39.00374c0,20.57642 -7.90683,53.77121 -57.33333,75.48795c-49.42651,-21.71675 -57.33333,-54.91153 -57.33333,-75.48795v-39.00374c28.268,-1.92716 49.94104,-17.15928 57.33333,-23.1027zM85.91601,53.67302c-2.96578,0.04633 -5.33356,2.48614 -5.29101,5.45198v35.83333c-0.02741,1.93842 0.99102,3.74144 2.66532,4.71865c1.6743,0.97721 3.74507,0.97721 5.41937,0c1.6743,-0.97721 2.69273,-2.78023 2.66532,-4.71865v-35.83333c0.02085,-1.45347 -0.54782,-2.85342 -1.57635,-3.88062c-1.02852,-1.0272 -2.4292,-1.59408 -3.88264,-1.57136zM86,111.08333c-3.95804,0 -7.16667,3.20863 -7.16667,7.16667c0,3.95804 3.20863,7.16667 7.16667,7.16667c3.95804,0 7.16667,-3.20863 7.16667,-7.16667c0,-3.95804 -3.20863,-7.16667 -7.16667,-7.16667z"></path>
+                            </g>
+                        </g>
+                    </svg>
+                    {{ 'Pouze náhled'|t }}</h4>
+                <span>
+							{{ 'Všechny karty projdou před tiskem grafickými úpravami. Fotografie, loga, ap.. budou upraveny profesionálními grafiky.'|t }}</span>
+            </div>
+            <div class="card-preview"
+                 :style='"background-image: url(" + getActiveBackground()?.imageSrc + "); color: rgb(255, 255, 255);"'>
+                <div class="name">
+                    <span class="stats-show" x-text='name'></span>
+                    <span class="info-hide name-info">{{ 'Jméno hráče'|t }}</span>
+                </div>
+                <div class="rating-position">
+                    <div class="rating">
+                        <span class="stats-show" x-text='rating'></span>
+                        <span class="info-hide ch">{{ 'Celkové hodnocení'|t }}</span>
+                    </div>
+                    <div class="position">
+                        <span class="stats-show" x-text='position'></span>
+                        <span class="info-hide pos">{{ 'Pozice'|t }}</span>
+                    </div>
+                    <div class="country stats-show">
+                        <img :src="getActiveCountry()?.imageSrc" alt="" />
+                    </div>
+                    <span class="info-hide nation">
+                        {{ 'Země'|t }}
+                    </span>
+                    <span class="info-hide team">{{ 'Tým'|t }}</span>
+                </div>
+                <div class="image">
+                    <div id="card-image"></div>
+                </div>
+                {{ include("@modules:Adcards/partials/pages/builder/form/stats.twig") }}
+            </div>
+        </div>
+        <div class="col card-info">
+            <div class="card">
+                <div class="card-body">
+                    <div class="price-around">
+                        <h1>
+                            <span x-text='getActiveBackground()?.name'></span><br />
+                            <small class="total-price">(<span x-text='getActiveSizeAsLabel()'></span>)</small>
+                        </h1>
+
+                        <span x-text='getTotalPrice()' class="total-price">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {{ include("@modules:Adcards/partials/pages/builder/form/size-select.twig") }}
+            <div class="card worko-tabs">
+                <div class="tabs flex-tabs">
+                    <button @click='cardType = "player"' class="tab tab1"
+                            :data-is-active="!isRealPlayer()">{{ 'Vlastní karta'|t }}</button>
+                    <button @click='cardType = "realPlayer"' class="tab tab2"
+                            :data-is-active="isRealPlayer()">{{ 'Karta reálného hráče'|t }}</button>
+
+                    {{ include("@modules:Adcards/partials/pages/builder/form/player-fields.twig") }}
+                    {{ include("@modules:Adcards/partials/pages/builder/form/real-player-fields.twig") }}
+                </div>
+            </div>
+            <div class="card">
+                <form id="builder-form" action="{{ url_for('createNewCard') }}" method="POST" hx-target='#builder-root'
+                      hx-post="{{ url_for('createNewCard') }}" hx-swap="outerHTML">
+
+                    <input type="hidden" name="playerImage" x-model="playerImage" />
+                    <input type="hidden" name="countryId" x-model="countryId" />
+                    <input type="hidden" name="rating" x-model="rating" />
+                    <input type="hidden" name="position" x-model="position" />
+                    <input type="hidden" name="name" x-model="name" />
+                    <input type="hidden" name="backgroundId" x-model="backgroundId" />
+                    <input type="hidden" name="materialId" x-model="materialId" />
+                    <input type="hidden" name="sportId" x-model="sportId" />
+                    <input type="hidden" name="cardType" x-model="cardType" />
+                    <input type="hidden" name="sizeId" x-model="sizeId" />
+                    <template x-for='stat in stats[cardType]'>
+                        <input type="hidden"
+                               :name="'stats[' + stat.name + ']'"
+                               :value="stat.value" />
+                    </template>
+                    <button class="btn btn-primary" type="submit" id="add-to-cart-btn"
+                            :disabled='!isFormValid'
+                            :title='!isFormValid ? "Dokončete formulář" : ""'>{{ 'Přidat do košíku'|t }}</button>
+                    <div style="width: 100%; text-align: center; margin-top: 8px;">
+                        <p class="conditions">{{ "Odesláním formuláře souhlasíte se <a href='#' target='_blank'>všeobecnými podmíkami"|t|raw }}</a>
+                            a se zpracováním osobních údajů.</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>

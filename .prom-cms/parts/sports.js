@@ -1,51 +1,51 @@
 /**
  *
- * @type {(typeof import("@prom-cms/schema").databaseConfigModelSchema)["_input"]}
+ * @type {(typeof import('@prom-cms/schema').databaseConfigModelSchema)['_input']}
  */
 const sportsModel = {
-  admin:{},
-  icon: "BallFootball",
+  admin: {},
+  icon: 'BallFootball',
   sharable: false,
-  tableName: "sports",
+  tableName: 'sports',
   softDelete: false,
   ownable: false,
-  title: "Sporty",
+  title: 'Sporty',
   draftable: false,
   columns: {
-    "name": {
-      "required": true,
-      "editable": true,
-      "unique": true,
-      "hide": false,
-      "translations": true,
-      "type": "string",
-      "title": "Název",
-      "admin": {
-        "fieldType": "heading"
-      }
+    'name': {
+      'required': true,
+      'editable': true,
+      'unique': true,
+      'hide': false,
+      'translations': true,
+      'type': 'string',
+      'title': 'Název',
+      'admin': {
+        'fieldType': 'heading',
+      },
     },
-    "description": {
-      "required": true,
-      "editable": true,
-      "translations": true,
-      "type": "longText",
-      "title": "Popisek"
+    'description': {
+      'required': false,
+      'editable': true,
+      'translations': true,
+      'type': 'longText',
+      'title': 'Popisek',
     },
-    "image": {
-      "required": true,
-      "editable": true,
-      "unique": false,
-      "hide": false,
-      "translations": false,
-      "multiple": false,
-      "type": "file",
-      "title": "Obrázek",
-      "typeFilter": "image",
-      "admin": {
-        "fieldType": "big-image"
-      }
-    }
-  }
+    'image': {
+      'required': true,
+      'editable': true,
+      'unique': false,
+      'hide': false,
+      'translations': false,
+      'multiple': false,
+      'type': 'file',
+      'title': 'Obrázek',
+      'typeFilter': 'image',
+      'admin': {
+        'fieldType': 'big-image',
+      },
+    },
+  },
 }
 
 export default sportsModel

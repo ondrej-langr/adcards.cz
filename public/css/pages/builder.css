@@ -2,21 +2,65 @@
     padding-top: 130px;
 }
 
+.flex {
+    display: flex;
+}
+
+.tab {
+    margin-top: 0;
+}
+
+.card-preview-around .stats.container p {
+    line-height: 2.3rem;
+}
+
+.total-price {
+
+}
+
+.builder .label-image img {
+    height: auto;
+}
+
+.builder .card .tab[data-is-active='true'] {
+    background-color: rgb(247, 11, 53);
+    cursor: default;
+    color: #fff !important
+}
+
 .builder__steps-navigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+}
+
+.worko-tabs .flex-tabs .panel {
+    display: block !important;
+}
+
+.builder__steps-navigation button {
+    width: 56px;
+    height: 56px;
+    border-radius: 99px;
+    padding: unset;
+    color: white;
     display: flex;
     align-items: center;
     justify-content: center;
 }
 
-.builder__steps-navigation li {
-    background: var(---colors-brand-signature);
-    width: 56px;
-    height: 56px;
-    border-radius: 99px;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.builder__steps-navigation button:disabled {
+    opacity: .6;
+    cursor: not-allowed;
+}
+
+.builder__steps-navigation button:not(.current) {
+    transform: scale(0.7);
+}
+
+.builder__steps-navigation button.current {
+    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
 }
 
 .builder__steps {
@@ -35,7 +79,7 @@
 
 .builder__grid {
     display: flex;
-    gap:10px;
+    gap: 10px;
     justify-content: center;
     align-items: start;
     max-width: 1500px;
@@ -49,11 +93,13 @@
     text-align: center;
     width: calc(100% / var(--number-of-items-on-row));
     margin-bottom: 2rem;
+    display: flex;
+    flex-flow: column;
 }
 
 .builder__grid-item h4 {
     font-size: 2.5rem;
-    margin-top: 1rem;
+    margin-top: auto;
 }
 
 .builder__grid-item p {
@@ -66,12 +112,30 @@
 }
 
 .builder__grid-item-image_wrapper {
+    margin-bottom: 1rem;
     padding: 0 1rem;
 }
 
 .builder__grid-item-image_wrapper img {
     height: auto;
     width: 100%;
+}
+
+.builder.thank-you {
+    text-align: center;
+    margin: 2rem 0;
+}
+
+.builder.thank-you .thank-you__title p {
+    font-size: 1.5rem;
+}
+
+.thank-you__more-stuff {
+    margin-top: 3.5rem;
+}
+
+.thank-you__more-stuff h2 {
+    color: var(---colors-brand-signature);
 }
 
 

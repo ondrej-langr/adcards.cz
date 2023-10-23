@@ -1,0 +1,14 @@
+<div x-show="isRealPlayer()" style='display: none'>
+    <div class="card">
+        <div class="card-body no-padding-side flexi">
+            <div class="input-around col-lg-12 col-sm-12 col-xl-12">
+                <input class="form-control required-field"
+                       type="text" x-model="name" placeholder="Jméno reálného hráče" /></div>
+            <div class="alert-around">
+											<span class="alert-text">
+												<i class="fas fa-exclamation-triangle"></i>
+												{{ 'Veškeré údaje doplní náš tým.'|t }}</span>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,94 @@
+<div class="stats container">
+    <div style="position: relative;" x-show="cardType === 'player'">
+        {#        <div v-if="textColor == 'white'" class="line-white"></div> #}
+        {#        <div v-if="textColor == 'black'" class="line-black"></div> #}
+        <div class="row">
+            <div class="col">
+                <p class="stats-show">
+                    <span x-text='stats.player[0].value'></span>
+                    <b x-text='stats.player[0].name'></b>
+                </p>
+                <p class="info-hide">{{ 'rychlost'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.player[2].value'></span>
+                    <b x-text='stats.player[2].name'></b>
+                </p>
+                <p class="info-hide">{{ 'střela'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.player[4].value'></span>
+                    <b x-text='stats.player[4].name'></b>
+                </p>
+                <p class="info-hide">{{ 'přihrávka'|t }}</p>
+            </div>
+            <div class="col">
+                <p class="stats-show">
+                    <span x-text='stats.player[1].value'></span>
+                    <b x-text='stats.player[1].name'></b>
+                </p>
+                <p class="info-hide">{{ 'dribling'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.player[3].value'></span>
+                    <b x-text='stats.player[3].name'></b>
+                </p>
+                <p class="info-hide">{{ 'obrana'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.player[5].value'></span>
+                    <b x-text='stats.player[5].name'></b>
+                </p>
+                <p class="info-hide">{{ 'fyzička'|t }}</p>
+            </div>
+        </div>
+    </div>
+    <div x-show="cardType === 'goalKeeper'">
+        {#        <div v-if="textColor == 'white'" class="line-white"></div> #}
+        {#        <div v-if="textColor == 'black'" class="line-black"></div> #}
+        <div class="row">
+            <div class="col">
+                <p class="stats-show">
+                    <span x-text='stats.goalKeeper[0].value'></span>
+                    <b x-text='stats.goalKeeper[0].name'></b>
+                </p>
+                <p class="info-hide">{{ 'skoky'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.goalKeeper[2].value'></span>
+                    <b x-text='stats.goalKeeper[2].name'></b>
+                </p>
+                <p class="info-hide">{{ 'chytání'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.goalKeeper[4].value'></span>
+                    <b x-text='stats.goalKeeper[4].name'></b>
+                </p>
+                <p class="info-hide">{{ 'technika'|t }}</p>
+            </div>
+            <div class="col">
+                <p class="stats-show">
+                    <span x-text='stats.goalKeeper[1].value'></span>
+                    <b x-text='stats.goalKeeper[1].name'></b>
+                </p>
+                <p class="info-hide">{{ 'reflexy'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.goalKeeper[3].value'></span>
+                    <b x-text='stats.goalKeeper[3].name'></b>
+                </p>
+                <p class="info-hide">{{ 'rychlost'|t }}</p>
+                <p class="stats-show">
+                    <span x-text='stats.goalKeeper[5].value'></span>
+                    <b x-text='stats.goalKeeper[5].name'></b>
+                </p>
+                <p class="info-hide">{{ 'pozice'|t }}</p>
+            </div>
+        </div>
+    </div>
+    <div style="height: 110px; display: flex; justify-content: center; align-items: center; line-height: 110px;"
+         x-show="cardType === 'manager'"
+         class='flex'
+    >
+        <div class="row">
+            <div class="col">
+                <p>
+                    <b>{{ 'Manažer'|t }}</b>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
