@@ -1,0 +1,25 @@
+<div class="checkbox-group payment-around col-xl-12">
+    <div class="form-group col-xl-12"
+         style="padding: 0px;margin-bottom: 10px;margin-top: 15px;">
+        <h4>Výběr platby</h4>
+    </div>
+
+    {% for paymentId, paymentItem in paymentMethods %}
+        <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
+            <input type="radio"
+                   name='payment-method'
+                   class="input-required"
+                   x-model="paymentMethod"
+                   value="{{ paymentId }}"
+                   id="payment-method-{{ paymentId }}"
+            >
+
+            <label for="payment-method-{{ paymentId }}" class="tab" id="payment-method-{{ paymentId }}-label">
+                <span class="label-name">{{ paymentItem.title|t }}
+                    <br>
+                    <small></small>
+                </span>
+            </label>
+        </div>
+    {% endfor %}
+</div>

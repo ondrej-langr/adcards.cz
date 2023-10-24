@@ -3,9 +3,11 @@
 namespace PromCMS\Modules\Adcards;
 
 use GuzzleHttp\Psr7\UploadedFile;
+use League\Flysystem\Filesystem;
 use PromCMS\Core\Services\EntryTypeService;
+use PromCMS\Core\Services\FileService;
 
-function getIds(array $array)
+function getIds(array $array): array
 {
     return array_map(fn($row) => $row["id"], $array);
 }
@@ -16,54 +18,126 @@ class CartCard
     private string $backgroundId;
     private string $sportId;
     private string $materialId;
-    private string|null $sizeId = null;
+    private string $sizeId;
+    private string $cardType;
     private string|null $countryId = null;
     private array|null $stats = null;
-    private string|null $cardType = null;
     private string|null $playerImagePathname = null;
     private int|null $rating = null;
 
     public function __construct(
         string $name,
+        string $sizeId,
         string $materialId,
         string $backgroundId,
         string $sportId,
+        string $cardType,
     )
     {
         $this->name = $name;
+        $this->sizeId = $sizeId;
         $this->materialId = $materialId;
         $this->backgroundId = $backgroundId;
         $this->sportId = $sportId;
+        $this->cardType = $cardType;
     }
 
-    public function setPlayerImage(UploadedFile $playerImage)
+    public function setPlayerImage(string $uploadedPlayerImage, string $sessionId, $fileName, Filesystem $fs): CartCard
     {
+        $allowedMimeTypesToFileType = [];
+        foreach ([IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_WEBP] as $type) {
+            $allowedMimeTypesToFileType[image_type_to_mime_type($type)] = $type;
+        }
 
+        $imageAsStream = \imagecreatefromstring($uploadedPlayerImage);
+        $uploadedImageMimeType = mime_content_type($imageAsStream);
+        if (!in_array($uploadedImageMimeType, array_keys($allowedMimeTypesToFileType))) {
+            throw new \Exception("Nepodporovaný formát obrázku hráče. Podporujeme pouze .png, .gif, .jpeg nebo .webp");
+        }
+
+        $extensionForImage = image_type_to_extension($allowedMimeTypesToFileType[$uploadedImageMimeType], false);
+        $filePath = "/temp-uploaded-player-images/$sessionId/$fileName.$extensionForImage";
+        $fs->writeStream($filePath, $uploadedImageMimeType);
+
+        $this->playerImagePathname = $filePath;
+
+        return $this;
     }
 
-    public function setSize(string $sizeId)
+    public function setPlayerImagePathname(string $playerImagePathname): CartCard
     {
-        $this->sizeId = $sizeId;
+        $this->playerImagePathname = $playerImagePathname;
+
+        return $this;
     }
 
-    public function setCountry(string $countryId)
+    public function setCountry(string $countryId): CartCard
     {
         $this->countryId = $countryId;
+
+        return $this;
     }
 
-    public function setStats(array $stats)
+    public function setStats(array $stats): CartCard
     {
-        $this->stats = $stats;
+        if (empty($stats)) {
+            throw new \Exception("Prázdné vlastnostni hráče");
+        }
+
+        $this->stats = array_map(fn($row) => intval($row), $stats);
+
+        return $this;
     }
 
-    public function setRating(string $rating)
+    public function setRating(string $rating): CartCard
     {
-        $this->rating = $rating;
+        $this->rating = intval($rating);
+
+        return $this;
     }
 
     function asArray(): array
     {
-        return [];
+        if (!$this->isValid()) {
+            throw new \Exception("Karta není validní");
+        }
+
+        return [
+            "name" => $this->name,
+            "background" => $this->backgroundId,
+            "sport" => $this->sportId,
+            "material" => $this->materialId,
+            "size" => $this->sizeId,
+            "cardType" => $this->cardType,
+
+            // nullable fields
+            "playerImagePathname" => $this->playerImagePathname,
+            "rating" => $this->rating,
+            "stats" => $this->stats,
+            "country" => $this->countryId,
+        ];
+    }
+
+    static function fromArray($input): CartCard
+    {
+        $instance = new self(
+            $input["name"],
+            $input["size"],
+            $input["material"],
+            $input["background"],
+            $input["sport"],
+            $input["cardType"],
+        );
+
+        if ($input["cardType"] !== "realPlayer") {
+            $instance
+                ->setPlayerImagePathname($input["playerImagePathname"])
+                ->setRating($input["rating"])
+                ->setStats($input["stats"])
+                ->setCountry($input["country"]);
+        }
+
+        return $instance;
     }
 
     function isValid(): bool
@@ -85,17 +159,19 @@ class CartCard
             !in_array(intval($this->materialId), getIds($materials)) ||
             !in_array(intval($this->backgroundId), getIds($backgrounds)) ||
             !in_array(intval($this->sportId), getIds($sports)) ||
+            !in_array(intval($this->sizeId), getIds($sizes)) ||
             !$this->name
         ) {
             return false;
         }
 
 
-        if ($this->cardType !== "realPlayer" && $this->cardType !== null) {
+        if ($this->cardType !== "realPlayer") {
             if (
-                !in_array(intval($this->sizeId), getIds($sizes)) ||
                 !in_array(intval($this->countryId), getIds($countries)) ||
-                $this->stats === null || count($this->stats) == 0 || $this->rating === null || !$this->playerImagePathname
+                empty($this->stats) ||
+                $this->rating === null ||
+                !$this->playerImagePathname
             ) {
                 return false;
             }

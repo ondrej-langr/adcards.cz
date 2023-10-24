@@ -9,11 +9,11 @@ use Slim\Routing\RouteCollectorProxy;
 return function (App $app, RouteCollectorProxy $router) {
 
     $router
-        ->post('/cart/product/add', ApiControllers\Cart\ProductController::class . ":addProduct")
+        ->post('/cart/product/add', ApiControllers\Cart\ProductController::class . ":add")
         ->setName('add-to-cart');
 
     $router
-        ->post('/cart/product/remove', ApiControllers\Cart\ProductController::class . ":removeProduct")
+        ->post('/cart/product/remove', ApiControllers\Cart\ProductController::class . ":remove")
         ->setName('removeFromCart');
 
     $router

@@ -28,7 +28,7 @@ class ProductController
 
         $cart->appendProduct($body["product-id"], $body["quantity"]);
         $this->container->get(RenderingService::class)->render($response, '@modules:Adcards/partials/mini-cart.twig', [
-            'cartSizeAfterCartUpdate', $cart->getCount()
+            'cartSize' => $cart->getCount()
         ]);
 
         return $response->withHeader("Cache-Control", "no-cache");
@@ -46,7 +46,7 @@ class ProductController
         $cart->removeProduct($body["product-id"]);
 
         $this->container->get(RenderingService::class)->render($response, '@modules:Adcards/partials/mini-cart.twig', [
-            'cartSizeAfterCartUpdate', $cart->getCount()
+            'cartSizeAfterCartUpdate' => $cart->getCount()
         ]);
 
         return $response;

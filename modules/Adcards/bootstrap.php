@@ -2,17 +2,35 @@
 // In this file you can tell what this module contains or have here something that should be loaded before your models, routes, ..etc
 use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Mailer;
+use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Modules\Adcards\Cart;
+use PromCMS\Modules\Adcards\CartCard;
 use Slim\App;
 
-function getCartStateForTemplates(Cart $cart): array {
+function getCartStateForTemplates(Cart $cart): array
+{
     $productsFromCart = $cart->getProducts();
     $promoCode = $cart->getPromoCode();
     $totalWithoutPromo = $cart->getTotal(false);
 
+    $cardSizes = [];
+    $cardSizesService = new EntryTypeService(new \CardSizes());
+    $sizes = $cardSizesService->getMany([], 1, 999)["data"];
+    foreach ($sizes as $size) {
+        $cardSizes[$size["id"]] = $size;
+    }
+
+    $cardMaterials = [];
+    $cardMaterialService = new EntryTypeService(new \CardMaterial());
+    $materials = $cardMaterialService->getMany([], 1, 999)["data"];
+    foreach ($materials as $material) {
+        $cardMaterials[$material["id"]] = $material;
+    }
+
     return [
         "size" => $cart->getCount(),
+        "cards" => array_map(fn(CartCard $item) => $item->asArray(), $cart->getCards()),
         "products" => $productsFromCart,
         "promoCode" => $promoCode ? [
             "isset" => true,
@@ -21,6 +39,8 @@ function getCartStateForTemplates(Cart $cart): array {
         ] : [
             "isset" => false
         ],
+        "cardSizes" => $cardSizes,
+        "cardMaterials" => $cardMaterials,
         "total" => [
             // This will be striken through if promocode.isset === true
             "withoutPromo" => $totalWithoutPromo,

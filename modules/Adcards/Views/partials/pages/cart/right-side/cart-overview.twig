@@ -1,28 +1,64 @@
-<div class="full-order cart-overview__items">
-    {% for itemId, item in cart.products %}
-        {% set currentImage = getImage(item.data.images[0], 200) %}
-        <div class='d-flex cart-overview__item'>
-            <div class='cart-overview__item-image'>
-                <img class='h-100 w-100 position-absolute' src="{{ currentImage.src }}" width='{{ currentImage.width }}' height='{{ currentImage.height }}'  />
-            </div>
-            <div class='d-flex w-100 align-items-center'>
-                <div class='w-100'>
-                    <h3 class='cart-overview__item-title'>{{ item.data.name }}</h3>
-                    <p>{{ item.price.total }} {{ "Kč"|t }}</p>
-                </div>
+{% if cart.cards|length > 0 %}
+    <h3>{{ "Přehled objednávky - karty"|t }}</h3>
 
-                <input class="cart-overview__item-quantity" name="quantity[{{ itemId }}]" type="number" min="1" step="1" value="{{ item.count }}" />
-                <button class='cart-overview__item-remove'>
-                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                        <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
-                        <path d="M4 7l16 0"></path>
-                        <path d="M10 11l0 6"></path>
-                        <path d="M14 11l0 6"></path>
-                        <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
-                        <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
-                    </svg>
-                </button>
+    <div class="full-order cart-overview__items">
+        {% for itemId, item in cart.cards %}
+            <div class='d-flex cart-overview__item'>
+                <div class='cart-overview__item-image'>
+                    {% set currentImage = getImage(item.background, 440) %}
+                    <img class='h-100 w-100 position-absolute' style='object-fit: contain' src="{{ currentImage.src }}"
+                         width='{{ currentImage.width }}'
+                         height='{{ currentImage.height }}' />
+                </div>
+                <div class="info w-100 position-relative">
+                    {% set size = cart.cardSizes[item.size] %}
+                    {% set material = cart.cardMaterials[item.material] %}
+                    <div class="name"><h4>{{ item.name }}</h4></div>
+                    <div class="size"><span>{{ material.name }} ({{ size.width }}x{{ size.height }}cm)</span></div>
+                    <div class="price"><span>Cena: <b>{{ size.price }} {{ "Kč"|t }}</b></span>
+                    </div>
+                    <a href="https://adcards.cz/cart/card/remove?id=1196" class="delete"></a>
+                </div>
             </div>
-        </div>
-    {% endfor %}
-</div>
+        {% endfor %}
+    </div>
+{% endif %}
+
+{% if cart.products|length > 0 %}
+    <h3>{{ "Přehled objednávky - produkty"|t }}</h3>
+
+    <div class="full-order cart-overview__items">
+        {% for itemId, item in cart.products %}
+            {% set currentImage = getImage(item.data.images[0], 200) %}
+            <div class='d-flex cart-overview__item'>
+                <div class='cart-overview__item-image'>
+                    <img class='h-100 w-100 position-absolute' src="{{ currentImage.src }}"
+                         width='{{ currentImage.width }}'
+                         height='{{ currentImage.height }}' />
+                </div>
+                <div class='d-flex w-100 align-items-center'>
+                    <div class='w-100'>
+                        <h3 class='cart-overview__item-title'>{{ item.data.name }}</h3>
+                        <p>{{ item.price.total }} {{ "Kč"|t }}</p>
+                    </div>
+
+                    <input class="cart-overview__item-quantity" name="quantity[{{ itemId }}]" type="number" min="1"
+                           step="1"
+                           value="{{ item.count }}" />
+                    <button class='cart-overview__item-remove'>
+                        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-trash" width="24"
+                             height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none"
+                             stroke-linecap="round" stroke-linejoin="round">
+                            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+                            <path d="M4 7l16 0"></path>
+                            <path d="M10 11l0 6"></path>
+                            <path d="M14 11l0 6"></path>
+                            <path d="M5 7l1 12a2 2 0 0 0 2 2h8a2 2 0 0 0 2 -2l1 -12"></path>
+                            <path d="M9 7v-3a1 1 0 0 1 1 -1h4a1 1 0 0 1 1 1v3"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}

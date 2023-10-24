@@ -10,7 +10,9 @@
   "require": {
     "prom-cms/core": "dev-develop",
     "rakit/validation": "^1.4",
-    "drewm/mailchimp-api": "^2.5"
+    "drewm/mailchimp-api": "^2.5",
+    "ext-fileinfo": "*",
+    "ext-gd": "*"
   },
   "require-dev": {
     "fakerphp/faker": "^1.23.0",

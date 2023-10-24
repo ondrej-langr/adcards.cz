@@ -23,7 +23,9 @@ class CartController
         $cart = $this->container->get(Cart::class);
 
         return $this->container->get(RenderingService::class)->render($response, '@modules:Adcards/pages/kosik.twig', [
-            "cart" => getCartStateForTemplates($cart)
+            "cart" => getCartStateForTemplates($cart),
+            "shipping" => Cart::$availableShipping,
+            "paymentMethods" => Cart::$availablePaymentMethods
         ]);
     }
 }

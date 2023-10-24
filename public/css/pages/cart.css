@@ -87,7 +87,7 @@ form .form-group textarea::placeholder {
     font-size: 14px;
 }
 
-.form-check p.conditions a{
+.form-check p.conditions a {
     text-decoration: underline;
     color: rgb(247, 11, 53);
 }
@@ -258,7 +258,7 @@ input[type=radio] + label {
     color: #000 !important;
     padding: 10px 5px;
     transition: all 200ms ease-in-out;
-    margin:0;
+    margin: 0;
 }
 
 input[type=radio] + label:hover {
@@ -331,7 +331,7 @@ input[type=radio] {
 }
 
 .cart-overview__item-image {
-    max-width: 70px;
+    max-width: 90px;
     width: 100%;
     position: relative;
     z-index: 10;
@@ -372,7 +372,7 @@ input[type=radio] {
     height: 25px;
 }
 
-@media (max-width:767px) {
+@media (max-width: 767px) {
     .cart-around {
         padding-top: 100px;
         padding-left: 5px;
@@ -383,20 +383,20 @@ input[type=radio] {
         font-size: 22px;
         padding-top: 65px;
     }
-    
+
     .add {
-    width: 15px;
-    height: 15px;
-}
+        width: 15px;
+        height: 15px;
+    }
 
-.add:after {
-    width: 15px;
-}
+    .add:after {
+        width: 15px;
+    }
 
-.add:before {
-    width: 15px;
-}
-    
+    .add:before {
+        width: 15px;
+    }
+
     .cart-inner .cart-left {
         padding: 10px;
     }

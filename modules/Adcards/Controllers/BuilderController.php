@@ -201,7 +201,7 @@ class BuilderController
     {
         $cart = $this->container->get(Cart::class);
         $body = $request->getParsedBody();
-        $requiredKeys = ["name", "materialId", "backgroundId", "sportId"];
+        $requiredKeys = ["name", "sizeId", "materialId", "backgroundId", "sportId", "cardType"];
 
         foreach ($requiredKeys as $requiredKey) {
             if (isDefinedInArray($body, $requiredKey) && isNotEmpty($body[$requiredKey])) {
@@ -211,14 +211,16 @@ class BuilderController
             return $response->withStatus(400);
         }
 
-        $card = new CartCard($body["name"], $body["materialId"], $body["backgroundId"], $body["sportId"]);
+        $card = new CartCard($body["name"], $body["sizeId"], $body["materialId"], $body["backgroundId"], $body["sportId"], $body["cardType"]);
 
-        if ($body["cardType"] !== null && $body["cardType"] !== "realPlayer") {
-            $card->setCountry($body["countryId"]);
-            $card->setStats($body["stats"]);
-            $card->setPlayerImage($body["playerImage"]);
-            $card->setSize($body["sizeId"]);
-            $card->setRating($body["rating"]);
+        if ($body["cardType"] !== "realPlayer") {
+            $fs = $this->container->get("filesystem");
+
+            $card
+                ->setCountry($body["countryId"])
+                ->setStats($body["stats"])
+                ->setPlayerImage(base64_decode($body["playerImage"]), $this->container->get('session')::id(), uniqid(), $fs)
+                ->setRating($body["rating"]);
         }
 
         if (!$card->isValid()) {

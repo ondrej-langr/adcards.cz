@@ -11,6 +11,29 @@ use PromCMS\Modules\Adcards\Enums\CartItemTypes;
  */
 class Cart
 {
+    public static array $availableShipping = [
+        "choices" => [
+            "dpd" => [
+                "title" => "DPD",
+                "rate" => 90 // KČ
+            ],
+            "zasilkovna" => [
+                "title" => "Zásilkovna",
+                "metadataRequiredFields" => ["name", "zip"],
+                "rate" => 110, // KČ
+                "bonusContentAfterSelect" => '@modules:Adcards/partials/pages/cart/shipping/zasilkovna-select.twig'
+            ]
+        ],
+    ];
+    public static array $availablePaymentMethods = [
+        "gopay" => [
+            "title" => "GOPAY"
+        ],
+        "bank-transfer" => [
+            "title" => "Bankovním převodem"
+        ]
+    ];
+
     public static array $defaultState = [Enums\CartItemTypes::PRODUCTS->value => []];
     protected array $state;
 
@@ -49,7 +72,8 @@ class Cart
         return true;
     }
 
-    public function deletePromoCode(): void {
+    public function deletePromoCode(): void
+    {
         if (isset($this->state[CartItemTypes::PROMO_CODE->value]["id"]) === false) {
             return;
         }
@@ -61,7 +85,8 @@ class Cart
         $this->state = $state;
     }
 
-    public function getPromoCode():false|array {
+    public function getPromoCode(): false|array
+    {
         if (isset($this->state[CartItemTypes::PROMO_CODE->value]["id"]) === false) {
             return false;
         }
@@ -138,6 +163,11 @@ class Cart
         ];
     }
 
+    public function getCards(): array
+    {
+        return array_map(fn($value) => CartCard::fromArray($value["data"]), $this->state[CartItemTypes::CARDS->value]);
+    }
+
     public function getCount()
     {
         $count = 0;
@@ -157,7 +187,8 @@ class Cart
         return $count;
     }
 
-    public function getProducts():array {
+    public function getProducts(): array
+    {
         $result = [];
         $productsFromCart = $this->state[CartItemTypes::PRODUCTS->value];
 
@@ -187,8 +218,12 @@ class Cart
             $total += $productFromCartInfo["price"]["total"];
         }
 
+        foreach ($this->getCards() as $card) {
+            $total += $productFromCartInfo["price"]["total"];
+        }
+
         if ($applyPromoCode && $promoCode = $this->getPromoCode()) {
-            $total = $total - ($total / 100) * (int) $promoCode["amount"];
+            $total = $total - ($total / 100) * (int)$promoCode["amount"];
         }
 
         return $total;

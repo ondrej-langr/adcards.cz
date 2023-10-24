@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-    <div class="cart-around" id="app-cart">
+    <div class="cart-around" id="app-cart" x-data='cart'>
         <div class="cart-inner">
             <div class="headline">
                 <h1>{{ 'Dokončení objednávky'|t }}</h1>
@@ -53,95 +53,8 @@
                                       placeholder="{{ 'Poznámka k objednávce'|t }}"></textarea>
                         </div>
 
-                        <script> $('input[name="shippingMethodBtn"]').prop('checked', false) </script>
-                        <div class="checkbox-group col-xl-12">
-                            <div class="form-group col-xl-12" style="padding: 0px;margin-bottom: 10px;margin-top: 5px;">
-                                <h4>Výběr dopravy</h4></div>
-
-                            {% if shipping.prices.zasilkovna %}
-                                <!-- <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
-                                <input type="radio" name="shippingMethodBtn" v-on:change="setShipping('personal', 0)" id="transport1"> 
-                                <label for="transport1" id="transport1-label" class="tab">
-                                    <span class="label-name">{{ 'Osobní odběr'|t }}
-                                        <br>
-                                        <small>
-                                            <a target="_blank" href="https://www.google.cz/maps/dir//t%C5%99.+E.+Bene%C5%A1e+1414%2F31,+Nov%C3%BD+Hradec+Kr%C3%A1lov%C3%A9,+500+12+Hradec+Kr%C3%A1lov%C3%A9/@50.1914501,15.8397083,17z/data=!4m8!4m7!1m0!1m5!1m1!1s0x470dd4ba06c5d4f3:0x484e202f83de9004!2m2!1d15.841897!2d50.1914501">{{ 'Hradec Králové: tř. E. Beneše 1414'|t }}</a>
-                                        </small>
-                                    </span>
-                                </label>
-                            </div> -->
-
-                                <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
-                                                                                               name="shippingMethodBtn"
-                                                                                               v-on:change="setShipping('zasilkovna', {{ shipping.prices.zasilkovna }})"
-                                                                                               id="transport4">
-                                    <label for="transport4" id="transport4-label" class="tab"><span
-                                                class="label-name">{{ 'Zásilkovna'|t }}<br><small>({{ shipping.prices.zasilkovna }}{{ 'Kč'|t }})</small></span></label>
-                                </div>
-                            {% endif %}
-
-                            <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
-                                                                                           name="shippingMethodBtn"
-                                                                                           v-on:change="setShipping('cashOnDelivery', {{ shipping.prices.cashOnDelivery }})"
-                                                                                           id="transport2">
-                                <label for="transport2" id="transport2-label" class="tab"><span
-                                            class="label-name">{{ 'DPD'|t }} <br><small>({{ shipping.prices.cashOnDelivery }}{{ 'Kč'|t }})</small></span></label>
-                            </div>
-
-                            <div class="form-group w40 w100-mob" v-if="shippingMethod.code == 'personal'">
-                                <input type="hidden" class="input-required" value="personal"
-                                       name="shippingMethod[code]">
-                            </div>
-
-                            <div class="form-group w40 w100-mob" v-else-if="shippingMethod.code == 'cashOnDelivery'">
-                                <input type="hidden" class="input-required" name="shippingMethod[code]"
-                                       value="cashOnDelivery">
-                            </div>
-
-                            <div class="form-group shipping-around w100 w100-mob"
-                                 v-else-if="shippingMethod.code == 'zasilkovna'">
-                                <button type="button" onclick="zasilkovna()"
-                                        id="zasilkovnaBtn">{{ 'Vybrat místo'|t }}</button>
-
-                                <input type="hidden" class="input-required" name="shippingMethod[code]"
-                                       value="zasilkovna">
-                                <input style="display:none;" type="text" name="shippingMethod[value]" value=""
-                                       id="shippingMethodInp">
-                            </div>
-
-                            <input type="hidden" name="shippingMethod[code]" class="input-required" v-else>
-                        </div>
-                        <div class="checkbox-group payment-around col-xl-12">
-                            <div class="form-group col-xl-12"
-                                 style="padding: 0px;margin-bottom: 10px;margin-top: 15px;"><h4>Výběr platby</h4></div>
-                            <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
-                                                                                           class="input-required"
-                                                                                           name="paymentMethod"
-                                                                                           value="gopay" id="payment1">
-                                <label for="payment1" class="tab" id="payment1-label">
-                                <span class="label-name">{{ 'Kartou (GoPay)'|t }}
-                                    <br>
-                                    <small></small>
-                                </span>
-                                </label>
-                            </div>
-
-                            <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6"><input type="radio"
-                                                                                           class="input-required"
-                                                                                           name="paymentMethod"
-                                                                                           value="transfer"
-                                                                                           id="payment2">
-                                <label for="payment2" class="tab" id="payment2-label">
-                                <span class="label-name">{{ 'Bankovní převod'|t }}
-                                    <br>
-                                    <small></small>
-                                </span>
-                                </label>
-                            </div>
-
-                        </div>
-
-                        <input type="hidden" name="promoCode" v-model="promoCode">
+                        {{ include("@modules:Adcards/partials/pages/cart/left-side/shipping-select.twig") }}
+                        {{ include("@modules:Adcards/partials/pages/cart/left-side/payment-select.twig") }}
                     </form>
                 </div>
 

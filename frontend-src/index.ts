@@ -1,6 +1,7 @@
 import 'htmx.org'
 import Alpine from 'alpinejs'
 import cardBuilder from './alpine-components/cardBuilder'
+import cart from './alpine-components/cart'
 import 'cropperjs/dist/cropper.css'
 
 declare global {
@@ -25,11 +26,13 @@ declare global {
 
 window.Alpine = Alpine
 
-if (window.location.pathname.startsWith('/kosik')) {
-  import('./kosik')
+if (window.location.pathname.includes('/kosik')) {
+  // @ts-expect-error
+  import('./packeta.js')
+  Alpine.data(cart.name, cart)
 }
 
-if (window.location.pathname.startsWith('/karty/builder')) {
+if (window.location.pathname.includes('/karty/builder')) {
   Alpine.data(cardBuilder.name, cardBuilder)
 }
 

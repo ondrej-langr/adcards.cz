@@ -26,15 +26,18 @@
   RewriteCond %{HTTP_HOST} !^test\.
   RewriteCond %{HTTP_HOST} !^adcards\.
   RewriteCond %{HTTP_HOST} !^www\.
-  RewriteRule ^(.*)$ http://www.%{HTTP_HOST}/$1 [L,R=301]
+  RewriteRule ^(.*)$ https://www.%{HTTP_HOST}/$1 [L,R=301]
 
   # Server only public folder to public
   RewriteCond %{REQUEST_URI} !^/public/
-  RewriteRule (.*) public/$1
+  RewriteRule (.*) public/$1 [PT]
+
+  RewriteCond %{REQUEST_URI} !^/public/
+  RewriteRule ^admin$ /public/admin/index.html [PT]
 
   # If we did not find any file then we handle requests with php app
   RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteRule (.*) public/index.php
+  RewriteRule (.*) public/index.php [PT]
 </ifModule> 
 
 

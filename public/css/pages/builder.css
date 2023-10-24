@@ -81,7 +81,6 @@
     display: flex;
     gap: 10px;
     justify-content: center;
-    align-items: start;
     max-width: 1500px;
     width: 100%;
 
@@ -119,6 +118,16 @@
 .builder__grid-item-image_wrapper img {
     height: auto;
     width: 100%;
+    transition: all;
+    transition-duration: 0.5s;
+
+    -webkit-filter: drop-shadow(5px 5px 5px #22222250);
+    filter: drop-shadow(5px 5px 5px #22222250);
+}
+
+.builder__grid-item:hover .builder__grid-item-image_wrapper img {
+    -webkit-filter: drop-shadow(10px 5px 5px #222);
+    filter: drop-shadow(10px 5px 5px rgb(247 11 53 / 36%));
 }
 
 .builder.thank-you {
