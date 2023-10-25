@@ -19,7 +19,13 @@ class CartController
 
     public function checkout(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
-        return $response;
+        $resultPayload = [
+            "data" => $request->getParsedBody()
+        ];
 
+        $this->container->get(RenderingService::class)->render($response, "@modules:Adcards/partials/pages/cart/order-finished.twig", $resultPayload);
+
+
+        return $response;
     }
 }

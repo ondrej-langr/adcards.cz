@@ -8,7 +8,7 @@ use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\CartCard;
 use Slim\App;
 
-function getCartStateForTemplates(Cart $cart): array
+function getCommonCartTemplateVariables(Cart $cart): array
 {
     $productsFromCart = $cart->getProducts();
     $promoCode = $cart->getPromoCode();
@@ -29,24 +29,28 @@ function getCartStateForTemplates(Cart $cart): array
     }
 
     return [
-        "size" => $cart->getCount(),
-        "cards" => array_map(fn(CartCard $item) => $item->asArray(), $cart->getCards()),
-        "products" => $productsFromCart,
-        "promoCode" => $promoCode ? [
-            "isset" => true,
-            "value" => $promoCode["code"],
-            "percentage" => $promoCode["amount"],
-        ] : [
-            "isset" => false
+        "cart" => [
+            "size" => $cart->getCount(),
+            "cards" => array_map(fn(CartCard $item) => $item->asArray(), $cart->getCards()),
+            "products" => $productsFromCart,
+            "promoCode" => $promoCode ? [
+                "isset" => true,
+                "value" => $promoCode["code"],
+                "percentage" => $promoCode["amount"],
+            ] : [
+                "isset" => false
+            ],
+            "total" => [
+                // This will be striken through if promocode.isset === true
+                "withoutPromo" => $totalWithoutPromo,
+                // This is always shown
+                "withPromo" => $promoCode ? $cart->getTotal(true) : $totalWithoutPromo
+            ]
         ],
         "cardSizes" => $cardSizes,
         "cardMaterials" => $cardMaterials,
-        "total" => [
-            // This will be striken through if promocode.isset === true
-            "withoutPromo" => $totalWithoutPromo,
-            // This is always shown
-            "withPromo" => $promoCode ? $cart->getTotal(true) : $totalWithoutPromo
-        ]
+        "shipping" => Cart::$availableShipping,
+        "paymentMethods" => Cart::$availablePaymentMethods
     ];
 }
 
@@ -70,7 +74,7 @@ return function (App $app) {
         $cartFromSession = $container->get(Cart::class);
 
         // Load cart items from session into Cart class instance
-        $cartFromSession->setState($session->get('cart', Cart::$defaultState));
+        $cartFromSession->setState($session->get('cartForm', Cart::$defaultState));
         // Add cart state into each template (at least to those that render page components, since this variable is only added on request)
         $rendering->getEnvironment()->addGlobal('cartSize', $cartFromSession->getCount());
 

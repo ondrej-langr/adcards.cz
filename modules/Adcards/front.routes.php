@@ -35,7 +35,6 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     });
 
     $router->get('/karty/builder', Controllers\BuilderController::class . ":get")->setName("builder");
-    $router->post('/karty/builder', Controllers\BuilderController::class . ":post")->setName("createNewCard");
     $router->get('/kosik', Controllers\CartController::class . ":get")->setName("cart");
     $router->get('/produkty', Controllers\ProductsController::class . ":get")->setName("products");
 

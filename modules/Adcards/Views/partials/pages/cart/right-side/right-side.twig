@@ -1,5 +1,6 @@
 <div class="cart-right w50 w100-mob" id='cart-right-side'>
-    {{ include("@modules:Adcards/partials/pages/cart/right-side/cart-overview.twig") }}
+    {{ include("@modules:Adcards/partials/pages/cart/right-side/cards-overview.twig") }}
+    {{ include("@modules:Adcards/partials/pages/cart/right-side/products-overview.twig") }}
 
     {{ include("@modules:Adcards/partials/pages/cart/right-side/extras.twig") }}
     {{ include("@modules:Adcards/partials/pages/cart/right-side/price.twig") }}
@@ -8,7 +9,30 @@
     <div class="form-check col-xl-12">
         <p>{{ "Odesláním formuláře souhlasíte se všeobecnými podmíkami a se zpracováním osobních údajů."|t }}</p>
     </div>
-    <button type="submit">
+
+    <button type="submit" form='cart-form'>
         <span>{{ 'Odeslat objednávku'|t }}</span>
     </button>
+
+    {% if state.successes is not empty %}
+        {% for key, success in state.successes %}
+            {{ include("@modules:Adcards/components/toast-alert.twig", {message: success}) }}
+        {% endfor %}
+    {% endif %}
+    {% if state.focusOn is not null %}
+        <script>
+          window.focusOnElement = document.querySelector("{{ state.focusOn|raw }}")
+
+          if (window.focusOnElement && 'focus' in window.focusOnElement) {
+            const element = window.focusOnElement
+            element.focus()
+
+            // place cursor at the end after refocus
+            const val = element.value
+            element.value = ''
+            element.value = val
+          }
+        </script>
+    {% endif %}
 </div>
+

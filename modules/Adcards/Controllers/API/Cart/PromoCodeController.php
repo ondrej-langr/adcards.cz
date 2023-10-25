@@ -5,6 +5,7 @@ namespace PromCMS\Modules\Adcards\Controllers\API\Cart;
 use DI\Container;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Modules\Adcards\Cart;
+use PromCMS\Modules\Adcards\StaticMessages;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
@@ -30,7 +31,7 @@ class PromoCodeController
         $template = "@modules:Adcards/partials/pages/cart/right-side/right-side.twig";
         $resultPayload = [
             "state" => [
-                "success" => [],
+                "successes" => [],
                 "errors" => [],
             ]
         ];
@@ -39,18 +40,20 @@ class PromoCodeController
         if ($userHasPromoCodeAlready) {
             $cart->deletePromoCode();
 
-            $resultPayload["state"]["success"]["promoCode"] = "Promo kód odebrán";
+            $resultPayload["state"]["successes"][] = StaticMessages::PROMO_CODE_REMOVED;
         } else {
             $successfullyAdded = $cart->setPromoCode($body["code"]);
 
             if ($successfullyAdded) {
-                $resultPayload["state"]["success"]["promoCode"] = "Promo kód přidán!";
+                $resultPayload["state"]["successes"][] = StaticMessages::PROMO_CODE_ADDED;
             } else {
-                $resultPayload["state"]["errors"]["promoCode"] = "Neplatný promo kód!";
+                // In twig we check if "promoCode" is in array - keep this key here, otherview it will be rendered as
+                // toast message
+                $resultPayload["state"]["errors"]["promoCode"] = StaticMessages::PROMO_CODE_ACTIVATION_FAILED;
             }
         }
 
-        $resultPayload["cart"] = getCartStateForTemplates($cart);
+        $resultPayload = array_merge($resultPayload, getCommonCartTemplateVariables($cart));
         $this->container->get(RenderingService::class)->render($response, $template, $resultPayload);
 
         return $response;

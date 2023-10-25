@@ -1,0 +1,9 @@
+{% set id = 'cart-successes-' ~ random() %}
+<div id='{{ id }}' class="alert success">
+    {{ message|t }}
+    <script>
+      setTimeout(() => {
+        window.document.getElementById("{{ id }}")?.remove()
+      }, 4000)
+    </script>
+</div>

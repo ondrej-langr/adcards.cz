@@ -25,7 +25,7 @@
     align-content: flex-start;
 }
 
-form {
+form:not(.ignore-form-styles) {
     display: flex;
     flex-wrap: wrap;
     margin-left: -10px;
@@ -33,7 +33,7 @@ form {
     margin-top: 25px;
 }
 
-form .form-group input {
+form:not(.ignore-form-styles) .form-group input {
     margin: 0px;
     border: 1px solid #e4e4e4;
     border-radius: 0px;
@@ -42,7 +42,7 @@ form .form-group input {
     color: #000;
 }
 
-form .form-group textarea {
+form:not(.ignore-form-styles) .form-group textarea {
     border-radius: 0 !important;
     border: 1px solid #e4e4e4 !important;
     min-height: 55px;
@@ -52,13 +52,13 @@ form .form-group textarea {
     font-weight: 700;
 }
 
-form .form-group input::placeholder {
+form:not(.ignore-form-styles) .form-group input::placeholder {
     text-transform: uppercase;
     font-size: 16px;
     color: #000;
 }
 
-form .form-group textarea::placeholder {
+form:not(.ignore-form-styles) .form-group textarea::placeholder {
     text-transform: uppercase;
     font-size: 16px;
     color: #000;
@@ -346,30 +346,12 @@ input[type=radio] {
     object-fit: cover;
 }
 
-.cart-overview__item-title {
-    margin-bottom: 0.1rem;
-    font-size: 2rem;
-}
-
 .cart-overview__item-quantity {
     padding: 0.3rem;
     font-size: 1.6rem;
     flex: none;
     width: 80px;
-    margin-right: 15px;
-}
-
-.cart-overview__item-remove {
-    margin-top: 0;
-    padding: 9px 13px;
-    min-height: auto;
-}
-
-.cart-overview__item-remove svg {
-    top: 3px;
-    position: relative;
-    width: 25px;
-    height: 25px;
+    margin-right: 3rem;
 }
 
 @media (max-width: 767px) {
@@ -434,19 +416,19 @@ input[type=radio] {
         padding-right: 15px;
     }
 
-    form .form-check label {
+    form:not(.ignore-form-styles) .form-check label {
         font-size: 12px;
     }
 
-    form .form-group label {
+    form:not(.ignore-form-styles) .form-group label {
         font-size: 12px;
     }
 
-    form {
+    form:not(.ignore-form-styles) {
         margin-top: 15px;
     }
 
-    form .form-group input {
+    form:not(.ignore-form-styles) .form-group input {
         font-size: 12px;
         min-height: 45px;
     }

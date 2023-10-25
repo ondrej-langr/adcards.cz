@@ -1,0 +1,23 @@
+<div class='d-flex cart-overview__item'>
+    <div class='cart-overview__item-image'>
+        {% set currentImage = getImage(data.background, 440) %}
+        <img class='h-100 w-100 position-absolute' style='object-fit: contain' src="{{ currentImage.src }}"
+             width='{{ currentImage.width }}'
+             height='{{ currentImage.height }}' />
+    </div>
+    <div class="info w-100 position-relative">
+        {% set size = cardSizes[data.size] %}
+        {% set material = cardMaterials[data.material] %}
+        <div class="name"><h4>{{ data.name }}</h4></div>
+        <div class="size"><span>{{ material.name }} ({{ size.width }}x{{ size.height }}cm)</span></div>
+        <div class="price"><span>Cena: <b>{{ size.price }} {{ "Kč"|t }}</b></span>
+        </div>
+        <button
+                type='button'
+                hx-delete='{{ url_for("removeCardByIndex") }}?i={{ index }}'
+                hx-target="#cart-right-side"
+                hx-swap='outerHTML'
+                class='delete ignore-button-styles'
+        ></button>
+    </div>
+</div>

@@ -1,2 +1,5 @@
 <button type="button" @click="showZasilkovnaSelect()"
         x-text='shippingMetadata ? shippingMetadata.name : "{{ 'Vybrat místo'|t }}"'></button>
+<input class='d-none' required name='shippingMetadata'
+       :value='shippingMetadata? JSON.stringify(shippingMetadata) : undefined' />
+

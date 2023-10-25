@@ -163,9 +163,27 @@ class Cart
         ];
     }
 
+    public function removeCard(int $index): bool
+    {
+        if (empty($this->state[CartItemTypes::CARDS->value][$index])) {
+            return false;
+        }
+
+        $cardData = $this->state[CartItemTypes::CARDS->value][$index]["data"];
+
+        // TODO: remove player image from store if it is set
+
+        unset($this->state[CartItemTypes::CARDS->value][$index]);
+
+        return true;
+    }
+
+    /**
+     * @return array<CartCard>
+     */
     public function getCards(): array
     {
-        return array_map(fn($value) => CartCard::fromArray($value["data"]), $this->state[CartItemTypes::CARDS->value]);
+        return array_map(fn($value) => CartCard::fromArray($value["data"]), $this->state[CartItemTypes::CARDS->value] ?? []);
     }
 
     public function getCount()
@@ -213,17 +231,16 @@ class Cart
     public function getTotal($applyPromoCode = true)
     {
         $total = 0;
-
-        foreach ($this->getProducts() as $productId => $productFromCartInfo) {
+        foreach ($this->getProducts() as $productFromCartInfo) {
             $total += $productFromCartInfo["price"]["total"];
         }
 
         foreach ($this->getCards() as $card) {
-            $total += $productFromCartInfo["price"]["total"];
+            $total += $card->getPrice();
         }
 
         if ($applyPromoCode && $promoCode = $this->getPromoCode()) {
-            $total = $total - ($total / 100) * (int)$promoCode["amount"];
+            $total = ceil($total - ($total / 100) * (int)$promoCode["amount"]);
         }
 
         return $total;

@@ -1,0 +1,51 @@
+<div class="cart-left w50 w100-mob" id='cart-left-side' x-data='cartForm'>
+    <h3>{{ "Kontaktní údaje"|t }}</h3>
+    <form
+            role="form"
+            id="cart-form"
+            hx-swap="outerHTML"
+            hx-target="#app-cart"
+            action="{{ url_for('finish-order') }}"
+            method="POST"
+            hx-post="{{ url_for('finish-order') }}"
+    >
+        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <input name="firstname" type="text" class="form-control input-required"
+                   placeholder="{{ 'Jméno'|t }}">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <input name="lastname" type="text" class="form-control input-required"
+                   placeholder="{{ 'Příjmení'|t }}">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <input name="email" type="text" class="form-control input-required" placeholder="E-mail">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            <input name="phone" type="tel" class="form-control input-required"
+                   placeholder="{{ 'Telefonní číslo'|t }}">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+            <input name="street" type="text" class="form-control input-required"
+                   placeholder="{{ 'Ulice'|t }}">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+            <input name="houseNumber" type="number" class="form-control input-required"
+                   placeholder="{{ 'Číslo popisné'|t }}">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+            <input name="city" type="text" class="form-control input-required"
+                   placeholder="{{ 'Město'|t }}">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+            <input name="postalCode" type="number" class="form-control input-required"
+                   placeholder="{{ 'PSČ'|t }}">
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+                            <textarea name="note" class="form-control" rows="3"
+                                      placeholder="{{ 'Poznámka k objednávce'|t }}"></textarea>
+        </div>
+
+        {{ include("@modules:Adcards/partials/pages/cart/left-side/shipping-select.twig") }}
+        {{ include("@modules:Adcards/partials/pages/cart/left-side/payment-select.twig") }}
+    </form>
+</div>

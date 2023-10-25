@@ -9,19 +9,31 @@ use Slim\Routing\RouteCollectorProxy;
 return function (App $app, RouteCollectorProxy $router) {
 
     $router
-        ->post('/cart/product/add', ApiControllers\Cart\ProductController::class . ":add")
-        ->setName('add-to-cart');
+        ->post('/cart/card/add', ApiControllers\Cart\CardController::class . ":addOne")
+        ->setName("createNewCard");
 
     $router
-        ->post('/cart/product/remove', ApiControllers\Cart\ProductController::class . ":remove")
+        ->delete('/cartForm/card/remove', ApiControllers\Cart\CardController::class . ":removeOneAtIndex")
+        ->setName("removeCardByIndex");
+
+    $router
+        ->post('/cart/product/append', ApiControllers\Cart\ProductController::class . ":append")
+        ->setName('add-to-cartForm');
+
+    $router
+        ->post('/cart/product/update', ApiControllers\Cart\ProductController::class . ":update")
+        ->setName('updateProductInCart');
+
+    $router
+        ->delete('/cart/product/remove', ApiControllers\Cart\ProductController::class . ":remove")
         ->setName('removeFromCart');
 
     $router
-        ->post('/cart/promo-code/toggle', ApiControllers\Cart\PromoCodeController::class . ":togglePromoCode")
+        ->post('/cart/promo-code/toggle', ApiControllers\Cart\PromoCodeController::class . ":toggle")
         ->setName('toggle-promo-code');
 
     $router
-        ->get('/cart/checkout-order', ApiControllers\CartController::class . ":checkout")
+        ->post('/cart/checkout-order', ApiControllers\CartController::class . ":checkout")
         ->setName('finish-order');
 
     $router

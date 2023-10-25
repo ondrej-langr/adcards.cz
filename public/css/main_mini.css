@@ -30,7 +30,7 @@ body {
     ---colors-brand-signature: rgb(247, 11, 53);
 }
 
-button, a.appearance-button {
+button:not(.ignore-button-styles), a.appearance-button {
     border: none;
     padding: 10px 35px;
     border-radius: 0;
@@ -593,7 +593,9 @@ h4 {
     display: flex;
     align-items: center;
     justify-content: center;
-    cursor: pointer
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
 }
 
 .delete:after {
@@ -3276,7 +3278,7 @@ button.rotate {
     text-align: center
 }
 
-form {
+form:not(.ignore-form-styles) {
     display: flex;
     flex-wrap: wrap;
     margin-left: -10px;
@@ -3373,7 +3375,7 @@ form .form-group textarea:focus {
         font-size: 12px
     }
 
-    form {
+    form:not(.ignore-form-styles) {
         margin-top: 15px
     }
 
@@ -3467,7 +3469,7 @@ ul.social-icons li i {
     align-content: flex-start
 }
 
-form {
+form:not(.ignore-form-styles) {
     display: flex;
     flex-wrap: wrap;
     margin-left: -10px;
@@ -3836,7 +3838,7 @@ input[type=radio] {
         font-size: 12px
     }
 
-    form {
+    form:not(.ignore-form-styles) {
         margin-top: 15px
     }
 

@@ -2,7 +2,7 @@ import { AlpineComponent } from 'alpinejs'
 
 const PACKETA_TOKEN = '5d7032d2392ceefd'
 
-export default function cart(): AlpineComponent<any> {
+export default function cartForm(): AlpineComponent<any> {
   return {
     // TODO
     paymentMethod: 'gopay',

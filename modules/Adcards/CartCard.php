@@ -96,6 +96,14 @@ class CartCard
         return $this;
     }
 
+    public function getPrice(): int
+    {
+        $cardSizesService = new EntryTypeService(new \CardSizes());
+        $size = $cardSizesService->getOne(["id", "=", intval($this->sizeId)]);
+
+        return $size->price;
+    }
+
     function asArray(): array
     {
         if (!$this->isValid()) {
