@@ -84,14 +84,14 @@ class CardController
 
         $common = getCommonCartTemplateVariables($cart);
 
-        if (empty($common["cartForm"]["products"]) && empty($common["cartForm"]["cards"])) {
+        if (empty($common["cart"]["products"]) && empty($common["cart"]["cards"])) {
             return $response->withHeader("HX-Location", "/kosik");
         }
 
         $this
             ->container
             ->get(RenderingService::class)
-            ->render($response, '@modules:Adcards/partials/pages/cartForm/right-side/right-side.twig',
+            ->render($response, '@modules:Adcards/partials/pages/cart/right-side/right-side.twig',
                 array_merge($common, $resultPayload)
             );
 

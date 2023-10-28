@@ -28,7 +28,10 @@
         </nav>
         <div class='builder__steps'>
             {#            Material select #}
-            <div class='builder__steps__step' x-show='currentStep === 0'>
+            <div
+                    class='builder__steps__step'
+                    x-show='currentStep === 0'
+            >
                 <h3 class='text-center'>{{ "Vyberte materiál"|t }}</h3>
                 <div class="builder__grid">
                     {% for material in materials %}
@@ -46,7 +49,11 @@
             </div>
 
             {#            Sport select #}
-            <div class='builder__steps__step' x-show='currentStep === 1' style='display: none'>
+            <div
+                    class='builder__steps__step'
+                    x-show='currentStep === 1'
+                    style='display: none'
+            >
                 <h3 class='text-center'>{{ "Vyberte sport"|t }}</h3>
                 <div class="builder__grid">
                     {% for sport in sports %}
@@ -66,7 +73,11 @@
             </div>
 
             {#            Background select #}
-            <div class='builder__steps__step' x-show='currentStep === 2' style='display: none'>
+            <div
+                    class='builder__steps__step'
+                    x-show='currentStep === 2'
+                    style='display: none'
+            >
                 <h3 class='text-center'>{{ "Vyberte pozadí karty"|t }}</h3>
                 <div class="builder__grid">
                     {% for background in backgrounds %}
@@ -86,9 +97,11 @@
                 </div>
             </div>
 
-            <div class='builder__steps__step' x-show='currentStep === 3'
-                 style='display: none'>
-                {{ include("@modules:Adcards/partials/pages/builder/form.twig") }}
+            <div class='builder__steps__step'
+                 x-show='currentStep === 3'
+                 style='display: none'
+            >
+                {{ include("@modules:Adcards/partials/pages/builder/form/form.twig") }}
             </div>
         </div>
     </div>

@@ -7,7 +7,7 @@
     {% for paymentId, paymentItem in paymentMethods %}
         <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
             <input type="radio"
-                   name='payment-method'
+                   name='paymentMethod'
                    class="input-required"
                    x-model="paymentMethod"
                    value="{{ paymentId }}"
@@ -22,4 +22,6 @@
             </label>
         </div>
     {% endfor %}
+
+    <small class='field-error' x-text='state.form.errors.paymentMethod'></small>
 </div>

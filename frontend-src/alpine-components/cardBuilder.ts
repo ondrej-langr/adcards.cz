@@ -64,6 +64,7 @@ type State = z.output<typeof builderStateSchema> & Omit<BuilderDataOnWindow, 'de
   getActiveSize(): any
   readPlayerImage(event: Event): void
   imageUploaderOpen: boolean
+  onSubmit(event: SubmitEvent): void
   _step: { current: number, largestStepTaken: number }
 }
 
@@ -78,8 +79,7 @@ export default function cardBuilder(): AlpineComponent<State> {
   let cropper: Cropper | null = null
   let initialStep = 0
 
-  console.log({ initialState })
-
+  // TODO: move this logic inside server for improved UX (user sees first step always with this logic as javascript takes some time to load)
   if (!!initialState.materialId && !initialState.sportId) {
     initialStep = 1
   } else if (!!initialState.materialId && !!initialState.sportId && !initialState.backgroundId) {
@@ -290,6 +290,15 @@ export default function cardBuilder(): AlpineComponent<State> {
 
     isRealPlayer() {
       return this.cardType === 'realPlayer'
+    },
+
+    /**
+     * This actually behaves like a "middleware" that checks fields before sending it to server
+     */
+    onSubmit(event) {
+      console.log(event)
+
+      event.preventDefault()
     },
   }
 }

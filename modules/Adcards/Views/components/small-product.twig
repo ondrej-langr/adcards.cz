@@ -1,3 +1,4 @@
+<!-- start @modules:Adcards/components/small-product.twig -->
 {% set rootId = "small-product-" ~ data.id %}
 <div id='{{ rootId }}' class='d-flex cart-overview__item'>
     <div class='cart-overview__item-image'>
@@ -39,9 +40,10 @@
         <button
                 type='button'
                 hx-delete='{{ url_for("removeFromCart") }}?product-id={{ data.id }}'
-                hx-target="#cartForm-right-side"
+                hx-target="#cart-right-side"
                 hx-swap='outerHTML'
                 class='delete ignore-button-styles'
         ></button>
     </form>
 </div>
+<!-- end @modules:Adcards/components/small-product.twig -->

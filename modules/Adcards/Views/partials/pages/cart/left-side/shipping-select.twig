@@ -1,12 +1,12 @@
-<div class="checkbox-group col-xl-12" x-data='{ shippingMethod: "dpd" }'>
+<div class="checkbox-group col-xl-12">
     <div class="form-group col-xl-12" style="padding: 0px;margin-bottom: 10px;margin-top: 5px;">
         <h4>Výběr dopravy</h4>
     </div>
 
-    {% for shippingKey, shippingItem in shipping.choices %}
+    {% for shippingKey, shippingItem in shippingMethods %}
         <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
             <input type="radio"
-                   name="shipping"
+                   name="shippingMethod"
                    value='{{ shippingKey }}'
                    x-model="shippingMethod"
                    id="shipping-{{ shippingKey }}">
@@ -20,7 +20,7 @@
         </div>
     {% endfor %}
 
-    {% for shippingKey, shippingItem in shipping.choices %}
+    {% for shippingKey, shippingItem in shippingMethods %}
         {% if shippingItem.bonusContentAfterSelect is not same as(null) %}
             <div class="form-group shipping-around w100 w100-mob"
                  x-show="shippingMethod === '{{ shippingKey }}'" style='display: none'>
@@ -30,6 +30,5 @@
         {% endif %}
     {% endfor %}
 
-
-    <input name='shippingMethod' x-model='shippingMethod' class='d-none' />
+    <small class='field-error' x-text='state.form.errors.shippingMethod'></small>
 </div>

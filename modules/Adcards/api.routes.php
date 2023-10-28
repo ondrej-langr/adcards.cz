@@ -13,12 +13,12 @@ return function (App $app, RouteCollectorProxy $router) {
         ->setName("createNewCard");
 
     $router
-        ->delete('/cartForm/card/remove', ApiControllers\Cart\CardController::class . ":removeOneAtIndex")
+        ->delete('/cart/card/remove', ApiControllers\Cart\CardController::class . ":removeOneAtIndex")
         ->setName("removeCardByIndex");
 
     $router
         ->post('/cart/product/append', ApiControllers\Cart\ProductController::class . ":append")
-        ->setName('add-to-cartForm');
+        ->setName('add-to-cart');
 
     $router
         ->post('/cart/product/update', ApiControllers\Cart\ProductController::class . ":update")

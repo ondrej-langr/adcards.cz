@@ -1,0 +1,70 @@
+<!-- start @modules:Adcards/partials/pages/builder/form/form.twig -->
+<section class="container">
+    <div class="row">
+        {{ include("@modules:Adcards/partials/pages/builder/form/card-preview.twig") }}
+        <div class="col card-info">
+            <div class="card">
+                <div class="card-body">
+                    <div class="price-around">
+                        <h1>
+                            <span x-text='getActiveBackground()?.name'></span><br />
+                            <small class="total-price">(<span x-text='getActiveSizeAsLabel()'></span>)</small>
+                        </h1>
+
+                        <span x-text='getTotalPrice()' class="total-price">
+                        </span>
+                    </div>
+                </div>
+            </div>
+            {{ include("@modules:Adcards/partials/pages/builder/form/size-select.twig") }}
+            <div class="card worko-tabs">
+                <div class="tabs flex-tabs">
+                    <button @click='cardType = "player"' class="tab tab1"
+                            :data-is-active="!isRealPlayer()">{{ 'Vlastní karta'|t }}</button>
+
+                    <button @click='cardType = "realPlayer"' class="tab tab2"
+                            :data-is-active="isRealPlayer()">{{ 'Karta reálného hráče'|t }}</button>
+
+                    {{ include("@modules:Adcards/partials/pages/builder/form/player-fields.twig") }}
+                    {{ include("@modules:Adcards/partials/pages/builder/form/real-player-fields.twig") }}
+                </div>
+            </div>
+            <div class="card">
+                <form
+                        id="builder-form"
+                        action="{{ url_for('createNewCard') }}"
+                        method="POST"
+                        hx-target='#builder-root'
+                        hx-post="{{ url_for('createNewCard') }}"
+                        hx-swap="outerHTML"
+                        @submit='onSubmit'
+                >
+
+                    <input type="hidden" name="playerImage" x-model="playerImage" />
+                    <input type="hidden" name="countryId" x-model="countryId" />
+                    <input type="hidden" name="rating" x-model="rating" />
+                    <input type="hidden" name="position" x-model="position" />
+                    <input type="hidden" name="name" x-model="name" />
+                    <input type="hidden" name="backgroundId" x-model="backgroundId" />
+                    <input type="hidden" name="materialId" x-model="materialId" />
+                    <input type="hidden" name="sportId" x-model="sportId" />
+                    <input type="hidden" name="cardType" x-model="cardType" />
+                    <input type="hidden" name="sizeId" x-model="sizeId" />
+                    <template x-for='stat in stats[cardType]'>
+                        <input type="hidden"
+                               :name="'stats[' + stat.name + ']'"
+                               :value="stat.value" />
+                    </template>
+                    <button class="btn btn-primary" type="submit" id="add-to-cart-btn"
+                            :disabled='!isFormValid'
+                            :title='!isFormValid ? "Dokončete formulář" : ""'>{{ 'Přidat do košíku'|t }}</button>
+                    <div style="width: 100%; text-align: center; margin-top: 8px;">
+                        <p class="conditions">{{ "Odesláním formuláře souhlasíte se <a href='#' target='_blank'>všeobecnými podmíkami"|t|raw }}</a>
+                            a se zpracováním osobních údajů.</p>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- end -->

@@ -1,0 +1,16 @@
+<!-- start @modules:Adcards/components/input.twig -->
+{% set defaultAttributes = {
+    name,
+    type: type ?? "text",
+    class: "form-control" ~ (required ? " input-required" : ""),
+    placeholder: placeholder ? placeholder ~ (required ? " *" : "") : null,
+    value: initialValue,
+    required: required ? "" : null,
+    ":class":  bindAlpine ? "state?.form?.errors?.['" ~ name ~ "'] ? 'error' : ''" : null,
+    "x-model": bindAlpine ? name : null
+} %}
+{% set attributesToRender = defaultAttributes|merge(attributes ?? {}) %}
+
+<input {% for key, value in attributesToRender|filter(i => i is not null) %}{{ key|raw }}="{{ value|raw }}" {% endfor %}>
+<small class="field-error" x-text='state?.form?.errors["{{ name }}"]'></small>
+<!-- end @modules:Adcards/components/input.twig -->

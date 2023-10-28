@@ -1,5 +1,6 @@
-{% set id = 'cart-successes-' ~ random() %}
-<div id='{{ id }}' class="alert success">
+<!-- start @modules:Adcards/components/toast-alert.twig -->
+{% set id = 'toast-message-' ~ random() %}
+<div id='{{ id }}' class="alert {{ isError ? "danger" : "success" }}">
     {{ message|t }}
     <script>
       setTimeout(() => {
@@ -7,3 +8,4 @@
       }, 4000)
     </script>
 </div>
+<!-- end @modules:Adcards/components/toast-alert.twig -->

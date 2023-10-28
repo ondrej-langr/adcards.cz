@@ -51,7 +51,7 @@ h1 {
     letter-spacing: 2px
 }
 
-button span {
+button:not(.ignore-button-styles) span {
     text-transform: uppercase;
     font-weight: 700;
     font-size: 16px;
@@ -573,7 +573,7 @@ nav.dark ul li.btn-custom:hover {
     text-align: center
 }
 
-button:hover span {
+button:not(.ignore-button-styles):hover span {
     color: #fff
 }
 
@@ -921,7 +921,7 @@ div.cookies a.close-cookie-warning {
     left: 0;
     width: 100%;
     z-index: 99999;
-    position: fixed
+    position: fixed;
 }
 
 .image-editor-content {
@@ -929,7 +929,10 @@ div.cookies a.close-cookie-warning {
     display: flex;
     flex-wrap: wrap;
     flex-direction: row;
-    position: relative
+    position: relative;
+    height: 100%;
+    overflow: auto;
+    overscroll-behavior: none;
 }
 
 .image-editor-content.toggled {
@@ -3304,6 +3307,11 @@ form .form-group textarea {
     font-size: 16px;
     color: #000;
     font-weight: 700
+}
+
+form .form-group input.error,
+form .form-group textarea.error {
+    border: 1px solid var(---colors-brand-signature) !important;
 }
 
 .contact-inner .headline {

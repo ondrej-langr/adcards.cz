@@ -1,5 +1,14 @@
-<button type="button" @click="showZasilkovnaSelect()"
-        x-text='shippingMetadata ? shippingMetadata.name : "{{ 'Vybrat místo'|t }}"'></button>
-<input class='d-none' required name='shippingMetadata'
-       :value='shippingMetadata? JSON.stringify(shippingMetadata) : undefined' />
+<!-- start @modules:Adcards/partials/pages/cart/shipping/zasilkovna-select.twig -->
+<template x-if='shippingMethod === "zasilkovna"'>
+    <div>
+        <button type="button" @click="showZasilkovnaSelect()"
+                x-text='shippingMetadata ? shippingMetadata.name : "{{ 'Vybrat místo'|t }}"'></button>
+        <input class='w-100 '
+               style='max-height: 0px; min-height: 0px;padding: 0;margin: 0;border:0;opacity: 0; top: -10px;position: relative;'
+               required
+               name='shippingMetadata'
+               :value='shippingMetadata? JSON.stringify(shippingMetadata) : undefined' />
+    </div>
+</template>
+<!-- end @modules:Adcards/partials/pages/cart/shipping/zasilkovna-select.twig -->
 

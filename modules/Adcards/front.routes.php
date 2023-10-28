@@ -37,6 +37,7 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     $router->get('/karty/builder', Controllers\BuilderController::class . ":get")->setName("builder");
     $router->get('/kosik', Controllers\CartController::class . ":get")->setName("cart");
     $router->get('/produkty', Controllers\ProductsController::class . ":get")->setName("products");
+    $router->get('/objednavky/{orderUuid}', Controllers\OrdersController::class . ":getOne")->setName("orderPage");
 
     $router->get('/faq', function (
         ServerRequestInterface $request,

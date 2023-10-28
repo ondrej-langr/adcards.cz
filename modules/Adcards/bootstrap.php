@@ -49,7 +49,7 @@ function getCommonCartTemplateVariables(Cart $cart): array
         ],
         "cardSizes" => $cardSizes,
         "cardMaterials" => $cardMaterials,
-        "shipping" => Cart::$availableShipping,
+        "shippingMethods" => Cart::$availableShipping,
         "paymentMethods" => Cart::$availablePaymentMethods
     ];
 }
@@ -74,7 +74,7 @@ return function (App $app) {
         $cartFromSession = $container->get(Cart::class);
 
         // Load cart items from session into Cart class instance
-        $cartFromSession->setState($session->get('cartForm', Cart::$defaultState));
+        $cartFromSession->setState($session->get('cart', Cart::$defaultState));
         // Add cart state into each template (at least to those that render page components, since this variable is only added on request)
         $rendering->getEnvironment()->addGlobal('cartSize', $cartFromSession->getCount());
 

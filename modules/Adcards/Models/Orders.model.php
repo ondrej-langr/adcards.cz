@@ -22,9 +22,29 @@ class Orders extends Model
       'unique' => true,
       'editable' => false,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'number',
       'autoIncrement' => true,
+    ],
+
+    '_uuid' => [
+      'title' => 'Unikátní identifikátor objednávky',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => false,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => true,
+        'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'normal',
+      ],
+      'readonly' => false,
+      'type' => 'string',
     ],
 
     'firstName' => [
@@ -36,9 +56,10 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -51,9 +72,10 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -66,9 +88,10 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -81,9 +104,10 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -96,13 +120,14 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
-    'buildingNumber' => [
+    'building_number' => [
       'title' => 'Číslo baráku',
       'hide' => false,
       'required' => true,
@@ -111,9 +136,10 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -126,13 +152,14 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
-    'postalCode' => [
+    'postal_code' => [
       'title' => 'PSČ',
       'hide' => false,
       'required' => true,
@@ -141,9 +168,10 @@ class Orders extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -154,18 +182,74 @@ class Orders extends Model
       'unique' => false,
       'editable' => true,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'longText',
     ],
 
-    'promoCode' => [
+    'shipping_method' => [
+      'title' => 'Typ dopravy',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => false,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'normal',
+      ],
+      'readonly' => false,
+      'type' => 'string',
+    ],
+
+    'payment_method' => [
+      'title' => 'Typ platby',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => false,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'normal',
+      ],
+      'readonly' => false,
+      'type' => 'string',
+    ],
+
+    'status' => [
+      'title' => 'Stav',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
+      'type' => 'enum',
+      'enum' => ['CREATED', 'CANCELED', 'PENDING', 'CONFIRMED', 'FINISHED'],
+    ],
+
+    'promo_code' => [
       'title' => 'Slevový kód',
       'hide' => false,
       'required' => false,
       'unique' => false,
       'editable' => true,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'promo_codes',
       'labelConstructor' => 'id',
@@ -181,7 +265,11 @@ class Orders extends Model
       'unique' => false,
       'editable' => true,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'cards',
       'labelConstructor' => 'id',
@@ -191,13 +279,17 @@ class Orders extends Model
     ],
 
     'products' => [
-      'title' => 'Artefakty',
+      'title' => 'Produkty',
       'hide' => false,
       'required' => false,
       'unique' => false,
       'editable' => true,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'products',
       'labelConstructor' => 'id',
@@ -206,14 +298,18 @@ class Orders extends Model
       'foreignKey' => 'id',
     ],
 
-    'finalPrice' => [
+    'cost' => [
       'title' => 'Celková částka',
       'hide' => false,
       'required' => true,
       'unique' => false,
       'editable' => false,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'number',
       'autoIncrement' => false,
     ],
@@ -225,7 +321,11 @@ class Orders extends Model
       'unique' => false,
       'editable' => false,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'enum',
       'enum' => ['CZK', 'EUR'],
     ],
@@ -237,7 +337,11 @@ class Orders extends Model
       'unique' => false,
       'editable' => false,
       'translations' => false,
-      'admin' => ['isHidden' => true, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => true,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'number',
       'autoIncrement' => true,
     ],

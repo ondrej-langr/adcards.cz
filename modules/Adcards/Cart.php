@@ -12,18 +12,19 @@ use PromCMS\Modules\Adcards\Enums\CartItemTypes;
 class Cart
 {
     public static array $availableShipping = [
-        "choices" => [
-            "dpd" => [
-                "title" => "DPD",
-                "rate" => 90 // KČ
-            ],
-            "zasilkovna" => [
-                "title" => "Zásilkovna",
-                "metadataRequiredFields" => ["name", "zip"],
-                "rate" => 110, // KČ
-                "bonusContentAfterSelect" => '@modules:Adcards/partials/pages/cart/shipping/zasilkovna-select.twig'
-            ]
+        "dpd" => [
+            "title" => "DPD",
+            "rate" => 90 // KČ
         ],
+        "zasilkovna" => [
+            "title" => "Zásilkovna",
+            "metadataRequiredFields" => [
+                "name",
+                "zip"
+            ],
+            "rate" => 110, // KČ
+            "bonusContentAfterSelect" => '@modules:Adcards/partials/pages/cart/shipping/zasilkovna-select.twig'
+        ]
     ];
     public static array $availablePaymentMethods = [
         "gopay" => [

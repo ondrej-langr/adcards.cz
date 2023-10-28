@@ -22,7 +22,11 @@ class MainPageSlides extends Model
       'unique' => true,
       'editable' => false,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'number',
       'autoIncrement' => true,
     ],
@@ -36,9 +40,10 @@ class MainPageSlides extends Model
       'translations' => true,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'heading',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -51,9 +56,10 @@ class MainPageSlides extends Model
       'translations' => true,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -66,9 +72,10 @@ class MainPageSlides extends Model
       'translations' => true,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
 
@@ -81,9 +88,10 @@ class MainPageSlides extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'big-image',
       ],
+      'readonly' => false,
       'type' => 'file',
       'multiple' => false,
       'typeFilter' => 'image',
@@ -96,7 +104,11 @@ class MainPageSlides extends Model
       'unique' => false,
       'editable' => false,
       'translations' => false,
-      'admin' => ['isHidden' => true, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => true,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'number',
       'autoIncrement' => true,
     ],

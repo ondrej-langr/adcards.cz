@@ -7,6 +7,7 @@ import 'cropperjs/dist/cropper.css'
 declare global {
   interface Window {
     Alpine: typeof Alpine
+    Packeta: any,
     application: {
       builder?: {
         materials: { id: string }[],

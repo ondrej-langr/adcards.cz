@@ -330,6 +330,10 @@ input[type=radio] {
     gap: 1rem;
 }
 
+.cart-overview__item:not(:first-of-type) {
+    margin-top: 1rem;
+}
+
 .cart-overview__item-image {
     max-width: 90px;
     width: 100%;

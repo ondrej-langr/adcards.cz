@@ -22,7 +22,11 @@ class NewsletterSubscriptions extends Model
       'unique' => true,
       'editable' => false,
       'translations' => false,
-      'admin' => ['isHidden' => false, 'editor' => ['placement' => 'main']],
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
       'type' => 'number',
       'autoIncrement' => true,
     ],
@@ -36,9 +40,10 @@ class NewsletterSubscriptions extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main'],
+        'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'normal',
       ],
+      'readonly' => false,
       'type' => 'string',
     ],
   ];

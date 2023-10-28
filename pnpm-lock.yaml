@@ -23,14 +23,14 @@ devDependencies:
     specifier: ^0.20.1
     version: 0.20.1(prettier@3.0.3)
   '@prom-cms/admin':
-    specifier: ^0.12.5
-    version: 0.12.5(postcss@8.4.31)
+    specifier: ^0.13.0
+    version: 0.13.0(postcss@8.4.31)
   '@prom-cms/cli':
-    specifier: ^0.21.1
-    version: 0.21.1(@types/node@20.8.2)(postcss@8.4.31)
+    specifier: ^0.21.2
+    version: 0.21.2(@types/node@20.8.2)(postcss@8.4.31)
   '@prom-cms/schema':
-    specifier: ^0.2.1
-    version: 0.2.1
+    specifier: ^0.3.0
+    version: 0.3.0
   '@prom-cms/vite-plugin':
     specifier: ^0.7.1
     version: 0.7.1(axios@0.27.2)(vite@4.4.11)
@@ -1884,8 +1884,8 @@ packages:
       prettier: 3.0.3
     dev: true
 
-  /@prom-cms/admin@0.12.5(postcss@8.4.31):
-    resolution: {integrity: sha512-eW/WUhypQLs662taedL99ntjMrLvuiwGca4D1s8Ct/RC1UBkkwAe6nqSDvV1dEXJl/62UeRj491txTWOW5yHBA==}
+  /@prom-cms/admin@0.13.0(postcss@8.4.31):
+    resolution: {integrity: sha512-j9hhEm/qmrSbR55ckqKi0m16sUtpYKVt+LCUADA2wrHm3MPSF/tzQcReDFvpkqTQcoEKRjDpwGE67xbiXVBy+Q==}
     dependencies:
       '@calumk/editorjs-columns': 0.2.4
       '@editorjs/editorjs': 2.28.0
@@ -1906,7 +1906,7 @@ packages:
       '@mantine/notifications': 5.10.5(@mantine/core@5.10.5)(@mantine/hooks@5.10.5)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.0
       '@prom-cms/api-client': 0.7.1(axios@0.24.0)
-      '@prom-cms/schema': 0.2.1
+      '@prom-cms/schema': 0.3.0
       '@prom-cms/shared': 2.0.0
       '@svgr/webpack': 6.5.1
       '@tanstack/react-query': 4.2.3(react-dom@18.2.0)(react@18.2.0)
@@ -1954,14 +1954,14 @@ packages:
       axios: 0.24.0
     dev: true
 
-  /@prom-cms/cli@0.21.1(@types/node@20.8.2)(postcss@8.4.31):
-    resolution: {integrity: sha512-K404gEbvNbJJ7FyTCHmZxFn/jYI4Q7+D8JyFjSPk9ndq78ghGjKeF43yFZOr+tdzvU1rpF2IT6CFsg5AewgUXQ==}
+  /@prom-cms/cli@0.21.2(@types/node@20.8.2)(postcss@8.4.31):
+    resolution: {integrity: sha512-aed8mWHh1Kne2nv0R6CSUPLApsUrljEpY6yMaRjLc23+mHTNIPlcbnGZIXewwWg7jrzJ2pYgY59ZXGlQm5Fjqg==}
     hasBin: true
     dependencies:
       '@faker-js/faker': 7.6.0
-      '@prom-cms/admin': 0.12.5(postcss@8.4.31)
+      '@prom-cms/admin': 0.13.0(postcss@8.4.31)
       '@prom-cms/config': 0.1.7(prettier@3.0.3)
-      '@prom-cms/shared': 2.0.0
+      '@prom-cms/shared': 2.1.0
       chalk: 5.3.0
       commander: 11.0.0
       dayjs: 1.11.10
@@ -1998,8 +1998,8 @@ packages:
       - prettier
     dev: true
 
-  /@prom-cms/schema@0.2.1:
-    resolution: {integrity: sha512-tMATFLc+/B/zeSk3xdTyWaouLXCQD8cO3VmKD6Pbq4zLK7CZVWEIPHgJGui8jegMq1XZ4M2uSPGBOwf9FEwNcA==}
+  /@prom-cms/schema@0.3.0:
+    resolution: {integrity: sha512-hgc1H6l3xJ8+Jzhy6cZ2NtLOy07kVquhgXFXBPfmrG7bm1sQz+w86xNrlb+/NZl7EYIs+4+5+XxO67muzj32rQ==}
     dependencies:
       lodash.kebabcase: 4.1.1
       zod: 3.22.4
@@ -2007,6 +2007,13 @@ packages:
 
   /@prom-cms/shared@2.0.0:
     resolution: {integrity: sha512-JMa8wY+zD7uqJcSs4XZ4kXjXFCMIR6Il6w4NtBhmAzwp0j9SOXbKaw/zEsZ4R01O3yWEBnH0HScmVv10UJ+X0A==}
+    dependencies:
+      lodash.kebabcase: 4.1.1
+      zod: 3.22.4
+    dev: true
+
+  /@prom-cms/shared@2.1.0:
+    resolution: {integrity: sha512-8acevmlNn44hSXbG9TmF5KEchRoOeQlWQysBNXoCqalAVlzgdaAi/LnOZL7Z6yhp2Jh6P3j73S+XLH1g7LgVbQ==}
     dependencies:
       lodash.kebabcase: 4.1.1
       zod: 3.22.4
