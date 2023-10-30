@@ -30,6 +30,9 @@ const sportsModel = {
       'translations': true,
       'type': 'longText',
       'title': 'Popisek',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
     'image': {
       'required': true,
@@ -43,6 +46,7 @@ const sportsModel = {
       'typeFilter': 'image',
       'admin': {
         'fieldType': 'big-image',
+        editor: { width: 6 },
       },
     },
   },

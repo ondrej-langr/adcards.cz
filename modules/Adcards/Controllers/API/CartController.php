@@ -13,6 +13,7 @@ use PromCMS\Modules\Adcards\OrderStatus;
 use PromCMS\Modules\Adcards\UUID;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Middleware\Session;
 
 class CartController
 {
@@ -26,6 +27,12 @@ class CartController
     public function checkout(ServerRequestInterface $request, ResponseInterface $response, $args)
     {
         $cart = $this->container->get(Cart::class);
+        /**
+         * @var $fs Filesystem
+         * @var $session Session
+         */
+        $fs = $this->container->get("filesystem");
+        $session = $this->container->get('session');
 
         if (empty($cart->getProducts()) && empty($cart->getCards())) {
             return $response->withStatus(400);
@@ -149,7 +156,8 @@ class CartController
         $orderPayload->status = OrderStatus::CREATED;
 
         if ($promoCode = $cart->getPromoCode()) {
-            $orderPayload->promo_code = $promoCode["id"];
+            $orderPayload->promo_code_value = $promoCode["code"];
+            $orderPayload->promo_code_amount = intval($promoCode["amount"]);
         }
 
         $cardsInCart = $cart->getCards();
@@ -165,17 +173,11 @@ class CartController
                 $cardPayload->name = $cardInCartAsArray["name"];
                 $cardPayload->background = $cardInCartAsArray["background"];
                 $cardPayload->sport = $cardInCartAsArray["sport"];
-                $cardPayload->material = $cardInCartAsArray["material"];
                 $cardPayload->size = $cardInCartAsArray["size"];
                 $cardPayload->card_type = $cardInCartAsArray["cardType"];
 
                 // Handle non real player as that has more fields to process
                 if ($cardInCartAsArray["cardType"] !== "realPlayer") {
-                    /**
-                     * @var $fs Filesystem
-                     */
-                    $fs = $this->container->get("fs");
-
                     $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
                     $filename = basename($uploadedPlayerImagePath);
                     $filepath = "/hraci-karet/" . $filename;
@@ -186,7 +188,7 @@ class CartController
                     ]);
                     $fs->move(
                         $uploadedPlayerImagePath,
-                        $this->container->get(Config::class)->fs->uploadsPath . $filepath
+                        $filepath
                     );
 
                     $cardPayload->rating = $cardInCartAsArray["rating"];
@@ -209,10 +211,13 @@ class CartController
             $orderPayload->products = array_keys($products);
         }
 
-        $orderPayload->cost = $cart->getTotal();
+        $orderPayload->subtotal_cost = $cart->getTotal(false);
+        $orderPayload->total_cost = $cart->getTotal(true);
         $orderPayload->currency = "CZK";
 
         $ordersService->create((array)$orderPayload);
+
+        $session->delete("cart");
 
         return $response->withHeader("HX-Location", "/objednavky/$orderUuid");
     }

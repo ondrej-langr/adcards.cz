@@ -219,7 +219,7 @@ class Cart
             $productInfoFromCart = $productsFromCart[$product["id"]];
             $result[$product["id"]] = array_merge($productInfoFromCart, [
                 // count -> but that is already from state
-                "data" => $product,
+                "product" => $product,
                 "price" => [
                     "total" => $product["price"] * $productInfoFromCart["count"]
                 ]

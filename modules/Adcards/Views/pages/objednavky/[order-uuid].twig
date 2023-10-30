@@ -1,7 +1,85 @@
 {% extends '@modules:Adcards/layouts/site-layout/site-layout.twig' %}
 
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/order-underpage.css">
+{% endblock %}
+
 {% block content %}
-    <div>
-        Děkujeme!
+    <div class='order-underpage'>
+        <div class='text-center'>
+            <h3 class='text-muted'>{{ "Děkujeme!"|t }}</h3>
+            <h1>{{ "Přehled objednávky"|t }}: <span class='text-brands-signature'>#{{ order.id }}</span></h1>
+        </div>
+        <div class='order-underpage__content'>
+            <div>
+                <section>
+                    <h2>{{ "Základní info"|t }}</h2>
+                    <ul>
+                        <li>{{ "Číslo objednávky"|t }}: #{{ order.id }}</li>
+                        <li>{{ "Datum objednání"|t }}: {{ order.created_at|date("j. F Y @h:i") }}</li>
+                        <li>{{ "Aktuální stav"|t }}: {{ order.status|t }}</li>
+                    </ul>
+                </section>
+                <section>
+                    <h2>{{ "Adresa"|t }}</h2>
+                    <ul>
+                        <li class='mb-2'>{{ order.firstName }} {{ order.lastName }}</li>
+                        <li>{{ order.street }} {{ order.building_number }}</li>
+                        <li>{{ order.postal_code }}, {{ order.city }}</li>
+                    </ul>
+                </section>
+                {% if order.note %}
+                    <section>
+                        <h2>{{ "Poznámka"|t }}</h2>
+                        <p>
+                            {{ order.note }}
+                        </p>
+                    </section>
+                {% endif %}
+            </div>
+            <div>
+                {% if order.cards|length > 0 %}
+                    <section>
+                        <h2>{{ "Objednané karty"|t }}</h2>
+                        {% for item in order.cards %}
+                            {{ include("@modules:Adcards/components/small-card.twig", {
+                                "card": item,
+                                "size": item.size,
+                                "index": loop.index0
+                            }) }}
+                        {% endfor %}
+                    </section>
+                {% endif %}
+                {% if order.products|length > 0 %}
+                    <section>
+                        <h2>{{ "Objednané produkty"|t }}</h2>
+                        {% for item in order.products %}
+                            {{ include("@modules:Adcards/components/small-product.twig", {
+                                orderedProduct: item,
+                                readOnly: true
+                            }) }}
+                        {% endfor %}
+                    </section>
+                {% endif %}
+                <section>
+                    {% if order.promo_code_value %}
+                        <div class='d-flex justify-content-between text-muted'>
+                            <p>Mezisoučet: </p>
+                            <p>{{ order.subtotal_cost }} Kč</p>
+                        </div>
+                        <div class='d-flex justify-content-between text-muted'>
+                            <p>Sleva: ({{ order.promo_code_value }} {{ order.promo_code_amount }}%)</p>
+                            <p>
+
+                                -{{ order.subtotal_cost - order.total_cost }}Kč</p>
+                        </div>
+                    {% endif %}
+                    <div class='d-flex justify-content-between'>
+                        <p class='font-weight-bold'>Celková částka:</p>
+                        <p class='text-brands-signature font-weight-bold'>{{ order.total_cost }} Kč</p>
+                    </div>
+                </section>
+            </div>
+        </div>
     </div>
 {% endblock %}

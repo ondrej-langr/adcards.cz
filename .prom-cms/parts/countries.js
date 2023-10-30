@@ -25,6 +25,9 @@ const countriesModel = {
       'title': 'Název',
       'admin': {
         'fieldType': 'heading',
+        editor: {
+          width: 6,
+        },
       },
     },
     'flag': {
@@ -37,6 +40,11 @@ const countriesModel = {
       'type': 'file',
       'title': 'Vlajka',
       'typeFilter': 'image',
+      admin: {
+        editor: {
+          width: 6,
+        },
+      },
     },
   },
 }

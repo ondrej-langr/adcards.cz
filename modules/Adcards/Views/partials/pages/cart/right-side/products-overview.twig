@@ -3,7 +3,9 @@
 
     <div class="full-order cart-overview__items">
         {% for itemId, item in cart.products %}
-            {{ include("@modules:Adcards/components/small-product.twig", item) }}
+            {{ include("@modules:Adcards/components/small-product.twig", {
+                orderedProduct: item
+            }) }}
         {% endfor %}
     </div>
 {% endif %}

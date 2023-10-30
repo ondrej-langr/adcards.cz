@@ -31,24 +31,36 @@ const ordersModel = {
       'translations': false,
       'type': 'string',
       'title': 'Jméno',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
     'lastName': {
       'required': true,
       'translations': false,
       'type': 'string',
       'title': 'Příjmení',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
     'email': {
       'required': true,
       'translations': false,
       'type': 'string',
       'title': 'Email',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
     'phone': {
       'required': true,
       'translations': false,
       'type': 'string',
       'title': 'Telefon',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
     'street': {
       'required': true,
@@ -61,18 +73,27 @@ const ordersModel = {
       'translations': false,
       'type': 'string',
       'title': 'Číslo baráku',
+      'admin': {
+        editor: { width: 4 },
+      },
     },
     'city': {
       'required': true,
       'translations': false,
       'type': 'string',
       'title': 'Město',
+      'admin': {
+        editor: { width: 4 },
+      },
     },
     'postal_code': {
       'required': true,
       'translations': false,
       'type': 'string',
       'title': 'PSČ',
+      'admin': {
+        editor: { width: 4 },
+      },
     },
     'note': {
       'required': false,
@@ -86,6 +107,9 @@ const ordersModel = {
       'translations': false,
       'type': 'string',
       'title': 'Typ dopravy',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
     'payment_method': {
       'editable': false,
@@ -93,6 +117,9 @@ const ordersModel = {
       'translations': false,
       'type': 'string',
       'title': 'Typ platby',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
 
     'status': {
@@ -112,15 +139,11 @@ const ordersModel = {
         'FINISHED',
       ],
       'title': 'Stav',
-    },
-
-    'promo_code': {
-      'required': false,
-      'translations': false,
-      'type': 'relationship',
-      'targetModel': 'promo_codes',
-      'labelConstructor': 'id',
-      'title': 'Slevový kód',
+      admin: {
+        editor: {
+          placement: 'aside',
+        },
+      },
     },
     'cards': {
       'required': false,
@@ -130,6 +153,7 @@ const ordersModel = {
       'targetModel': 'cards',
       'labelConstructor': 'id',
       'title': 'Vytvořené karty',
+      readonly: true,
     },
     'products': {
       'required': false,
@@ -139,25 +163,72 @@ const ordersModel = {
       'targetModel': 'products',
       'labelConstructor': 'id',
       'title': 'Produkty',
+      readonly: true,
     },
 
-    'cost': {
+    'subtotal_cost': {
       'required': true,
       'editable': false,
       'unique': false,
       'hide': false,
       'translations': false,
       'type': 'number',
+      'title': 'Mezisoučet',
+      readonly: true,
+      admin: {
+        editor: {
+          placement: 'aside',
+        },
+      },
+    },
+    'promo_code_value': {
+      'required': false,
+      'translations': false,
+      'type': 'string',
+      'title': 'Slevový kód - název',
+      readonly: true,
+      admin: {
+        editor: {
+          width: 6,
+          placement: 'aside',
+        },
+      },
+    },
+    'promo_code_amount': {
+      'required': false,
+      'translations': false,
+      'type': 'number',
+      'title': 'Slevový kód - hodnota',
+      readonly: true,
+      admin: {
+        editor: {
+          width: 6,
+          placement: 'aside',
+        },
+      },
+    },
+    'total_cost': {
+      'required': true,
+      'editable': false,
+      'unique': false,
+      'translations': false,
+      'type': 'number',
       'title': 'Celková částka',
+      readonly: true,
+      admin: {
+        editor: {
+          placement: 'aside',
+        },
+      },
     },
     'currency': {
       'required': true,
       'editable': false,
       'unique': false,
-      'hide': false,
       'translations': false,
       'type': 'enum',
       'enum': ['CZK', 'EUR'],
+      readonly: true,
       'title': 'Měna',
     },
   },

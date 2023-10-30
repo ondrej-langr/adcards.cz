@@ -9,14 +9,15 @@
         countries: JSON.parse('{{ countries|json_encode|raw }}'),
         sports: JSON.parse('{{ sports|json_encode|raw }}'),
         sizes: JSON.parse('{{ sizes|json_encode|raw }}'),
-
-        initialValues: JSON.parse('{{ (builderInitialValues)|json_encode|raw }}'),
+        /**
+         * server state
+         */
+        state: JSON.parse('{{ state|json_encode|raw }}'),
       }
     </script>
 {% endblock %}
 
 {% block content %}
-
     <div id='builder-root' class='builder' x-data="cardBuilder">
         <nav class='builder__steps-navigation align-items-center flex'>
             <template x-for='i in 4'>
@@ -31,6 +32,7 @@
             <div
                     class='builder__steps__step'
                     x-show='currentStep === 0'
+                    {% if (state.form.values.currentStep != 0) %}style='display: none'{% endif %}
             >
                 <h3 class='text-center'>{{ "Vyberte materiál"|t }}</h3>
                 <div class="builder__grid">
@@ -52,7 +54,7 @@
             <div
                     class='builder__steps__step'
                     x-show='currentStep === 1'
-                    style='display: none'
+                    {% if (state.form.values.currentStep != 1) %}style='display: none'{% endif %}
             >
                 <h3 class='text-center'>{{ "Vyberte sport"|t }}</h3>
                 <div class="builder__grid">
@@ -76,7 +78,7 @@
             <div
                     class='builder__steps__step'
                     x-show='currentStep === 2'
-                    style='display: none'
+                    {% if (state.form.values.currentStep != 2) %}style='display: none'{% endif %}
             >
                 <h3 class='text-center'>{{ "Vyberte pozadí karty"|t }}</h3>
                 <div class="builder__grid">
@@ -99,7 +101,7 @@
 
             <div class='builder__steps__step'
                  x-show='currentStep === 3'
-                 style='display: none'
+                 {% if (state.form.values.currentStep != 3) %}style='display: none'{% endif %}
             >
                 {{ include("@modules:Adcards/partials/pages/builder/form/form.twig") }}
             </div>

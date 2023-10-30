@@ -8,19 +8,20 @@
     display: none;
 }
 
-
-.htmx-request .hx-show-on-request {
+.htmx-request .hx-show-on-request,
+.htmx-request.hx-show-on-request {
     display: block;
 }
 
-.htmx-request .hx-hide-on-request {
+.htmx-request .hx-hide-on-request,
+.htmx-request.hx-hide-on-request {
     display: none;
 }
 
 
 body {
     font-family: 'Oswald', sans-serif;
-    background-image: url(../images/bg_texture2.png);
+    background-image: url(/images/bg_texture2.png);
     background-position: left top;
     background-repeat: repeat;
     background-size: 350px 350px;
@@ -28,6 +29,10 @@ body {
     width: 100vw;
 
     ---colors-brand-signature: rgb(247, 11, 53);
+}
+
+.text-brands-signature {
+    color: var(---colors-brand-signature);
 }
 
 button:not(.ignore-button-styles), a.appearance-button {
@@ -386,6 +391,44 @@ nav ul li.btn-cart {
 .mob-cart {
     display: none !important
 }
+
+.cart-overview__items {
+    padding-bottom: 2rem;
+    gap: 1rem;
+}
+
+.cart-overview__item:not(:first-of-type),
+.cart-overview__items .small-product:not(:first-of-type) {
+    margin-top: 1rem;
+}
+
+.cart-overview__item-image,
+.small-product__image {
+    max-width: 90px;
+    width: 100%;
+    position: relative;
+    z-index: 10;
+    aspect-ratio: 1/1;
+    margin-right: 2rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+.cart-overview__item-image img,
+.small-product__image img {
+    object-position: center;
+    object-fit: cover;
+}
+
+.cart-overview__item-quantity,
+.small-product__quantity {
+    padding: 0.3rem;
+    font-size: 1.6rem;
+    flex: none;
+    width: 80px;
+    margin-right: 3rem;
+}
+
 
 @media (max-width: 767px) {
     .counter-border span {
@@ -1737,6 +1780,7 @@ a:focus {
     max-height: 300px;
     transition: max-height 400ms ease-in-out, min-height 400ms ease-in-out, visibility 400ms ease-in-out;
     overflow: auto;
+    overscroll-behavior: none;
     overflow-x: hidden;
     z-index: 2
 }

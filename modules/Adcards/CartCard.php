@@ -17,7 +17,6 @@ class CartCard
     private string $name;
     private string $backgroundId;
     private string $sportId;
-    private string $materialId;
     private string $sizeId;
     private string $cardType;
     private string|null $countryId = null;
@@ -28,7 +27,6 @@ class CartCard
     public function __construct(
         string $name,
         string $sizeId,
-        string $materialId,
         string $backgroundId,
         string $sportId,
         string $cardType,
@@ -36,7 +34,6 @@ class CartCard
     {
         $this->name = $name;
         $this->sizeId = $sizeId;
-        $this->materialId = $materialId;
         $this->backgroundId = $backgroundId;
         $this->sportId = $sportId;
         $this->cardType = $cardType;
@@ -48,16 +45,19 @@ class CartCard
         foreach ([IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_WEBP] as $type) {
             $allowedMimeTypesToFileType[image_type_to_mime_type($type)] = $type;
         }
+        $allowedMimeTypes = array_keys($allowedMimeTypesToFileType);
 
-        $imageAsStream = \imagecreatefromstring($uploadedPlayerImage);
-        $uploadedImageMimeType = mime_content_type($imageAsStream);
-        if (!in_array($uploadedImageMimeType, array_keys($allowedMimeTypesToFileType))) {
-            throw new \Exception("Nepodporovaný formát obrázku hráče. Podporujeme pouze .png, .gif, .jpeg nebo .webp");
+        [$uploadedImageMimeType, $imageData] = explode(';', $uploadedPlayerImage);
+        [, $imageData] = explode(',', $imageData);
+        [, $uploadedImageMimeType] = explode(':', $uploadedImageMimeType);
+
+        if (!in_array($uploadedImageMimeType, $allowedMimeTypes)) {
+            throw new \Exception("Nepodporovaný formát $uploadedImageMimeType obrázku hráče. Podporujeme pouze " . implode(", ", $allowedMimeTypes));
         }
 
         $extensionForImage = image_type_to_extension($allowedMimeTypesToFileType[$uploadedImageMimeType], false);
         $filePath = "/temp-uploaded-player-images/$sessionId/$fileName.$extensionForImage";
-        $fs->writeStream($filePath, $uploadedImageMimeType);
+        $fs->write($filePath, base64_decode($imageData));
 
         $this->playerImagePathname = $filePath;
 
@@ -114,7 +114,6 @@ class CartCard
             "name" => $this->name,
             "background" => $this->backgroundId,
             "sport" => $this->sportId,
-            "material" => $this->materialId,
             "size" => $this->sizeId,
             "cardType" => $this->cardType,
 
@@ -131,7 +130,6 @@ class CartCard
         $instance = new self(
             $input["name"],
             $input["size"],
-            $input["material"],
             $input["background"],
             $input["sport"],
             $input["cardType"],
@@ -150,13 +148,11 @@ class CartCard
 
     function isValid(): bool
     {
-        $cardMaterialService = new EntryTypeService(new \CardMaterial());
         $countriesService = new EntryTypeService(new \Countries());
         $cardSizesService = new EntryTypeService(new \CardSizes());
         $cardBackgroundsService = new EntryTypeService(new \CardBackgrounds());
         $sportsService = new EntryTypeService(new \Sports());
 
-        $materials = $cardMaterialService->getMany([], 1, 999)["data"];
         $sizes = $cardSizesService->getMany([], 1, 999)["data"];
         $countries = $countriesService->getMany([], 1, 999)["data"];
         $backgrounds = $cardBackgroundsService->getMany([], 1, 999)["data"];
@@ -164,7 +160,6 @@ class CartCard
 
         // TODO: use json schema for validation
         if (
-            !in_array(intval($this->materialId), getIds($materials)) ||
             !in_array(intval($this->backgroundId), getIds($backgrounds)) ||
             !in_array(intval($this->sportId), getIds($sports)) ||
             !in_array(intval($this->sizeId), getIds($sizes)) ||

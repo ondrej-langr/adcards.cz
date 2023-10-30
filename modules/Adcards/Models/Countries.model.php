@@ -40,7 +40,7 @@ class Countries extends Model
       'translations' => true,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
         'fieldType' => 'heading',
       ],
       'readonly' => false,
@@ -56,7 +56,7 @@ class Countries extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
         'fieldType' => 'normal',
       ],
       'readonly' => false,

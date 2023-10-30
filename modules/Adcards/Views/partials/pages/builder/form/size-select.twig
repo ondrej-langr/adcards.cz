@@ -1,24 +1,29 @@
 <div class="card">
-    <div class="card-body">
-        {% for size in sizes %}
-            <div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
-                <input type="radio" value="{{ size.id }}" id="size-{{ size.id }}" name="size"
-                       x-model='sizeId' />
-                <label for="size-{{ size.id }}">
-                    <div class="label-image">
-                        {% set currentImage = getImage(size.image, 65) %}
-                        <img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}"
-                             height="{{ currentImage.height }}" class='h-auto'>
-                    </div>
-                    <div class="info">
+    {% for material in materials %}
+        <div
+                class="card-body" x-show='parseInt(materialId) === {{ material.id }}'
+                {% if (state.form.values.materialId != material.id) %}style='display: none'{% endif %}
+        >
+            {% for size in material.sizes %}
+                <div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
+                    <input type="radio" value="{{ size.id }}" id="size-{{ size.id }}" name="size"
+                           x-model='sizeId' />
+                    <label for="size-{{ size.id }}">
+                        <div class="label-image">
+                            {% set currentImage = getImage(size.image, 65) %}
+                            <img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}"
+                                 height="{{ currentImage.height }}" class='h-auto'>
+                        </div>
+                        <div class="info">
 										<span class="label-name">
 											<small>{{ size.width }}x{{ size.height }}cm</small>
 										</span>
-                        <span class="label-price">{{ size.price }}
-                            {{ 'Kč'|t }}</span>
-                    </div>
-                </label>
-            </div>
-        {% endfor %}
-    </div>
+                            <span class="label-price">{{ size.price }}
+                                {{ 'Kč'|t }}</span>
+                        </div>
+                    </label>
+                </div>
+            {% endfor %}
+        </div>
+    {% endfor %}
 </div>

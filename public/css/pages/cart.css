@@ -325,39 +325,6 @@ input[type=radio] {
 
 /*  update by Ondřej Langr  */
 
-.cart-overview__items {
-    padding-bottom: 2rem;
-    gap: 1rem;
-}
-
-.cart-overview__item:not(:first-of-type) {
-    margin-top: 1rem;
-}
-
-.cart-overview__item-image {
-    max-width: 90px;
-    width: 100%;
-    position: relative;
-    z-index: 10;
-    aspect-ratio: 1/1;
-    margin-right: 2rem;
-    border-radius: 0.5rem;
-    overflow: hidden;
-}
-
-.cart-overview__item-image img {
-    object-position: center;
-    object-fit: cover;
-}
-
-.cart-overview__item-quantity {
-    padding: 0.3rem;
-    font-size: 1.6rem;
-    flex: none;
-    width: 80px;
-    margin-right: 3rem;
-}
-
 @media (max-width: 767px) {
     .cart-around {
         padding-top: 100px;

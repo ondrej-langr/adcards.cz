@@ -72,7 +72,7 @@ class MainPageSlides extends Model
       'translations' => true,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
         'fieldType' => 'normal',
       ],
       'readonly' => false,
@@ -88,7 +88,7 @@ class MainPageSlides extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
         'fieldType' => 'big-image',
       ],
       'readonly' => false,

@@ -3,48 +3,18 @@ import Cropper from 'cropperjs'
 import { z } from 'zod'
 
 const builderStateSchema = z.object({
-  materialId: z.string().transform((item) => {
-    if (!window.application.builder?.materials.map(item => String(item.id)).includes(item)) {
-      return undefined
-    }
-
-    return item
-  }),
-  backgroundId: z.string().transform((item) => {
-    if (!window.application.builder?.backgrounds.map(item => String(item.id)).includes(item)) {
-      return undefined
-    }
-
-    return item
-  }),
-  sportId: z.string().transform((item) => {
-    if (!window.application.builder?.sports.map(item => String(item.id)).includes(item)) {
-      return undefined
-    }
-
-    return item
-  }),
-  countryId: z.string().transform((item) => {
-    if (!window.application.builder?.countries.map(item => item.id).includes(item)) {
-      return undefined
-    }
-
-    return item
-  }),
-  sizeId: z.string().transform((item) => {
-    if (!window.application.builder?.sizes.map(item => String(item.id)).includes(item)) {
-      return undefined
-    }
-
-    return item
-  }),
+  materialId: z.string().optional(),
+  backgroundId: z.string().optional(),
+  sportId: z.string().optional(),
+  countryId: z.string().optional(),
+  sizeId: z.string().nullable().default(null),
   name: z.string(),
-
   stats: z.any().nullable().default(null),
   cardType: z.string().nullable().default(null),
   rating: z.string().nullable().default(null),
   position: z.string().nullable().default(null),
   playerImage: z.string().nullable().default(null),
+  currentStep: z.number().min(0),
 })
 
 type BuilderDataOnWindow = NonNullable<typeof window.application.builder>
@@ -54,7 +24,6 @@ type State = z.output<typeof builderStateSchema> & Omit<BuilderDataOnWindow, 'de
   _backgroundId: string,
   _materialId: string,
   _sportId: string,
-  currentStep: number;
   getActiveBackground(): object | undefined
   getActiveSizeAsLabel(): string
   getTotalPrice(): string
@@ -66,32 +35,41 @@ type State = z.output<typeof builderStateSchema> & Omit<BuilderDataOnWindow, 'de
   imageUploaderOpen: boolean
   onSubmit(event: SubmitEvent): void
   _step: { current: number, largestStepTaken: number }
+  _country?: undefined | BuilderDataOnWindow['countries'][number]
+  _countryFlagSrc?: undefined | string;
+  _countryName?: string;
+  setCountry(param: any): void
 }
 
 export default function cardBuilder(): AlpineComponent<State> {
-  if (!window.application.builder) {
+  const builderValues = window.application.builder
+
+  if (!builderValues) {
     throw new Error('Card builder was run without initial data on window.application.builder! You may used builder outside of its page')
   }
 
-  const initialState = builderStateSchema.partial().parse(window.application.builder.initialValues)
+  const initialState = builderStateSchema.partial().parse(builderValues.state.form.values)
 
   let cropperImage: Element | null = null
   let cropper: Cropper | null = null
-  let initialStep = 0
-
-  // TODO: move this logic inside server for improved UX (user sees first step always with this logic as javascript takes some time to load)
-  if (!!initialState.materialId && !initialState.sportId) {
-    initialStep = 1
-  } else if (!!initialState.materialId && !!initialState.sportId && !initialState.backgroundId) {
-    initialStep = 2
-  } else if (!!initialState.materialId && !!initialState.sportId && !!initialState.backgroundId) {
-    initialStep = 3
-  }
 
   // actual state
   return {
     ...window.application.builder!,
-    _step: { current: initialStep, largestStepTaken: initialStep },
+    _step: { current: initialState.currentStep ?? 0, largestStepTaken: initialState.currentStep ?? 0 },
+    _countryFlagSrc: undefined,
+    _countryName: undefined,
+    setCountry(country) {
+      this.countryId = country.id
+      this._countryName = country.name
+      console.log({ country })
+
+      if (country.flag?.src) {
+        this._countryFlagSrc = country.flag.src
+      } else {
+        this._countryFlagSrc = undefined
+      }
+    },
     get largestStepTaken() {
       return this._step.largestStepTaken
     },
@@ -177,6 +155,14 @@ export default function cardBuilder(): AlpineComponent<State> {
     },
     set materialId(nextValue: string) {
       this._materialId = nextValue
+
+      const material = builderValues.materials.find((item) => item.id === nextValue)
+      if (!material || !material.sizes) {
+        throw new Error('Material by id not found or material has no sizes')
+      }
+
+      this.sizeId = material.sizes?.[0].id
+
       this.updateSearchParamsWithState()
     },
 

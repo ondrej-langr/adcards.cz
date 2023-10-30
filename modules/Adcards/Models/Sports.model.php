@@ -56,7 +56,7 @@ class Sports extends Model
       'translations' => true,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
       ],
       'readonly' => false,
       'type' => 'longText',
@@ -71,7 +71,7 @@ class Sports extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
         'fieldType' => 'big-image',
       ],
       'readonly' => false,

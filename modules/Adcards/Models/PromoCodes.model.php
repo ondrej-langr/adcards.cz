@@ -40,7 +40,7 @@ class PromoCodes extends Model
       'translations' => true,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 4],
         'fieldType' => 'normal',
       ],
       'readonly' => false,
@@ -56,7 +56,7 @@ class PromoCodes extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 4],
       ],
       'readonly' => false,
       'type' => 'number',
@@ -72,7 +72,7 @@ class PromoCodes extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 4],
       ],
       'readonly' => false,
       'type' => 'boolean',
@@ -88,9 +88,9 @@ class PromoCodes extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
       ],
-      'readonly' => false,
+      'readonly' => true,
       'type' => 'number',
       'autoIncrement' => false,
     ],
@@ -104,9 +104,9 @@ class PromoCodes extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
       ],
-      'readonly' => false,
+      'readonly' => true,
       'type' => 'boolean',
       'default' => false,
     ],

@@ -25,6 +25,7 @@ const productsModel = {
       'title': 'Název',
       'admin': {
         'fieldType': 'heading',
+        editor: { width: 6 },
       },
     },
     'price': {
@@ -35,6 +36,9 @@ const productsModel = {
       'translations': true,
       'type': 'number',
       'title': 'Cena',
+      'admin': {
+        editor: { width: 6 },
+      },
     },
     'images': {
       'required': true,

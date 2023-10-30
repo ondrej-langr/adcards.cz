@@ -10,15 +10,27 @@ declare global {
     Packeta: any,
     application: {
       builder?: {
-        materials: { id: string }[],
+        materials: { id: string, sizes?: NonNullable<Window['application']['builder']>['sizes'] }[],
         backgrounds: { id: string }[],
         countries: { id: string }[],
         sports: { id: string }[],
-        sizes: { id: string, width: string, height: string }[],
+        sizes: { id: string, width: string, height: string, material: string }[],
 
-        initialValues: {
-          sizeId: string,
-          cardType: string
+        state: {
+          form: {
+            values: {
+              rating?: string,
+              position?: string,
+              cardType: string
+              sizeId?: string,
+              materialId?: string,
+              sportId?: string
+              backgroundId?: string
+              currentStep: number
+            },
+            errors: any[],
+            successes: any[],
+          }
         }
       }
     }

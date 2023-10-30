@@ -39,6 +39,26 @@ class BuilderController
         $this->container = $container;
     }
 
+    public function searchCountries(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        $countriesService = new EntryTypeService(new \Countries());
+        $querySearch = array_merge(["limit" => "15", "page" => "1"], $request->getQueryParams());
+        $limit = intval($querySearch["limit"]);
+        $page = intval($querySearch["page"]);
+        $query = !empty($querySearch["query"]) ? $querySearch["query"] : null;
+        $payload = [
+            "page" => $page + 1
+        ];
+
+        $payload["countries"] = $countriesService->getMany(
+            $query ? [["name", "LIKE", "%$query%"]] : [],
+            $page,
+            $limit
+        )["data"];
+
+        return $this->container->get(RenderingService::class)->render($response, '@modules:Adcards/partials/pages/builder/form/countries-list.twig', $payload);
+    }
+
     public function get(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $cardMaterialService = new EntryTypeService(new \CardMaterial());
@@ -49,37 +69,46 @@ class BuilderController
         $imageService = $this->container->get(ImageService::class);
         $fileService = $this->container->get(FileService::class);
 
-        $payload = [
-            "materials" => $cardMaterialService->getMany([], 1, 999)["data"],
-            "sizes" => $cardSizesService->getMany([], 1, 999)["data"],
-            "countries" => $countriesService->getMany([], 1, 999)["data"],
+        $payload["sizes"] = $cardSizesService->getMany([], 1, 999)["data"];
+
+        $payload = array_merge($payload, [
+            "materials" => $cardMaterialService->getMany(
+                ["id", "IN", array_unique(array_map(fn($item) => $item["id"], $payload["sizes"]))],
+                1,
+                999
+            )["data"],
+            "countries" => $countriesService->getMany([], 1, 15)["data"],
             "backgrounds" => $cardBackgroundsService->getMany([], 1, 999)["data"],
             "sports" => $sportsService->getMany([], 1, 999)["data"],
-        ];
+        ]);
 
-        $materialPublicFields = ["id", "image", "name", "description"];
-        $payload["materials"] = array_map(function ($item) use ($materialPublicFields) {
-            return array_filter($item, function ($value, $key) use ($materialPublicFields) {
-                return in_array($key, $materialPublicFields);
-            }, ARRAY_FILTER_USE_BOTH);
-        }, $payload["materials"]);
-
-        $sizesPublicFields = ["id", "image", "price", "width", "height"];
+        $sizesPublicFields = ["id", "image", "price", "width", "height", "material"];
         $payload["sizes"] = array_map(function ($item) use ($sizesPublicFields) {
             return array_filter($item, function ($value, $key) use ($sizesPublicFields) {
                 return in_array($key, $sizesPublicFields);
             }, ARRAY_FILTER_USE_BOTH);
         }, $payload["sizes"]);
 
-        $countriesPublicFields = ["id", "image"];
+        $payload["materials"] = array_map(function ($item) use ($payload) {
+            $materialPublicFields = ["id", "image", "name", "description"];
+            $filteredContents = array_filter($item, function ($value, $key) use ($materialPublicFields) {
+                return in_array($key, $materialPublicFields);
+            }, ARRAY_FILTER_USE_BOTH);
+
+            $filteredContents["sizes"] = array_values(array_filter($payload["sizes"], fn($size) => $size["material"] === $item["id"]));
+
+            return $filteredContents;
+        }, $payload["materials"]);
+
+        $countriesPublicFields = ["id", "flag", "name"];
         $payload["countries"] = array_map(function ($item) use ($countriesPublicFields) {
             return array_filter($item, function ($value, $key) use ($countriesPublicFields) {
                 return in_array($key, $countriesPublicFields);
             }, ARRAY_FILTER_USE_BOTH);
         }, $payload["countries"]);
 
-        $backgroundsPublicFields = ["id", "image", "name", "description", "textColor"];
-        $payload["backgrounds"] = array_map(function ($item) use ($backgroundsPublicFields, $imageService, $fileService) {
+        $payload["backgrounds"] = array_map(function ($item) use ($imageService, $fileService) {
+            $backgroundsPublicFields = ["id", "image", "name", "description", "textColor"];
             $backgroundResults = array_filter($item, function ($value, $key) use ($backgroundsPublicFields, $imageService, $fileService) {
                 return in_array($key, $backgroundsPublicFields);
             }, ARRAY_FILTER_USE_BOTH);
@@ -101,9 +130,8 @@ class BuilderController
             }, ARRAY_FILTER_USE_BOTH);
         }, $payload["sports"]);
 
-        $payload["builderInitialValues"] = [
+        $values = [
             "cardType" => "player",
-            "sizeId" => (string)$payload["sizes"][0]["id"],
             "rating" => '99',
             "position" => 'CAM',
             "stats" => array(
@@ -173,25 +201,41 @@ class BuilderController
                                 'value' => 99,
                             ),
                     ),
-            )
+            ),
         ];
 
         $queryParams = $request->getQueryParams();
-        $sportIds = array_map(fn($item) => $item["id"], $payload["sports"]);
-        $materialIds = array_map(fn($item) => $item["id"], $payload["materials"]);
-        $backgroundIds = array_map(fn($item) => $item["id"], $payload["backgrounds"]);
+        $values["currentStep"] = 0;
+        $sportIds = array_column($payload["sports"], "id");
+        $materialIds = array_column($payload["materials"], "id");
+        $backgroundIds = array_column($payload["backgrounds"], "id");
 
         if (isset($queryParams["materialId"]) && in_array(trim($queryParams["materialId"]), $materialIds)) {
-            $payload["builderInitialValues"]["materialId"] = trim($queryParams["materialId"]);
+            $values["materialId"] = trim($queryParams["materialId"]);
+
+            $foundSizeIndex = array_search(intval($values["materialId"]), array_column($payload["sizes"], "material"));
+
+            $values["sizeId"] = (string)$payload["sizes"][$foundSizeIndex]["id"];
+            $values["currentStep"] += 1;
         }
 
         if (isset($queryParams["sportId"]) && in_array(trim($queryParams["sportId"]), $sportIds)) {
-            $payload["builderInitialValues"]["sportId"] = trim($queryParams["sportId"]);
+            $values["sportId"] = trim($queryParams["sportId"]);
+            $values["currentStep"] += 1;
         }
 
         if (isset($queryParams["backgroundId"]) && in_array(trim($queryParams["backgroundId"]), $backgroundIds)) {
-            $payload["builderInitialValues"]["backgroundId"] = trim($queryParams["backgroundId"]);
+            $values["backgroundId"] = trim($queryParams["backgroundId"]);
+            $values["currentStep"] += 1;
         }
+
+        $payload["state"] = [
+            "form" => [
+                "values" => $values,
+                "errors" => [],
+                "successes" => [],
+            ]
+        ];
 
         return $this->container->get(RenderingService::class)->render($response, '@modules:Adcards/pages/builder.twig', $payload);
     }

@@ -1,0 +1,37 @@
+.order-underpage {
+    padding-top: 130px;
+}
+
+.order-underpage__content {
+    background-color: white;
+    border-radius: 1rem;
+
+    max-width: 1230px;
+    margin: 3rem auto 1.5rem;
+    box-shadow: 4px 13px 31px 0px rgba(0, 0, 0, 0.1);
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.order-underpage__content > div {
+    padding: 10px 20px;
+}
+
+.order-underpage__content section h2 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+}
+
+.order-underpage__content section {
+    padding: 2rem 0;
+}
+
+.order-underpage__content section:not(:last-child) {
+    border-bottom: 1px solid rgba(0, 0, 0, .1);
+
+}
+
+
+.order-underpage__content > div:first-of-type {
+    border-right: 1px solid rgba(0, 0, 0, .1);
+}

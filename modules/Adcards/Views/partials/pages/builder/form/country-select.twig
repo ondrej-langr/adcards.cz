@@ -1,7 +1,14 @@
 <!-- start @modules:Adcards/partials/pages/builder/form/country-select.twig -->
-<div style="width: 100%; position: relative; padding: 2px;">
-    <div id="country-dropdown-btn" class="dropdown country-dropdown-btn">
-        <span>{{ 'Kliknutím vyberte zemi'|t }}</span>
+<div style="width: 100%; position: relative; padding: 2px;" x-data='{ isOpen: false }' @click.outside='isOpen=false'>
+    <div id="country-dropdown-btn" class="dropdown country-dropdown-btn" @click='isOpen = !isOpen'>
+        <template x-if='_countryFlagSrc'>
+            <div class="dropdown-icon-container">
+                <img loading="lazy"
+                     :src="_countryFlagSrc"
+                     alt="" class="dropdown-icon">
+            </div>
+        </template>
+        <span x-text='_countryName ? _countryName : "{{ 'Kliknutím vyberte zemi'|t }}"'>{{ 'Kliknutím vyberte zemi'|t }}</span>
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20"
              height="20" viewbox="0 0 172 172" style=" fill:#000000;">
             <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -19,7 +26,8 @@
     <small class='field-error' x-text='state.form.errors.countryId'></small>
 
 
-    <div class="dropdown-content country-dropdown-content">
+    <div class="dropdown-content country-dropdown-content"
+         :class='isOpen ? "toggled" : ""'>
         {#        <input id="custom-country" type="checkbox"/> #}
         {#        <label for="custom-country"> #}
         {#                                                    <span class="label-name"> #}
@@ -55,9 +63,15 @@
                     </g>
                 </g>
             </svg>
-            <input class="search-bar" type="text"
+            <input class="search-bar"
+                   type="text"
+                   name='query'
                    placeholder="{{ 'Vyhledávání..'|t }}"
-                   title="Zadejte název pro vyhledání" /></div>
+                   title="Zadejte název pro vyhledání"
+                   hx-get="{{ url_for("searchCountries") }}"
+                   hx-trigger="keyup changed delay:500ms, search"
+                   hx-target="#countries-list"
+            /></div>
         {#        <div class="upload-around" v-if="country.custom"> #}
         {#            <div class="upload"> #}
         {#                <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" #}
@@ -79,42 +93,8 @@
         {#            <input id="fileup" name="fileup" type="file" #}
         {#                   onchange="readURL(this, 'country')" /></div> #}
         {# Search - Country #}
-        <div class="search-results-around" v-if="searching.country">
-													<span v-for="country in countries.search">
-														<input v-on:change="validateForm" type="radio"
-                                                               v-bind:value="country.id"
-                                                               v-bind:id="'country-' + country.id"
-                                                               v-on:click="insertFlag($event, '{{ __webRoot__ }}' + 'app/carnival/var/storage/' + country.flag.relativePath, 'country')"
-                                                               name="country" />
-														<label class="dropdown-item dropdown-item-country"
-                                                               v-bind:for="'country-' + country.id">
-															<div class="dropdown-icon-container">
-																<img loading="lazy" class="dropdown-icon"
-                                                                     v-bind:src="'{{ __webRoot__ }}app/carnival/var/storage/' + country.flag.relativePath"
-                                                                     alt="" /></div>
-															<span class="label-name">${ country.name }</span>
-														</label>
-													</span>
-        </div>
-        {# List - Countries #}
-        <div v-else>
-													<span v-for="country in countries.list">
-														<input v-on:change="validateForm" type="radio"
-                                                               v-bind:value="country.id"
-                                                               v-bind:id="'country-' + country.id"
-                                                               v-on:click="insertFlag($event, '{{ __webRoot__ }}' + 'app/carnival/var/storage/' + country.flag.relativePath, 'country')"
-                                                               name="country" />
-														<label class="dropdown-item dropdown-item-country"
-                                                               v-bind:for="'country-' + country.id">
-															<div class="dropdown-icon-container">
-																<img loading="lazy" class="dropdown-icon"
-                                                                     v-bind:src="'{{ __webRoot__ }}app/carnival/var/storage/' + country.flag.relativePath"
-                                                                     alt="" /></div>
-															<span class="label-name">${ country.name }</span>
-														</label>
-													</span>
-            <div v-if="loading.scroll.countries">Loading...</div>
-        </div>
+
+        {{ include("@modules:Adcards/partials/pages/builder/form/countries-list.twig") }}
     </div>
 </div>
 <!-- end -->

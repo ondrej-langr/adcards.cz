@@ -36,7 +36,7 @@ class CardController
             return $response->withStatus(400);
         }
 
-        $card = new CartCard($body["name"], $body["sizeId"], $body["materialId"], $body["backgroundId"], $body["sportId"], $body["cardType"]);
+        $card = new CartCard($body["name"], $body["sizeId"], $body["backgroundId"], $body["sportId"], $body["cardType"]);
 
         if ($body["cardType"] !== "realPlayer") {
             $fs = $this->container->get("filesystem");
@@ -44,7 +44,7 @@ class CardController
             $card
                 ->setCountry($body["countryId"])
                 ->setStats($body["stats"])
-                ->setPlayerImage(base64_decode($body["playerImage"]), $this->container->get('session')::id(), uniqid(), $fs)
+                ->setPlayerImage($body["playerImage"], $this->container->get('session')::id(), uniqid(), $fs)
                 ->setRating($body["rating"]);
         }
 

@@ -1,0 +1,42 @@
+<div id='countries-list'>
+    {% set currentStepId = random() %}
+    {% for country in countries %}
+        <span
+                @click='isOpen = false'
+                {% if loop.last %}
+                    hx-get="{{ url_for("searchCountries") }}?page={{ page ?? 2 }}"
+                    hx-trigger="revealed"
+                    hx-swap="afterend"
+                    hx-indicator='#indicator-{{ currentStepId }}'
+                {% endif %}
+        >
+            {% set flag = "" %}
+            {% if country.flag %}
+                {% set flag = getImage(country.flag, 40, null, 45) %}
+            {% endif %}
+            <input id='country-{{ country.id }}' type="radio" value='{{ country.id }}' x-model='countryId'
+                   name="countryId" />
+            <label class="dropdown-item dropdown-item-country"
+                   @click='setCountry({ id: "{{ country.id }}", name: "{{ country.name }}" {% if flag %}, flag: { src: "{{ flag.src }}" }{% endif %}})'>
+                    {% if flag %}
+                        <div class="dropdown-icon-container">
+                            <img class="dropdown-icon"
+                                 src='{{ flag.src }}'
+                                 alt="" />
+                        </div>
+                    {% endif %}
+                <span class="label-name">{{ country.name }}</span>
+            </label>
+        </span>
+    {% else %}
+        <div class='p-2 text-center'>
+            {{ "Žádné další země pro vaše vyhledávání"|t }}
+        </div>
+    {% endfor %}
+    <div
+            class='p-2 text-center hx-show-on-request'
+            id='indicator-{{ currentStepId }}'
+    >
+        {{ "Načítám..."|t }}
+    </div>
+</div>
