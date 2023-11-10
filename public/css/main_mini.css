@@ -417,7 +417,7 @@ nav ul li.btn-cart {
 .cart-overview__item-image img,
 .small-product__image img {
     object-position: center;
-    object-fit: cover;
+    object-fit: contain;
 }
 
 .cart-overview__item-quantity,
@@ -973,7 +973,6 @@ div.cookies a.close-cookie-warning {
     flex-wrap: wrap;
     flex-direction: row;
     position: relative;
-    height: 100%;
     overflow: auto;
     overscroll-behavior: none;
 }
