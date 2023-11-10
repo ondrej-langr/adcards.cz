@@ -31,7 +31,15 @@ function getCommonCartTemplateVariables(Cart $cart): array
     return [
         "cart" => [
             "size" => $cart->getCount(),
-            "cards" => array_map(fn(CartCard $item) => $item->asArray(), $cart->getCards()),
+            "cards" => array_map(function (CartCard $item) use ($cardSizes, $cardMaterials) {
+                $result = $item->asArray();
+
+                $result["background"] = (new CardBackgrounds())->query()->where(["id", "=", intval($result["background_id"])])->getOne()->getData();
+                $result["size"] = $cardSizes[intval($result["size_id"])];
+                $result["size"]["material"] = $cardMaterials[intval($result["size"]["material_id"])];
+
+                return $result;
+            }, $cart->getCards()),
             "products" => $productsFromCart,
             "promoCode" => $promoCode ? [
                 "isset" => true,

@@ -33,8 +33,9 @@ const cardBackgroundsModel = {
       'unique': false,
       'hide': false,
       'translations': true,
-      'type': 'string',
+      'type': 'json',
       'title': 'Barva textu',
+      admin: { fieldType: 'color' },
     },
     'image': {
       'required': true,

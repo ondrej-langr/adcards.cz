@@ -82,7 +82,7 @@ class BuilderController
             "sports" => $sportsService->getMany([], 1, 999)["data"],
         ]);
 
-        $sizesPublicFields = ["id", "image", "price", "width", "height", "material"];
+        $sizesPublicFields = ["id", "image", "price", "width", "height", "material_id"];
         $payload["sizes"] = array_map(function ($item) use ($sizesPublicFields) {
             return array_filter($item, function ($value, $key) use ($sizesPublicFields) {
                 return in_array($key, $sizesPublicFields);
@@ -95,7 +95,7 @@ class BuilderController
                 return in_array($key, $materialPublicFields);
             }, ARRAY_FILTER_USE_BOTH);
 
-            $filteredContents["sizes"] = array_values(array_filter($payload["sizes"], fn($size) => $size["material"] === $item["id"]));
+            $filteredContents["sizes"] = array_values(array_filter($payload["sizes"], fn($size) => $size["material_id"] === $item["id"]));
 
             return $filteredContents;
         }, $payload["materials"]);
@@ -213,7 +213,7 @@ class BuilderController
         if (isset($queryParams["materialId"]) && in_array(trim($queryParams["materialId"]), $materialIds)) {
             $values["materialId"] = trim($queryParams["materialId"]);
 
-            $foundSizeIndex = array_search(intval($values["materialId"]), array_column($payload["sizes"], "material"));
+            $foundSizeIndex = array_search(intval($values["materialId"]), array_column($payload["sizes"], "material_id"));
 
             $values["sizeId"] = (string)$payload["sizes"][$foundSizeIndex]["id"];
             $values["currentStep"] += 1;

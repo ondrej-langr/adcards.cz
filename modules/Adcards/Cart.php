@@ -97,12 +97,10 @@ class Cart
                 "id", "=", $this->state[CartItemTypes::PROMO_CODE->value]["id"]
             ]);
         } catch (\Exception $error) {
-            if ($error instanceof EntityNotFoundException) {
-                return false;
-            }
+            // If promo code was not found(or any other error) then we remove it
+            $this->deletePromoCode();
 
-            // Other error in which case we want it to crash...
-            throw $error;
+            return false;
         }
 
 
@@ -220,6 +218,7 @@ class Cart
             $result[$product["id"]] = array_merge($productInfoFromCart, [
                 // count -> but that is already from state
                 "product" => $product,
+                "count" => $productInfoFromCart["count"],
                 "price" => [
                     "total" => $product["price"] * $productInfoFromCart["count"]
                 ]

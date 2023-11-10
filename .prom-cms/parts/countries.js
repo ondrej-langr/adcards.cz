@@ -24,7 +24,6 @@ const countriesModel = {
       'type': 'string',
       'title': 'Název',
       'admin': {
-        'fieldType': 'heading',
         editor: {
           width: 6,
         },

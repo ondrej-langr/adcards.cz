@@ -12,29 +12,29 @@ import sportsModel from './parts/sports.js'
 
 /**
  *
- * @type {import("@prom-cms/schema").GeneratorConfig}
+ * @type {import('@prom-cms/schema').GeneratorConfig}
  */
 const config = {
-  "project": {
-    "name": "adcards",
-    "slug": "adcards",
-    "url": "http://localhost"
+  'project': {
+    'name': 'adcards',
+    'slug': 'adcards',
+    'url': 'http://localhost',
   },
   database: {
     models: {
-      "cardBackgrounds": cardBackgroundsModel,
-      "cardMaterial": cardMaterialModel,
-      "cardSizes": cardSizesModel,
-      "cards": cardsModel,
-      "countries": countriesModel,
-      "mainPageSlides": mainPageSlidesModel,
-      "newsletterSubscriptions": newsletterSubscriptionsModel,
-      "orders": ordersModel,
-      "products":productsModel,
-      "promoCodes": promoCodesModel,
-      "sports": sportsModel,
-    }
-  }
+      'cardBackgrounds': cardBackgroundsModel,
+      'cardMaterial': cardMaterialModel,
+      'cardSizes': cardSizesModel,
+      'cards': cardsModel,
+      'countries': countriesModel,
+      'mainPageSlides': mainPageSlidesModel,
+      'newsletterSubscriptions': newsletterSubscriptionsModel,
+      'orders': ordersModel,
+      'products': productsModel,
+      'promoCodes': promoCodesModel,
+      'sports': sportsModel,
+    },
+  },
 }
 
 export default config

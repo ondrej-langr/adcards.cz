@@ -20,10 +20,21 @@
         <input name='product-id' value='{{ orderedProduct.product.id }}' class='d-none' />
         <div class='w-100 info'>
             <div class="name">
-                <h4>{{ orderedProduct.product.name }}</h4>
+                <h4>
+                    {{ orderedProduct.product.name }}
+                    {% if readOnly is same as(true) %}
+                        <span class='text-muted'>({{ orderedProduct.count }}x)</span>
+                    {% endif %}
+                </h4>
             </div>
             <div class="price">
-                <span>Cena: <b>{{ orderedProduct.price.total ?? orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
+                {% if readOnly is not same as(true) %}
+                    <span>Cena: <b>{{ orderedProduct.price.total ?? orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
+                {% else %}
+                    <span>Cena za kus: <b>{{ orderedProduct.price.total ?? orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
+                    <br />
+                    <span>Celkově: <b class='text-brands-signature'>{{ orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
+                {% endif %}
             </div>
         </div>
 
@@ -46,8 +57,6 @@
                     hx-swap='outerHTML'
                     class='delete ignore-button-styles'
             ></button>
-        {% else %}
-            <p>{{ orderedProduct.count }}</p>
         {% endif %}
     </form>
 </div>

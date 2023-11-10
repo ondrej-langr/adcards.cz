@@ -3,6 +3,7 @@
 namespace PromCMS\Modules\Adcards;
 
 use GuzzleHttp\Psr7\UploadedFile;
+use JetBrains\PhpStorm\ArrayShape;
 use League\Flysystem\Filesystem;
 use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\FileService;
@@ -104,6 +105,10 @@ class CartCard
         return $size->price;
     }
 
+    /**
+     * @throws \Exception
+     */
+    #[ArrayShape(["name" => "string", "background_id" => "string", "sport_id" => "string", "size_id" => "string", "cardType" => "string", "playerImagePathname" => "null|string", "rating" => "int|null", "stats" => "array|null", "country_id" => "null|string"])]
     function asArray(): array
     {
         if (!$this->isValid()) {
@@ -112,26 +117,32 @@ class CartCard
 
         return [
             "name" => $this->name,
-            "background" => $this->backgroundId,
-            "sport" => $this->sportId,
-            "size" => $this->sizeId,
+            "background_id" => $this->backgroundId,
+            "sport_id" => $this->sportId,
+            "size_id" => $this->sizeId,
             "cardType" => $this->cardType,
 
             // nullable fields
             "playerImagePathname" => $this->playerImagePathname,
             "rating" => $this->rating,
             "stats" => $this->stats,
-            "country" => $this->countryId,
+            "country_id" => $this->countryId,
         ];
     }
 
-    static function fromArray($input): CartCard
+
+    /**
+     * @param $input array{name: string, background_id: string, sport_id: string, size_id: string, cardType: string, playerImagePathname: string|null, rating: string|null, stats: array|null, country_id: string}
+     * @return CartCard
+     * @throws \Exception
+     */
+    static function fromArray(array $input): CartCard
     {
         $instance = new self(
             $input["name"],
-            $input["size"],
-            $input["background"],
-            $input["sport"],
+            $input["size_id"],
+            $input["background_id"],
+            $input["sport_id"],
             $input["cardType"],
         );
 
@@ -139,8 +150,11 @@ class CartCard
             $instance
                 ->setPlayerImagePathname($input["playerImagePathname"])
                 ->setRating($input["rating"])
-                ->setStats($input["stats"])
-                ->setCountry($input["country"]);
+                ->setCountry($input["country_id"]);
+
+            if (isset($input["stats"])) {
+                $instance->setStats($input["stats"]);
+            }
         }
 
         return $instance;
@@ -172,7 +186,7 @@ class CartCard
         if ($this->cardType !== "realPlayer") {
             if (
                 !in_array(intval($this->countryId), getIds($countries)) ||
-                empty($this->stats) ||
+                (empty($this->stats) && $this->cardType !== "manager") ||
                 $this->rating === null ||
                 !$this->playerImagePathname
             ) {

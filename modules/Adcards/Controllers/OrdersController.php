@@ -29,25 +29,30 @@ class OrdersController
             return $response->withStatus(404);
         }
 
-        $orderedCards = $templatePayload["order"]["cards"];
+        $orderedCards = $templatePayload["order"]["cards"]["data"];
         if (!empty($orderedCards)) {
-            $orderedCards = (new EntryTypeService(new \Cards()))->getMany(["id", "IN", array_map(fn($item) => intval($item), $orderedCards)])["data"];
+            $orderedCards = (new EntryTypeService(new \Cards()))->getMany(["id", "IN", array_column($orderedCards, "card_id")])["data"];
 
             $templatePayload["order"]["cards"] = array_map(function ($orderedCard) {
-                $orderedCard["size"] = (new EntryTypeService(new \CardSizes()))->getOne(["id", "=", $orderedCard["size"]])->getData();
-                $orderedCard["size"]["material"] = (new EntryTypeService(new \CardMaterial()))->getOne(["id", "=", $orderedCard["size"]["material"]])->getData();
+                $orderedCard["size"] = (new EntryTypeService(new \CardSizes()))->getOne(["id", "=", intval($orderedCard["size_id"])])->getData();
+                $orderedCard["background"] = (new EntryTypeService(new \CardBackgrounds()))->getOne(["id", "=", intval($orderedCard["background_id"])])->getData();
+                $orderedCard["size"]["material"] = (new EntryTypeService(new \CardMaterial()))->getOne(["id", "=", intval($orderedCard["size"]["material_id"])])->getData();
 
                 return $orderedCard;
             }, $orderedCards);
         }
 
-        $orderedProducts = $templatePayload["order"]["products"];
+        $orderedProducts = $templatePayload["order"]["products"]["data"];
         if (!empty($orderedProducts)) {
-            $orderedProducts = (new EntryTypeService(new \Products()))->getMany(["id", "IN", array_map(fn($item) => intval($item), $orderedProducts)])["data"];
+            $orderedProducts = (new EntryTypeService(new \Products()))->getMany(["id", "IN", array_column($orderedProducts, "product_id")])["data"];
 
-            $templatePayload["order"]["products"] = array_map(fn($product) => ["product" => $product], $orderedProducts);
+            $templatePayload["order"]["products"] = array_map(function ($product) use ($templatePayload) {
+                // Find previous metadata under order - there is count and product_id
+                $orderProductMetadata = $templatePayload["order"]["products"]["data"][array_search($product["id"], array_column($templatePayload["order"]["products"]["data"], "product_id"))];
+
+                return array_merge($orderProductMetadata, ["product" => $product]);
+            }, $orderedProducts);
         }
-
 
         return $this->container->get(RenderingService::class)->render($response, '@modules:Adcards/pages/objednavky/[order-uuid].twig', $templatePayload);
     }

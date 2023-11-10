@@ -163,7 +163,7 @@ class CartController
         $cardsInCart = $cart->getCards();
         if (!empty($cardsInCart)) {
             $cardsService = new EntryTypeService(new \Cards());
-            $orderPayload->cards = [];
+            $orderPayload->cards = ["data" => []];
 
             // TODO: implement creation
             foreach ($cardsInCart as $cardInCart) {
@@ -171,16 +171,16 @@ class CartController
                 $cardInCartAsArray = $cardInCart->asArray();
 
                 $cardPayload->name = $cardInCartAsArray["name"];
-                $cardPayload->background = $cardInCartAsArray["background"];
-                $cardPayload->sport = $cardInCartAsArray["sport"];
-                $cardPayload->size = $cardInCartAsArray["size"];
+                $cardPayload->background_id = intval($cardInCartAsArray["background_id"]);
+                $cardPayload->sport_id = intval($cardInCartAsArray["sport_id"]);
+                $cardPayload->size_id = intval($cardInCartAsArray["size_id"]);
                 $cardPayload->card_type = $cardInCartAsArray["cardType"];
 
                 // Handle non real player as that has more fields to process
                 if ($cardInCartAsArray["cardType"] !== "realPlayer") {
                     $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
                     $filename = basename($uploadedPlayerImagePath);
-                    $filepath = "/hraci-karet/" . $filename;
+                    $filepath = "/hraci-z-karet/" . $filename;
                     $playerImageEntity = Files::create([
                         'filepath' => $filepath,
                         'filename' => $filename,
@@ -193,7 +193,7 @@ class CartController
 
                     $cardPayload->rating = $cardInCartAsArray["rating"];
                     $cardPayload->stats = $cardInCartAsArray["stats"];
-                    $cardPayload->country = $cardInCartAsArray["country"];
+                    $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
                     $cardPayload->player_image = $playerImageEntity->id;
                 }
 
@@ -201,14 +201,25 @@ class CartController
                 $cardPayload->currency = "CZK";
 
                 $createdCard = $cardsService->create((array)$cardPayload);
-                $orderPayload->cards[] = $createdCard->id;
+                $orderPayload->cards["data"][] = [
+                    "card_id" => $createdCard->id
+                ];
             }
 
         }
 
         $products = $cart->getProducts();
         if (!empty($products)) {
-            $orderPayload->products = array_keys($products);
+            $mappedProducts = [];
+
+            foreach ($products as $productInCartId => $productInCartInfo) {
+                $mappedProducts[] = [
+                    "product_id" => intval($productInCartId),
+                    "count" => intval($productInCartInfo["count"])
+                ];
+            }
+
+            $orderPayload->products = ["data" => $mappedProducts];
         }
 
         $orderPayload->subtotal_cost = $cart->getTotal(false);

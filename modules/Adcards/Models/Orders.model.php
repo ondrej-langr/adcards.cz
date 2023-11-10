@@ -14,6 +14,12 @@ class Orders extends Model
   protected static bool $enabled = true;
   protected static array $adminSettings = ['hidden' => false];
 
+  public static array $casts = [
+    'cards' => 'array',
+
+    'products' => 'array',
+  ];
+
   public static array $tableColumns = [
     'id' => [
       'title' => 'ID',
@@ -239,7 +245,7 @@ class Orders extends Model
     ],
 
     'cards' => [
-      'title' => 'Vytvořené karty',
+      'title' => 'Karty',
       'hide' => false,
       'required' => false,
       'unique' => false,
@@ -248,14 +254,24 @@ class Orders extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'repeater',
+        'columns' => [
+          'card_id' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => true,
+            'type' => 'relationship',
+            'targetModel' => 'cards',
+            'labelConstructor' => '{{name}} - {{size_id}} - {{final_price}}Kč',
+            'multiple' => false,
+            'fill' => true,
+            'foreignKey' => 'id',
+          ],
+        ],
       ],
       'readonly' => true,
-      'type' => 'relationship',
-      'targetModel' => 'cards',
-      'labelConstructor' => 'id',
-      'multiple' => true,
-      'fill' => true,
-      'foreignKey' => 'id',
+      'type' => 'json',
     ],
 
     'products' => [
@@ -268,14 +284,33 @@ class Orders extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'repeater',
+        'columns' => [
+          'product_id' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => false,
+            'type' => 'relationship',
+            'targetModel' => 'products',
+            'labelConstructor' => '{{name}} ({{id}})',
+            'multiple' => false,
+            'fill' => true,
+            'foreignKey' => 'id',
+            'title' => 'Produkt',
+          ],
+          'count' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => false,
+            'type' => 'number',
+            'title' => 'Počet',
+          ],
+        ],
       ],
       'readonly' => true,
-      'type' => 'relationship',
-      'targetModel' => 'products',
-      'labelConstructor' => 'id',
-      'multiple' => true,
-      'fill' => true,
-      'foreignKey' => 'id',
+      'type' => 'json',
     ],
 
     'subtotal_cost' => [
@@ -320,10 +355,10 @@ class Orders extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'aside', 'width' => 6],
-        'fieldType' => 'normal',
       ],
       'readonly' => true,
-      'type' => 'string',
+      'type' => 'number',
+      'autoIncrement' => false,
     ],
 
     'total_cost' => [

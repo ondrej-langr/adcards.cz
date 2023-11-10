@@ -14,6 +14,10 @@ class CardBackgrounds extends Model
   protected static bool $enabled = true;
   protected static array $adminSettings = ['hidden' => false];
 
+  public static array $casts = [
+    'textColor' => 'array',
+  ];
+
   public static array $tableColumns = [
     'id' => [
       'title' => 'ID',
@@ -57,10 +61,10 @@ class CardBackgrounds extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 12],
-        'fieldType' => 'normal',
+        'fieldType' => 'color',
       ],
       'readonly' => false,
-      'type' => 'string',
+      'type' => 'json',
     ],
 
     'image' => [
@@ -126,7 +130,7 @@ class CardBackgrounds extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'user',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => false,
       'foreignKey' => 'id',
@@ -146,7 +150,7 @@ class CardBackgrounds extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'user',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => false,
       'foreignKey' => 'id',

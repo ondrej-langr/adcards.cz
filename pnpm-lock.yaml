@@ -23,16 +23,16 @@ devDependencies:
     specifier: ^0.20.1
     version: 0.20.1(prettier@3.0.3)
   '@prom-cms/admin':
-    specifier: ^0.13.0
-    version: 0.13.0(postcss@8.4.31)
+    specifier: ^0.15.1
+    version: 0.15.1(postcss@8.4.31)
   '@prom-cms/cli':
-    specifier: ^0.21.2
-    version: 0.21.2(@types/node@20.8.2)(postcss@8.4.31)
+    specifier: ^0.21.4
+    version: 0.21.4(@types/node@20.8.2)(postcss@8.4.31)
   '@prom-cms/schema':
-    specifier: ^0.3.0
-    version: 0.3.0
+    specifier: ^0.4.0
+    version: 0.4.0
   '@prom-cms/vite-plugin':
-    specifier: ^0.7.1
+    specifier: ~0.7.1
     version: 0.7.1(axios@0.27.2)(vite@4.4.11)
   '@types/alpinejs':
     specifier: ^3.13.3
@@ -1884,8 +1884,8 @@ packages:
       prettier: 3.0.3
     dev: true
 
-  /@prom-cms/admin@0.13.0(postcss@8.4.31):
-    resolution: {integrity: sha512-j9hhEm/qmrSbR55ckqKi0m16sUtpYKVt+LCUADA2wrHm3MPSF/tzQcReDFvpkqTQcoEKRjDpwGE67xbiXVBy+Q==}
+  /@prom-cms/admin@0.15.1(postcss@8.4.31):
+    resolution: {integrity: sha512-pNqbJ0jd19ht15JTpCfZ3ZtpcBQxxWvXUeave7/qFBjhv3Ce6gzJhwJYTWnpbVGlgxOnHwFRYg36X144kHbEVQ==}
     dependencies:
       '@calumk/editorjs-columns': 0.2.4
       '@editorjs/editorjs': 2.28.0
@@ -1905,9 +1905,9 @@ packages:
       '@mantine/hooks': 5.10.5(react@18.2.0)
       '@mantine/notifications': 5.10.5(@mantine/core@5.10.5)(@mantine/hooks@5.10.5)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.0
-      '@prom-cms/api-client': 0.7.1(axios@0.24.0)
-      '@prom-cms/schema': 0.3.0
-      '@prom-cms/shared': 2.0.0
+      '@prom-cms/api-client': 0.8.0(axios@0.24.0)
+      '@prom-cms/schema': 0.4.0
+      '@prom-cms/shared': 3.0.0
       '@svgr/webpack': 6.5.1
       '@tanstack/react-query': 4.2.3(react-dom@18.2.0)(react@18.2.0)
       axios: 0.24.0
@@ -1924,6 +1924,7 @@ packages:
       i18next-browser-languagedetector: 6.1.4
       i18next-http-backend: 1.4.0
       lodash.find: 4.6.0
+      mustache: 4.2.0
       react: 18.2.0
       react-beautiful-dnd: 13.1.1(react-dom@18.2.0)(react@18.2.0)
       react-dom: 18.2.0(react@18.2.0)
@@ -1945,23 +1946,23 @@ packages:
       - supports-color
     dev: true
 
-  /@prom-cms/api-client@0.7.1(axios@0.24.0):
-    resolution: {integrity: sha512-1gTEbw8g4Ap0lFdcBp86OZ3maA+4gIplJBer2iPTyl6XGeJe+cMLYCtavvaKtOo/3RpIbDCt1Kab6GykRKjtcw==}
+  /@prom-cms/api-client@0.8.0(axios@0.24.0):
+    resolution: {integrity: sha512-Ha1fCi6horDZtmWdxoM6p6LBc8c1Wn/yhqVOrFhEASXkbUfqBOJYuGyseJLlF+MJ1lZG8Ur5UoYdMGIDfI7+nQ==}
     peerDependencies:
-      axios: ^0.27.2
+      axios: ^0.27
     dependencies:
-      '@prom-cms/shared': 2.0.0
+      '@prom-cms/shared': 3.0.0
       axios: 0.24.0
     dev: true
 
-  /@prom-cms/cli@0.21.2(@types/node@20.8.2)(postcss@8.4.31):
-    resolution: {integrity: sha512-aed8mWHh1Kne2nv0R6CSUPLApsUrljEpY6yMaRjLc23+mHTNIPlcbnGZIXewwWg7jrzJ2pYgY59ZXGlQm5Fjqg==}
+  /@prom-cms/cli@0.21.4(@types/node@20.8.2)(postcss@8.4.31):
+    resolution: {integrity: sha512-BLm2KjYUUAEltXjmrnG9P9AQrMkGg3y/b4RI9hc4UGfWeYlsl7b1lXVhophSrsLEKdaKYGeO8ZgbPDxcQaRR3Q==}
     hasBin: true
     dependencies:
       '@faker-js/faker': 7.6.0
-      '@prom-cms/admin': 0.13.0(postcss@8.4.31)
+      '@prom-cms/admin': 0.15.1(postcss@8.4.31)
       '@prom-cms/config': 0.1.7(prettier@3.0.3)
-      '@prom-cms/shared': 2.1.0
+      '@prom-cms/shared': 3.0.0
       chalk: 5.3.0
       commander: 11.0.0
       dayjs: 1.11.10
@@ -1998,22 +1999,15 @@ packages:
       - prettier
     dev: true
 
-  /@prom-cms/schema@0.3.0:
-    resolution: {integrity: sha512-hgc1H6l3xJ8+Jzhy6cZ2NtLOy07kVquhgXFXBPfmrG7bm1sQz+w86xNrlb+/NZl7EYIs+4+5+XxO67muzj32rQ==}
+  /@prom-cms/schema@0.4.0:
+    resolution: {integrity: sha512-vCO1+0dZVrSWaaGYbzbKvLy2NWr9qvVEar30xAu6u3+nuLi3K80FrShw8CMxK2V9HQzAVoNmSZbd/CyG4RFZNg==}
     dependencies:
       lodash.kebabcase: 4.1.1
       zod: 3.22.4
     dev: true
 
-  /@prom-cms/shared@2.0.0:
-    resolution: {integrity: sha512-JMa8wY+zD7uqJcSs4XZ4kXjXFCMIR6Il6w4NtBhmAzwp0j9SOXbKaw/zEsZ4R01O3yWEBnH0HScmVv10UJ+X0A==}
-    dependencies:
-      lodash.kebabcase: 4.1.1
-      zod: 3.22.4
-    dev: true
-
-  /@prom-cms/shared@2.1.0:
-    resolution: {integrity: sha512-8acevmlNn44hSXbG9TmF5KEchRoOeQlWQysBNXoCqalAVlzgdaAi/LnOZL7Z6yhp2Jh6P3j73S+XLH1g7LgVbQ==}
+  /@prom-cms/shared@3.0.0:
+    resolution: {integrity: sha512-BjGrmLNOABj/rTpRHDPFhet+kjwaFHOqwZ2BF4X91Z0OTJuqGYe5huRE6AIAwInIj1B6kI+2o3RfCXWhGWa3QQ==}
     dependencies:
       lodash.kebabcase: 4.1.1
       zod: 3.22.4
@@ -3872,6 +3866,11 @@ packages:
 
   /ms@2.1.2:
     resolution: {integrity: sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==}
+    dev: true
+
+  /mustache@4.2.0:
+    resolution: {integrity: sha512-71ippSywq5Yb7/tVYyGbkBggbU8H3u5Rz56fH60jGFgr8uHwxs+aSKeqmluIVzM0m0kB7xQjKS6qPfd0b2ZoqQ==}
+    hasBin: true
     dev: true
 
   /mute-stream@0.0.8:

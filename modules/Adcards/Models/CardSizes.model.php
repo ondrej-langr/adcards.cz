@@ -6,7 +6,7 @@ use PromCMS\Core\Database\ModelResult;
 
 class CardSizes extends Model
 {
-  protected string $tableName = 'countries';
+  protected string $tableName = 'card_sizes';
   protected bool $softDelete = false;
 
   protected bool $timestamps = false;
@@ -79,7 +79,7 @@ class CardSizes extends Model
       'autoIncrement' => false,
     ],
 
-    'material' => [
+    'material_id' => [
       'title' => 'Materiál ',
       'hide' => false,
       'required' => true,
@@ -147,7 +147,7 @@ class CardSizes extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'user',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => false,
       'foreignKey' => 'id',
@@ -167,7 +167,7 @@ class CardSizes extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'user',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => false,
       'foreignKey' => 'id',

@@ -20,7 +20,7 @@
     </div>
     {#    Modal #}
     <div class="card-preview"
-         :style='"background-image: url(" + getActiveBackground()?.imageSrc + "); color:  color: " + getActiveBackground()?.textColor + ";"'>
+         :style='"background-image: url(" + getActiveBackground()?.imageSrc + "); color: " + getActiveBackground()?.textColor?.value + ";"'>
 
         {#        Name #}
         <div class="name">

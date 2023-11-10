@@ -43,9 +43,12 @@ class CardController
 
             $card
                 ->setCountry($body["countryId"])
-                ->setStats($body["stats"])
                 ->setPlayerImage($body["playerImage"], $this->container->get('session')::id(), uniqid(), $fs)
                 ->setRating($body["rating"]);
+
+            if (isset($body["stats"])) {
+                $card->setStats($body["stats"]);
+            }
         }
 
         if (!$card->isValid()) {

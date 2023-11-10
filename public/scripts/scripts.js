@@ -1,3 +1,5 @@
+// TODO: check this file for unused code
+
 $(function() {
   var shrinkHeader = 10
   $(window).scroll(function() {
@@ -33,53 +35,7 @@ $('.btn-player').hover(function() {
   $('.info-hide, .stats-show').toggleClass('toggled')
 })
 
-window.acordionItems = document.querySelectorAll('.accordion button')
-
-function toggleAccordion() {
-  const itemToggle = this.getAttribute('aria-expanded')
-  for (i = 0; i < window.acordionItems.length; i++) {
-    items[i].setAttribute('aria-expanded', 'false')
-  }
-  if (itemToggle == 'false') {
-    this.setAttribute('aria-expanded', 'true')
-  }
-}
-
-window.acordionItems.forEach(item => item.addEventListener('click', toggleAccordion))
-$.fn.jQuerySimpleCounter = function(options) {
-  var settings = $.extend({
-    start: 0,
-    end: 100,
-    easing: 'swing',
-    duration: 400,
-    complete: '',
-  }, options)
-  var thisElement = $(this)
-  $({
-    count: settings.start,
-  }).animate({
-    count: settings.end,
-  }, {
-    duration: settings.duration,
-    easing: settings.easing,
-    step: function() {
-      var mathCount = Math.ceil(this.count)
-      thisElement.text(mathCount)
-    },
-    complete: settings.complete,
-  })
-}
-$('#number1').jQuerySimpleCounter({
-  end: 100,
-  duration: 600,
-})
-$(document).ready(function() {
-  setTimeout(function() {
-    $('.loader').addClass('loaded')
-  }, 600)
-});
-
-(function(factory) {
+;(function(factory) {
   if (typeof define === 'function' && define.amd) {
     define(['jquery'], factory)
   } else if (typeof exports === 'object') {

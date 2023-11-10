@@ -11,7 +11,7 @@ const cardSizesModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': true,
-  'tableName': 'countries',
+  'tableName': 'card_sizes',
   'intl': true,
   'icon': 'Dimensions',
   'columns': {
@@ -36,7 +36,7 @@ const cardSizesModel = {
       'type': 'number',
       'title': 'Cena',
     },
-    'material': {
+    'material_id': {
       'required': true,
       'translations': false,
       'type': 'relationship',

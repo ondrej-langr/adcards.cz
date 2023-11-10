@@ -3,10 +3,9 @@
 
     <div class="full-order cart-overview__items">
         {% for itemId, item in cart.cards %}
-            {% set size = cardSizes[item.size] %}
             {{ include("@modules:Adcards/components/small-card.twig", {
                 "card": item,
-                "size": size|merge({ material: cardMaterials[size.material] }),
+                "size": item.size,
                 "index": loop.index0
             }) }}
         {% endfor %}

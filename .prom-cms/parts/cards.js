@@ -1,38 +1,38 @@
 const relationFields = {
-  'background': {
+  'background_id': {
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
     'targetModel': 'cardBackgrounds',
-    'labelConstructor': 'name',
+    'labelConstructor': '{{name}}',
     'title': 'Pozadí karty',
   },
-  'country': {
+  'country_id': {
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
     'targetModel': 'countries',
-    'labelConstructor': 'name',
+    'labelConstructor': '{{name}}',
     'title': 'Země',
   },
-  'sport': {
+  'sport_id': {
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
     'targetModel': 'sports',
-    'labelConstructor': 'name',
+    'labelConstructor': '{{name}}',
     'title': 'Sport',
   },
-  'size': {
+  'size_id': {
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
     'targetModel': 'cardSizes',
-    'labelConstructor': 'name',
+    'labelConstructor': '{{width}}x{{height}}cm',
     'title': 'Velikost',
   },
 }

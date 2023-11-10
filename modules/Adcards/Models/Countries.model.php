@@ -41,7 +41,7 @@ class Countries extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 6],
-        'fieldType' => 'heading',
+        'fieldType' => 'normal',
       ],
       'readonly' => false,
       'type' => 'string',

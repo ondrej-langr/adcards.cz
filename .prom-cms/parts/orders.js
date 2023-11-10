@@ -148,22 +148,49 @@ const ordersModel = {
     'cards': {
       'required': false,
       'translations': false,
-      'type': 'relationship',
-      'multiple': true,
-      'targetModel': 'cards',
-      'labelConstructor': 'id',
-      'title': 'Vytvořené karty',
+      'type': 'json',
+      'title': 'Karty',
       readonly: true,
+      'admin': {
+        'fieldType': 'repeater',
+        'columns': {
+          'card_id': {
+            'required': true,
+            'type': 'relationship',
+            'multiple': false,
+            'targetModel': 'cards',
+            'labelConstructor': '{{name}} - {{size_id}} - {{final_price}}Kč',
+            readonly: true,
+          },
+        },
+      },
     },
+
     'products': {
       'required': false,
       'translations': false,
-      'type': 'relationship',
-      'multiple': true,
-      'targetModel': 'products',
-      'labelConstructor': 'id',
+      'type': 'json',
       'title': 'Produkty',
       readonly: true,
+      'admin': {
+        'fieldType': 'repeater',
+        'columns': {
+          'product_id': {
+            'required': true,
+            'translations': false,
+            'type': 'relationship',
+            'targetModel': 'products',
+            'labelConstructor': '{{name}} ({{id}})',
+            'title': 'Produkt',
+          },
+          'count': {
+            'required': true,
+            'translations': false,
+            'type': 'number',
+            'title': 'Počet',
+          },
+        },
+      },
     },
 
     'subtotal_cost': {

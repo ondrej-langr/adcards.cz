@@ -149,7 +149,7 @@ class Cards extends Model
       'enum' => ['CZK', 'EUR'],
     ],
 
-    'background' => [
+    'background_id' => [
       'title' => 'Pozadí karty',
       'hide' => false,
       'required' => true,
@@ -163,13 +163,13 @@ class Cards extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'cardBackgrounds',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => true,
       'foreignKey' => 'id',
     ],
 
-    'country' => [
+    'country_id' => [
       'title' => 'Země',
       'hide' => false,
       'required' => true,
@@ -183,13 +183,13 @@ class Cards extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'countries',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => true,
       'foreignKey' => 'id',
     ],
 
-    'sport' => [
+    'sport_id' => [
       'title' => 'Sport',
       'hide' => false,
       'required' => true,
@@ -203,13 +203,13 @@ class Cards extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'sports',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => true,
       'foreignKey' => 'id',
     ],
 
-    'size' => [
+    'size_id' => [
       'title' => 'Velikost',
       'hide' => false,
       'required' => true,
@@ -223,7 +223,7 @@ class Cards extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'cardSizes',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{width}}x{{height}}cm',
       'multiple' => false,
       'fill' => true,
       'foreignKey' => 'id',
