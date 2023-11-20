@@ -68,7 +68,7 @@ const productsModel = {
       'translations': false,
       'type': 'boolean',
       'default': false,
-      'title': 'Bonus?',
+      'title': 'Zvýhodněný produkt ke kartám',
       'admin': {
         editor: { placement: 'aside' },
       },

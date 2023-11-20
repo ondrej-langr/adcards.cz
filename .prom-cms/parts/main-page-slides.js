@@ -7,6 +7,7 @@ const mainPageSlidesModel = {
   'softDelete': false,
   'sorting': true,
   'sharable': false,
+
   'draftable': false,
   'tableName': 'main_page_slides',
   'intl': true,
@@ -34,12 +35,12 @@ const mainPageSlidesModel = {
     },
     'buttonUrl': {
       'required': false,
-      'editable': true,
       'hide': false,
       'translations': true,
-      'type': 'string',
-      'title': 'Odkaz pro tlačítko',
+      'type': 'json',
+      'title': 'Tlačítko',
       admin: {
+        fieldType: 'linkButton',
         editor: {
           width: 6,
         },

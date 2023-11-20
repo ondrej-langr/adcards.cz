@@ -4,12 +4,16 @@
         <p>Vaše karta je připravená v košíku. Stačí jen dokončit objednávku</p>
     </div>
 
-    <div class='thank-you__more-stuff'>
-        <h2>Doplňky za zvýhoďněnou cenu:</h2>
-        <div>
-            dsfsd
+    {% if recommended.products|length %}
+        <div class='thank-you__more-stuff'>
+            <h2 class='mb-4'>Doplňky za zvýhoďněnou cenu:</h2>
+            <div class='d-flex justify-content-center align-items-start'>
+                {% for product in recommended.products %}
+                    {{ include("@modules:Adcards/components/product.twig", product) }}
+                {% endfor %}
+            </div>
         </div>
-    </div>
+    {% endif %}
     <script>
       window.document.querySelector('.builder.thank-you').scrollIntoView({
         behavior: 'smooth',

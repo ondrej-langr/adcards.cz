@@ -1,24 +1,14 @@
 {% if extras|length > 0 %}
     <div class="w100 extras">
-        {# <input type="hidden" id="extra-url" value="{{ url_form('cart/extra') }}"> #}
         <h3>{{ "Přidejte si k objednávce"|t }}</h3>
 
-        {% for extra in extras %}
-            <div class="extra w100">
-                <div class="w20">
-                    <img src="{{ __webRoot__ }}app/carnival/var/storage/{{ extra.img.relativePath }}"
-                         alt="">
-                </div>
-                <div class="w80 w80-mob">
-                    <h4>{{ extra.name }}</h4>
-                    <p>{{ 'Cena'|t }}: <b>{{ extra.price }}{{ 'Kč'|t }}</b></p>
-                </div>
-
-                <!-- <button class="btn btn-primary" type="button" onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}">Add</button> -->
-
-                <a onclick="toggleExtra(this)" data-extra-toggle="add" data-extra-value="{{ extra.id }}"
-                   class="add"></a>
-            </div>
+        {% for item in extras %}
+            {{ include("@modules:Adcards/components/small-product.twig", {
+                orderedProduct: {
+                    product: item
+                },
+                asExtra: true
+            }) }}
         {% endfor %}
     </div>
 {% endif %}

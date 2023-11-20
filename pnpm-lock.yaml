@@ -23,8 +23,11 @@ devDependencies:
     specifier: ^0.20.1
     version: 0.20.1(prettier@3.0.3)
   '@prom-cms/admin':
-    specifier: ^0.15.1
-    version: 0.15.1(postcss@8.4.31)
+    specifier: ^0.16.0
+    version: 0.16.0(postcss@8.4.31)
+  '@prom-cms/api-client':
+    specifier: ^0.10.0
+    version: 0.10.0(axios@0.27.2)
   '@prom-cms/cli':
     specifier: ^0.21.4
     version: 0.21.4(@types/node@20.8.2)(postcss@8.4.31)
@@ -1905,7 +1908,7 @@ packages:
       '@mantine/hooks': 5.10.5(react@18.2.0)
       '@mantine/notifications': 5.10.5(@mantine/core@5.10.5)(@mantine/hooks@5.10.5)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.0
-      '@prom-cms/api-client': 0.8.0(axios@0.24.0)
+      '@prom-cms/api-client': 0.10.0(axios@0.24.0)
       '@prom-cms/schema': 0.4.0
       '@prom-cms/shared': 3.0.0
       '@svgr/webpack': 6.5.1
@@ -1946,13 +1949,84 @@ packages:
       - supports-color
     dev: true
 
-  /@prom-cms/api-client@0.8.0(axios@0.24.0):
-    resolution: {integrity: sha512-Ha1fCi6horDZtmWdxoM6p6LBc8c1Wn/yhqVOrFhEASXkbUfqBOJYuGyseJLlF+MJ1lZG8Ur5UoYdMGIDfI7+nQ==}
+  /@prom-cms/admin@0.16.0(postcss@8.4.31):
+    resolution: {integrity: sha512-UQJJ29M4CAaBWzlVBl7SyneaF5NwLZ+CVpzPC5Re7yXKav6l+fmcLimV+rEOL7wyF5zuoiySmTLImPoCukTVdg==}
+    dependencies:
+      '@calumk/editorjs-columns': 0.2.4
+      '@editorjs/editorjs': 2.28.0
+      '@editorjs/embed': 2.5.3
+      '@editorjs/header': 2.7.0
+      '@editorjs/link': 2.5.0
+      '@editorjs/list': 1.8.0
+      '@editorjs/marker': 1.3.0
+      '@editorjs/paragraph': 2.10.0
+      '@editorjs/quote': 2.5.0
+      '@editorjs/table': 2.2.2
+      '@editorjs/underline': 1.1.0
+      '@emotion/react': 11.11.1(react@18.2.0)
+      '@headlessui/react': 1.6.6(react-dom@18.2.0)(react@18.2.0)
+      '@hookform/resolvers': 2.8.10(react-hook-form@7.34.0)
+      '@mantine/core': 5.10.5(@emotion/react@11.11.1)(@mantine/hooks@5.10.5)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 5.10.5(react@18.2.0)
+      '@mantine/notifications': 5.10.5(@mantine/core@5.10.5)(@mantine/hooks@5.10.5)(react-dom@18.2.0)(react@18.2.0)
+      '@popperjs/core': 2.11.0
+      '@prom-cms/api-client': 0.10.0(axios@0.24.0)
+      '@prom-cms/schema': 0.4.0
+      '@prom-cms/shared': 3.0.0
+      '@svgr/webpack': 6.5.1
+      '@tanstack/react-query': 4.2.3(react-dom@18.2.0)(react@18.2.0)
+      axios: 0.24.0
+      chalk: 5.3.0
+      clsx: 1.2.1
+      cssnano: 5.1.15(postcss@8.4.31)
+      dayjs: 1.10.7
+      dotenv: 10.0.0
+      editorjs-change-case: 0.0.3
+      editorjs-layout: 1.2.3
+      editorjs-text-alignment-blocktune: 1.0.3
+      editorjs-tooltip: 1.1.3
+      i18next: 21.6.14
+      i18next-browser-languagedetector: 6.1.4
+      i18next-http-backend: 1.4.0
+      lodash.find: 4.6.0
+      mustache: 4.2.0
+      react: 18.2.0
+      react-beautiful-dnd: 13.1.1(react-dom@18.2.0)(react@18.2.0)
+      react-dom: 18.2.0(react@18.2.0)
+      react-dropzone: 14.2.2(react@18.2.0)
+      react-hook-form: 7.34.0(react@18.2.0)
+      react-i18next: 11.18.3(i18next@21.6.14)(react-dom@18.2.0)(react@18.2.0)
+      react-popper: 2.3.0(@popperjs/core@2.11.0)(react-dom@18.2.0)(react@18.2.0)
+      react-router-dom: 6.16.0(react-dom@18.2.0)(react@18.2.0)
+      sass: 1.54.9
+      svg-country-flags: 1.2.10
+      tabler-icons-react: 1.56.0(react@18.2.0)
+      yup: 0.32.11
+    transitivePeerDependencies:
+      - '@types/react'
+      - debug
+      - encoding
+      - postcss
+      - react-native
+      - supports-color
+    dev: true
+
+  /@prom-cms/api-client@0.10.0(axios@0.24.0):
+    resolution: {integrity: sha512-U9X/FOjLK10v8b6VY77wRzUrfFOVI0yEleuqbjAddA2WeEEYO6XBNAWMBkywIeWWEMwNzV8oqmGcCZsbkxX4mQ==}
     peerDependencies:
       axios: ^0.27
     dependencies:
       '@prom-cms/shared': 3.0.0
       axios: 0.24.0
+    dev: true
+
+  /@prom-cms/api-client@0.10.0(axios@0.27.2):
+    resolution: {integrity: sha512-U9X/FOjLK10v8b6VY77wRzUrfFOVI0yEleuqbjAddA2WeEEYO6XBNAWMBkywIeWWEMwNzV8oqmGcCZsbkxX4mQ==}
+    peerDependencies:
+      axios: ^0.27
+    dependencies:
+      '@prom-cms/shared': 3.0.0
+      axios: 0.27.2
     dev: true
 
   /@prom-cms/cli@0.21.4(@types/node@20.8.2)(postcss@8.4.31):

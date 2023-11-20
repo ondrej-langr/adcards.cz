@@ -79,10 +79,13 @@
 
 .builder__grid {
     display: flex;
+    flex-flow: wrap;
     gap: 10px;
     justify-content: center;
+    align-items: center;
     max-width: 1500px;
     width: 100%;
+    margin: auto;
 
     --number-of-items-on-row: 1;
 }
@@ -90,14 +93,14 @@
 .builder__grid-item {
     cursor: pointer;
     text-align: center;
-    width: calc(100% / var(--number-of-items-on-row));
+    width: calc(100% / var(--number-of-items-on-row) - 20px);
     margin-bottom: 2rem;
     display: flex;
     flex-flow: column;
 }
 
 .builder__grid-item h4 {
-    font-size: 2.5rem;
+    font-size: 2.5rem !important;
     margin-top: auto;
 }
 

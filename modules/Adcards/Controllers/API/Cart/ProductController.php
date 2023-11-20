@@ -28,7 +28,7 @@ class ProductController
             $response->withStatus(401);
         }
 
-        $cart->appendProduct($body["product-id"], $body["quantity"]);
+        $cart->appendProduct($body["product-id"], $body["quantity"] ?? 1);
         $rendering = $this->container->get(RenderingService::class);
 
         $rendering
@@ -40,6 +40,15 @@ class ProductController
             ->render($response, "@modules:Adcards/components/toast-alert.twig", [
                 "message" => StaticMessages::PRODUCT_ADDED
             ]);
+
+        if (str_contains($request->getHeader("Hx-Current-Url")[0], "/kosik")) {
+            $rendering
+                ->render(
+                    $response,
+                    '@modules:Adcards/partials/pages/cart/right-side/right-side.twig',
+                    array_merge($cart->stateToTemplateVariables(), ["oob" => true])
+                );
+        }
 
         return $response
             ->withHeader("Cache-Control", "no-cache")
@@ -74,7 +83,7 @@ class ProductController
             ],
         ];
 
-        $resultPayload = array_merge($resultPayload, getCommonCartTemplateVariables($cart));
+        $resultPayload = array_merge($resultPayload, $cart->stateToTemplateVariables());
         $this->container->get(RenderingService::class)->render($response, $template, $resultPayload);
 
         return $response->withHeader("Cache-Control", "no-cache");
@@ -85,6 +94,7 @@ class ProductController
     {
         $params = $request->getQueryParams();
         $cart = $this->container->get(Cart::class);
+        $rendering = $this->container->get(RenderingService::class);
 
         if (!isset($params["product-id"])) {
             $response->withStatus(401);
@@ -106,8 +116,15 @@ class ProductController
             ]
         ];
 
-        $resultPayload = array_merge($resultPayload, getCommonCartTemplateVariables($cart));
-        $this->container->get(RenderingService::class)->render($response, $template, $resultPayload);
+        $resultPayload = array_merge($resultPayload, $cart->stateToTemplateVariables());
+        $rendering
+            ->render($response, $template, $resultPayload);
+        
+        $rendering
+            ->render($response, '@modules:Adcards/partials/mini-cart.twig', [
+                'cartSize' => $cart->getCount(),
+                'oob' => true
+            ]);
 
         return $response;
     }

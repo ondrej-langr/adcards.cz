@@ -1,4 +1,4 @@
-<div class="cart-right w50 w100-mob" id='cart-right-side'>
+<div class="cart-right w50 w100-mob" id='cart-right-side' {% if oob %}hx-swap-oob='true'{% endif %}>
     {{ include("@modules:Adcards/partials/pages/cart/right-side/cards-overview.twig") }}
     {{ include("@modules:Adcards/partials/pages/cart/right-side/products-overview.twig") }}
 

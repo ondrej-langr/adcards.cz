@@ -14,6 +14,10 @@ class MainPageSlides extends Model
   protected static bool $enabled = true;
   protected static array $adminSettings = ['hidden' => false];
 
+  public static array $casts = [
+    'buttonUrl' => 'array',
+  ];
+
   public static array $tableColumns = [
     'id' => [
       'title' => 'ID',
@@ -64,7 +68,7 @@ class MainPageSlides extends Model
     ],
 
     'buttonUrl' => [
-      'title' => 'Odkaz pro tlačítko',
+      'title' => 'Tlačítko',
       'hide' => false,
       'required' => false,
       'unique' => false,
@@ -73,10 +77,10 @@ class MainPageSlides extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 6],
-        'fieldType' => 'normal',
+        'fieldType' => 'linkButton',
       ],
       'readonly' => false,
-      'type' => 'string',
+      'type' => 'json',
     ],
 
     'image' => [

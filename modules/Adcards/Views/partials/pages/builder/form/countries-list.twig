@@ -12,7 +12,7 @@
         >
             {% set flag = "" %}
             {% if country.flag %}
-                {% set flag = getImage(country.flag, 40, null, 45) %}
+                {% set flag = getImage(country.flag, 100, 50) %}
             {% endif %}
             <input id='country-{{ country.id }}' type="radio" value='{{ country.id }}' x-model='countryId'
                    name="countryId" />
@@ -22,7 +22,7 @@
                         <div class="dropdown-icon-container">
                             <img class="dropdown-icon"
                                  src='{{ flag.src }}'
-                                 alt="" />
+                                 alt="" width='45' height='auto' />
                         </div>
                     {% endif %}
                 <span class="label-name">{{ country.name }}</span>

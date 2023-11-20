@@ -172,7 +172,6 @@ class CartController
 
                 $cardPayload->name = $cardInCartAsArray["name"];
                 $cardPayload->background_id = intval($cardInCartAsArray["background_id"]);
-                $cardPayload->sport_id = intval($cardInCartAsArray["sport_id"]);
                 $cardPayload->size_id = intval($cardInCartAsArray["size_id"]);
                 $cardPayload->card_type = $cardInCartAsArray["cardType"];
 
@@ -180,7 +179,7 @@ class CartController
                 if ($cardInCartAsArray["cardType"] !== "realPlayer") {
                     $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
                     $filename = basename($uploadedPlayerImagePath);
-                    $filepath = "/hraci-z-karet/" . $filename;
+                    $filepath = "/Objednávky/Karty/" . $filename;
                     $playerImageEntity = Files::create([
                         'filepath' => $filepath,
                         'filename' => $filename,
@@ -227,8 +226,7 @@ class CartController
         $orderPayload->currency = "CZK";
 
         $ordersService->create((array)$orderPayload);
-
-        $session->delete("cart");
+        $cart->destroyState();
 
         return $response->withHeader("HX-Location", "/objednavky/$orderUuid");
     }

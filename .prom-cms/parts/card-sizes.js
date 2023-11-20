@@ -42,7 +42,7 @@ const cardSizesModel = {
       'type': 'relationship',
       'multiple': false,
       'targetModel': 'cardMaterial',
-      'labelConstructor': 'name',
+      'labelConstructor': '{{name}}',
       'title': 'Materiál ',
     },
     'image': {

@@ -1,6 +1,7 @@
 <?php
 
 use PromCMS\Core\Services\EntryTypeService;
+use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -20,9 +21,10 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
         ServerRequestInterface $request,
         ResponseInterface      $response,
                                $args,
-    ) use ($twig) {
-        $cardMaterialService = new EntryTypeService(new CardMaterial());
-        $sliderItemsService = new EntryTypeService(new MainPageSlides());
+    ) use ($twig, $container) {
+        $currentLanguage = $container->get(LocalizationService::class)->getCurrentLanguage();
+        $cardMaterialService = new EntryTypeService(new CardMaterial(), $currentLanguage);
+        $sliderItemsService = new EntryTypeService(new MainPageSlides(), $currentLanguage);
 
         return $twig->render($response, '@modules:Adcards/pages/home.twig', [
             "cards" => [
@@ -38,6 +40,7 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     $router->get('/zeme/vyhledavani', Controllers\BuilderController::class . ":searchCountries")->setName("searchCountries");
     $router->get('/kosik', Controllers\CartController::class . ":get")->setName("cart");
     $router->get('/produkty', Controllers\ProductsController::class . ":get")->setName("products");
+    $router->get('/produkty/{productId}', Controllers\ProductController::class . ":get")->setName("productUnderpage");
     $router->get('/objednavky/{orderUuid}', Controllers\OrdersController::class . ":getOne")->setName("orderPage");
 
     $router->get('/faq', function (

@@ -4098,3 +4098,23 @@ button {
     text-align: center;
     margin-top: 0px;
 }
+
+form.add-to-cart {
+    display: flex;
+    margin-top: 1rem;
+    flex-wrap: nowrap;
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.add-to-cart button {
+    margin-top: 0;
+}
+
+.add-to-cart__value {
+    flex: none;
+    border-right: 0;
+    padding: 10px 20px;
+    width: 100px;
+    border-color: rgb(247, 11, 53);
+}

@@ -49,6 +49,7 @@ if (window.location.pathname.includes('/kosik')) {
 
 window.Alpine.start()
 
+
 // handles reset of all input fields([name="quantity"]) that belongs to product on current page
 // This is triggered usually when there is a product rendered
 document.body.addEventListener('resetAddToCartQuantity', function(evt) {

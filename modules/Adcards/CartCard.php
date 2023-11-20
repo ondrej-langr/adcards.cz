@@ -17,7 +17,6 @@ class CartCard
 {
     private string $name;
     private string $backgroundId;
-    private string $sportId;
     private string $sizeId;
     private string $cardType;
     private string|null $countryId = null;
@@ -29,14 +28,12 @@ class CartCard
         string $name,
         string $sizeId,
         string $backgroundId,
-        string $sportId,
         string $cardType,
     )
     {
         $this->name = $name;
         $this->sizeId = $sizeId;
         $this->backgroundId = $backgroundId;
-        $this->sportId = $sportId;
         $this->cardType = $cardType;
     }
 
@@ -57,10 +54,21 @@ class CartCard
         }
 
         $extensionForImage = image_type_to_extension($allowedMimeTypesToFileType[$uploadedImageMimeType], false);
-        $filePath = "/temp-uploaded-player-images/$sessionId/$fileName.$extensionForImage";
+        $filePath = "/interni/temp-uploaded-player-images/$sessionId/$fileName.$extensionForImage";
         $fs->write($filePath, base64_decode($imageData));
 
         $this->playerImagePathname = $filePath;
+
+        return $this;
+    }
+
+    public function unsetPlayerImage(Filesystem $fs): CartCard
+    {
+        if (!empty($this->playerImagePathname)) {
+            $fs->delete($this->playerImagePathname);
+
+            $this->playerImagePathname = null;
+        }
 
         return $this;
     }
@@ -108,7 +116,7 @@ class CartCard
     /**
      * @throws \Exception
      */
-    #[ArrayShape(["name" => "string", "background_id" => "string", "sport_id" => "string", "size_id" => "string", "cardType" => "string", "playerImagePathname" => "null|string", "rating" => "int|null", "stats" => "array|null", "country_id" => "null|string"])]
+    #[ArrayShape(["name" => "string", "background_id" => "string", "size_id" => "string", "cardType" => "string", "playerImagePathname" => "null|string", "rating" => "int|null", "stats" => "array|null", "country_id" => "null|string"])]
     function asArray(): array
     {
         if (!$this->isValid()) {
@@ -118,7 +126,6 @@ class CartCard
         return [
             "name" => $this->name,
             "background_id" => $this->backgroundId,
-            "sport_id" => $this->sportId,
             "size_id" => $this->sizeId,
             "cardType" => $this->cardType,
 
@@ -132,7 +139,7 @@ class CartCard
 
 
     /**
-     * @param $input array{name: string, background_id: string, sport_id: string, size_id: string, cardType: string, playerImagePathname: string|null, rating: string|null, stats: array|null, country_id: string}
+     * @param $input array{name: string, background_id: string, size_id: string, cardType: string, playerImagePathname: string|null, rating: string|null, stats: array|null, country_id: string}
      * @return CartCard
      * @throws \Exception
      */
@@ -142,7 +149,6 @@ class CartCard
             $input["name"],
             $input["size_id"],
             $input["background_id"],
-            $input["sport_id"],
             $input["cardType"],
         );
 
@@ -165,17 +171,14 @@ class CartCard
         $countriesService = new EntryTypeService(new \Countries());
         $cardSizesService = new EntryTypeService(new \CardSizes());
         $cardBackgroundsService = new EntryTypeService(new \CardBackgrounds());
-        $sportsService = new EntryTypeService(new \Sports());
 
         $sizes = $cardSizesService->getMany([], 1, 999)["data"];
         $countries = $countriesService->getMany([], 1, 999)["data"];
         $backgrounds = $cardBackgroundsService->getMany([], 1, 999)["data"];
-        $sports = $sportsService->getMany([], 1, 999)["data"];
 
         // TODO: use json schema for validation
         if (
             !in_array(intval($this->backgroundId), getIds($backgrounds)) ||
-            !in_array(intval($this->sportId), getIds($sports)) ||
             !in_array(intval($this->sizeId), getIds($sizes)) ||
             !$this->name
         ) {

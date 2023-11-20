@@ -97,7 +97,7 @@ class Products extends Model
     ],
 
     'is_bonus' => [
-      'title' => 'Bonus?',
+      'title' => 'Zvýhodněný produkt ke kartám',
       'hide' => false,
       'required' => false,
       'unique' => false,

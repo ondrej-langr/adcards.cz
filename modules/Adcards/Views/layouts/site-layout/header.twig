@@ -76,13 +76,14 @@
                     </li>
                 </a>
             </ul>
-            <div class="dropdown-language-around">
+            <div class="dropdown-language-around" x-data='{ opened: false }' @mouseenter='opened = true'
+                 @mouseleave='opened = false'>
                 <div class="dropdown language-btn">
                     <img src="/images/flags/{{ getCurrentLanguage() }}.svg" width="14" height="15"
                          alt="{{ getCurrentLanguage() }} vlajka">
                     {{ getCurrentLanguage() }}
                 </div>
-                <div class="dropdown-language-content">
+                <div class="dropdown-language-content" :class="{ 'toggled': opened }">
                     {#                    We create special array that has keys as languages and value as empty string. This will be later used to clear url #}
                     {% set languagesAsReplacer = {} %}
                     {% set defaultLanguage = getConfig().i18n.default %}

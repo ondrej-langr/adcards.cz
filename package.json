@@ -12,10 +12,11 @@
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.20.1",
-    "@prom-cms/admin": "^0.15.1",
+    "@prom-cms/admin": "^0.16.0",
     "@prom-cms/cli": "^0.21.4",
     "@prom-cms/schema": "^0.4.0",
     "@prom-cms/vite-plugin": "~0.7.1",
+    "@prom-cms/api-client": "^0.10.0",
     "@types/alpinejs": "^3.13.3",
     "prettier-plugin-twig-melody": "^0.4.6",
     "typescript": "^5.2.2",

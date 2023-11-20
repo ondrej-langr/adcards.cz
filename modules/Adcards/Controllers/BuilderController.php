@@ -6,6 +6,7 @@ use DI\Container;
 use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\FileService;
 use PromCMS\Core\Services\ImageService;
+use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\CartCard;
@@ -61,11 +62,12 @@ class BuilderController
 
     public function get(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
-        $cardMaterialService = new EntryTypeService(new \CardMaterial());
-        $countriesService = new EntryTypeService(new \Countries());
-        $cardSizesService = new EntryTypeService(new \CardSizes());
-        $cardBackgroundsService = new EntryTypeService(new \CardBackgrounds());
-        $sportsService = new EntryTypeService(new \Sports());
+        $requestLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
+        $cardMaterialService = new EntryTypeService(new \CardMaterial(), $requestLanguage);
+        $countriesService = new EntryTypeService(new \Countries(), $requestLanguage);
+        $cardSizesService = new EntryTypeService(new \CardSizes(), $requestLanguage);
+        $cardBackgroundsService = new EntryTypeService(new \CardBackgrounds(), $requestLanguage);
+        $sportsService = new EntryTypeService(new \Sports(), $requestLanguage);
         $imageService = $this->container->get(ImageService::class);
         $fileService = $this->container->get(FileService::class);
 

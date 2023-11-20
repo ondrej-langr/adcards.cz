@@ -1,0 +1,40 @@
+.product-page {
+    width: 100%;
+    display: flex;
+    padding: 185px 15px 65px;
+    justify-content: center;
+}
+
+.product-page-content {
+    width: 95%;
+    max-width: 1400px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
+}
+
+.product-page-image {
+}
+
+.product-page-image img {
+    width: 100%;
+    margin-bottom: 15px;
+    height: auto;
+}
+
+.product-page-info {
+    position: sticky;
+    top: 185px;
+    padding-left: 35px;
+}
+
+.product-page-info h1 {
+}
+
+.product-page-info h2.price {
+}
+
+.product-page-info p.desc {
+    margin-top: 2rem;
+}

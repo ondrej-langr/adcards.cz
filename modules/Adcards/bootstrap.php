@@ -3,64 +3,11 @@
 use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Mailer;
 use PromCMS\Core\Services\EntryTypeService;
+use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\CartCard;
 use Slim\App;
-
-function getCommonCartTemplateVariables(Cart $cart): array
-{
-    $productsFromCart = $cart->getProducts();
-    $promoCode = $cart->getPromoCode();
-    $totalWithoutPromo = $cart->getTotal(false);
-
-    $cardSizes = [];
-    $cardSizesService = new EntryTypeService(new \CardSizes());
-    $sizes = $cardSizesService->getMany([], 1, 999)["data"];
-    foreach ($sizes as $size) {
-        $cardSizes[$size["id"]] = $size;
-    }
-
-    $cardMaterials = [];
-    $cardMaterialService = new EntryTypeService(new \CardMaterial());
-    $materials = $cardMaterialService->getMany([], 1, 999)["data"];
-    foreach ($materials as $material) {
-        $cardMaterials[$material["id"]] = $material;
-    }
-
-    return [
-        "cart" => [
-            "size" => $cart->getCount(),
-            "cards" => array_map(function (CartCard $item) use ($cardSizes, $cardMaterials) {
-                $result = $item->asArray();
-
-                $result["background"] = (new CardBackgrounds())->query()->where(["id", "=", intval($result["background_id"])])->getOne()->getData();
-                $result["size"] = $cardSizes[intval($result["size_id"])];
-                $result["size"]["material"] = $cardMaterials[intval($result["size"]["material_id"])];
-
-                return $result;
-            }, $cart->getCards()),
-            "products" => $productsFromCart,
-            "promoCode" => $promoCode ? [
-                "isset" => true,
-                "value" => $promoCode["code"],
-                "percentage" => $promoCode["amount"],
-            ] : [
-                "isset" => false
-            ],
-            "total" => [
-                // This will be striken through if promocode.isset === true
-                "withoutPromo" => $totalWithoutPromo,
-                // This is always shown
-                "withPromo" => $promoCode ? $cart->getTotal(true) : $totalWithoutPromo
-            ]
-        ],
-        "cardSizes" => $cardSizes,
-        "cardMaterials" => $cardMaterials,
-        "shippingMethods" => Cart::$availableShipping,
-        "paymentMethods" => Cart::$availablePaymentMethods
-    ];
-}
 
 return function (App $app) {
     /**
@@ -75,8 +22,9 @@ return function (App $app) {
         $mailer->SMTPSecure = false;
     }
 
-    $container->set(Cart::class, new Cart());
+    $container->set(Cart::class, new Cart($container));
 
+    // Is being run after each request
     $customApplicationMiddleware = function ($request, $handler) use ($rendering, $container) {
         $session = $container->get('session');
         $cartFromSession = $container->get(Cart::class);

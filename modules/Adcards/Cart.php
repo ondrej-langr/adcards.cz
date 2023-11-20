@@ -2,8 +2,11 @@
 
 namespace PromCMS\Modules\Adcards;
 
+use DI\Container;
+use JetBrains\PhpStorm\ArrayShape;
 use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Services\EntryTypeService;
+use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Modules\Adcards\Enums\CartItemTypes;
 
 /**
@@ -11,6 +14,7 @@ use PromCMS\Modules\Adcards\Enums\CartItemTypes;
  */
 class Cart
 {
+    private Container $container;
     public static array $availableShipping = [
         "dpd" => [
             "title" => "DPD",
@@ -36,11 +40,13 @@ class Cart
     ];
 
     public static array $defaultState = [Enums\CartItemTypes::PRODUCTS->value => []];
+
     protected array $state;
 
-    public function __construct(array|null $initialState = null)
+    public function __construct(Container $container)
     {
-        $this->state = $initialState ?? Cart::$defaultState;
+        $this->container = $container;
+        $this->state = Cart::$defaultState;
     }
 
     public function setState(array $nextState): void
@@ -78,6 +84,7 @@ class Cart
         if (isset($this->state[CartItemTypes::PROMO_CODE->value]["id"]) === false) {
             return;
         }
+
 
         $state = $this->state;
 
@@ -119,7 +126,7 @@ class Cart
             $this->state[$cartItemTypeProducts][$productId] = ["count" => 0];
         }
 
-        $this->state[$cartItemTypeProducts][$productId]["count"] += $addQuantity;
+        $this->state[$cartItemTypeProducts][$productId]["count"] += max(1, $addQuantity);
     }
 
     public function changeProductQuantity($productId, int $toQuantity): void
@@ -170,9 +177,16 @@ class Cart
 
         $cardData = $this->state[CartItemTypes::CARDS->value][$index]["data"];
 
-        // TODO: remove player image from store if it is set
+        // Handle image deletion when unsetting
+        if (!empty($cardData["playerImagePathname"])) {
+            $card = CartCard::fromArray($cardData);
+
+            $card->unsetPlayerImage($this->container->get("filesystem"));
+        }
 
         unset($this->state[CartItemTypes::CARDS->value][$index]);
+
+        $this->state[CartItemTypes::CARDS->value] = array_values($this->state[CartItemTypes::CARDS->value]);
 
         return true;
     }
@@ -208,12 +222,22 @@ class Cart
     {
         $result = [];
         $productsFromCart = $this->state[CartItemTypes::PRODUCTS->value];
+        $hasCards = !empty($this->state[CartItemTypes::CARDS->value]);
 
-        $productsFromDatabase = (new \PromCMS\Core\Services\EntryTypeService(new \Products()))->getMany([
+        $productsFromDatabase = (new \PromCMS\Core\Services\EntryTypeService(
+            new \Products(),
+            $this->container->get(LocalizationService::class)->getCurrentLanguage()
+        ))->getMany([
             ["id", "IN", array_keys($productsFromCart)]
         ], 1, 999);
 
         foreach ($productsFromDatabase["data"] as $product) {
+            if (!$hasCards && $product["is_bonus"]) {
+                $this->removeProduct($product["id"]);
+
+                continue;
+            }
+
             $productInfoFromCart = $productsFromCart[$product["id"]];
             $result[$product["id"]] = array_merge($productInfoFromCart, [
                 // count -> but that is already from state
@@ -246,8 +270,92 @@ class Cart
         return $total;
     }
 
+    public function getRecommendedProducts()
+    {
+        // If there are no cards in cart then there are no recommended
+        if (empty($this->state[CartItemTypes::CARDS->value])) {
+            return [];
+        }
+
+        return (new \Products())
+            ->query()
+            ->setLanguage($this->container->get(LocalizationService::class)->getCurrentLanguage())
+            ->where([
+                ["is_bonus", "=", true],
+                ["id", "NOT IN", array_keys($this->state[CartItemTypes::PRODUCTS->value])]
+            ])
+            ->limit(3)
+            ->getMany();
+    }
+
+    public function stateToTemplateVariables()
+    {
+        $currentLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
+        $productsFromCart = $this->getProducts();
+        $promoCode = $this->getPromoCode();
+        $totalWithoutPromo = $this->getTotal(false);
+
+        $cardSizes = [];
+        $cardSizesService = new EntryTypeService(new \CardSizes(), $currentLanguage);
+        $sizes = $cardSizesService->getMany([], 1, 999)["data"];
+        foreach ($sizes as $size) {
+            $cardSizes[$size["id"]] = $size;
+        }
+
+        $cardMaterials = [];
+        $cardMaterialService = new EntryTypeService(new \CardMaterial(), $currentLanguage);
+        $materials = $cardMaterialService->getMany([], 1, 999)["data"];
+        foreach ($materials as $material) {
+            $cardMaterials[$material["id"]] = $material;
+        }
+
+        return [
+            "cart" => [
+                "size" => $this->getCount(),
+                "cards" => array_map(function (CartCard $item) use ($cardSizes, $cardMaterials, $currentLanguage) {
+                    $result = $item->asArray();
+
+                    $result["background"] = (new \CardBackgrounds())
+                        ->query()
+                        ->setLanguage($currentLanguage)
+                        ->where(["id", "=", intval($result["background_id"])])
+                        ->getOne()
+                        ->getData();
+                    $result["size"] = $cardSizes[intval($result["size_id"])];
+                    $result["size"]["material"] = $cardMaterials[intval($result["size"]["material_id"])];
+
+                    return $result;
+                }, $this->getCards()),
+                "products" => $productsFromCart,
+                "promoCode" => $promoCode ? [
+                    "isset" => true,
+                    "value" => $promoCode["code"],
+                    "percentage" => $promoCode["amount"],
+                ] : [
+                    "isset" => false
+                ],
+                "total" => [
+                    // This will be striken through if promocode.isset === true
+                    "withoutPromo" => $totalWithoutPromo,
+                    // This is always shown
+                    "withPromo" => $promoCode ? $this->getTotal(true) : $totalWithoutPromo
+                ]
+            ],
+            "cardSizes" => $cardSizes,
+            "cardMaterials" => $cardMaterials,
+            "shippingMethods" => Cart::$availableShipping,
+            "paymentMethods" => Cart::$availablePaymentMethods,
+            "extras" => $this->getRecommendedProducts()
+        ];
+    }
+
     public function getState(): array
     {
         return $this->state;
+    }
+
+    public function destroyState(): array
+    {
+        return $this->state = Cart::$defaultState;
     }
 }

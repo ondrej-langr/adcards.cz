@@ -231,7 +231,7 @@ form .form-group textarea:focus {
     width: 100%;
     margin-top: 25px;
     border-bottom: 1px solid #e4e4e4;
-    padding: 0;
+    padding: 0 0 25px 0;
 }
 
 .extras h3 {
@@ -240,6 +240,14 @@ form .form-group textarea:focus {
 
 .extra img {
     max-width: 100%;
+}
+
+.extras .add-to-cart__value {
+    display: none;
+}
+
+#cart-right-side h3:not(:first-of-type) {
+    margin-top: 25px;
 }
 
 input[type=radio] + label {

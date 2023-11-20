@@ -51,22 +51,6 @@ class CardBackgrounds extends Model
       'type' => 'string',
     ],
 
-    'textColor' => [
-      'title' => 'Barva textu',
-      'hide' => false,
-      'required' => true,
-      'unique' => false,
-      'editable' => true,
-      'translations' => true,
-      'admin' => [
-        'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
-        'fieldType' => 'color',
-      ],
-      'readonly' => false,
-      'type' => 'json',
-    ],
-
     'image' => [
       'title' => 'Obrázek',
       'hide' => false,
@@ -83,6 +67,42 @@ class CardBackgrounds extends Model
       'type' => 'file',
       'multiple' => false,
       'typeFilter' => 'image',
+    ],
+
+    'textColor' => [
+      'title' => 'Barva textu',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => true,
+      'translations' => true,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'color',
+      ],
+      'readonly' => false,
+      'type' => 'json',
+    ],
+
+    'sport_id' => [
+      'title' => 'Sport ',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
+      'type' => 'relationship',
+      'targetModel' => 'sports',
+      'labelConstructor' => '{{name}}',
+      'multiple' => false,
+      'fill' => true,
+      'foreignKey' => 'id',
     ],
 
     'is_published' => [

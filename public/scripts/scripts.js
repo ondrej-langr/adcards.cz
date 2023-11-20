@@ -127,16 +127,6 @@ $('.close-cookie-warning').on('click', function() {
 })(jQuery)
 
 $(document).ready(function() {
-  $('.dropdown-language-around').hover(function(e) {
-    $('.dropdown-language-content, .language-btn i').toggleClass('toggled')
-  })
-  $('.dropdown-language-item').on('click', function(e) {
-    $('.dropdown-language-content, .language-btn i').toggleClass('toggled')
-    $('#').html($(this).html())
-  })
-})
-
-$(document).ready(function() {
   $('.slider-main').slick({
     slidesToShow: 5,
     slidesToScroll: 1,

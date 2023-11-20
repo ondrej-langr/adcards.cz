@@ -53,7 +53,7 @@ class PromoCodeController
             }
         }
 
-        $resultPayload = array_merge($resultPayload, getCommonCartTemplateVariables($cart));
+        $resultPayload = array_merge($resultPayload, $cart->stateToTemplateVariables());
         $this->container->get(RenderingService::class)->render($response, $template, $resultPayload);
 
         return $response;

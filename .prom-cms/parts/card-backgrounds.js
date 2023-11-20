@@ -27,16 +27,6 @@ const cardBackgroundsModel = {
         'fieldType': 'heading',
       },
     },
-    'textColor': {
-      'required': true,
-      'editable': true,
-      'unique': false,
-      'hide': false,
-      'translations': true,
-      'type': 'json',
-      'title': 'Barva textu',
-      admin: { fieldType: 'color' },
-    },
     'image': {
       'required': true,
       'editable': true,
@@ -50,6 +40,25 @@ const cardBackgroundsModel = {
       'admin': {
         'fieldType': 'big-image',
       },
+    },
+    'textColor': {
+      'required': true,
+      'editable': true,
+      'unique': false,
+      'hide': false,
+      'translations': true,
+      'type': 'json',
+      'title': 'Barva textu',
+      admin: { fieldType: 'color' },
+    },
+    'sport_id': {
+      'required': true,
+      'translations': false,
+      'type': 'relationship',
+      'multiple': false,
+      'targetModel': 'sports',
+      'labelConstructor': '{{name}}',
+      'title': 'Sport ',
     },
   },
 }

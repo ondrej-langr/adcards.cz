@@ -1,42 +1,33 @@
 <div class="header">
-    <div class="slider-container">
+    <div class="slider-container" x-data='{ activeIndex: 0 }'>
         <div class="overlay"></div>
         <div class="col-12 col-lg-9 col-md-12 col-sm-12 col-xl-9 slider-left">
             {% for slide in slider.items %}
-                <div class="slide {% if loop.index == 1 %}active{% endif %}" id="slide-{{loop.index0}}">
+                <div class="slide {% if loop.index == 1 %}active{% endif %}" id="slide-{{ loop.index0 }}"
+                     :class='{ "active": activeIndex === {{ loop.index0 }} }'>
                     {% set currentImage = getImage(slide.image, null,500) %}
-                    <img src="{{currentImage.src}}" width="{{currentImage.width}}" height="{{currentImage.height}}"
-                        alt="Obrázek">
+                    <img src="{{ currentImage.src }}" width="{{ currentImage.width }}"
+                         height="{{ currentImage.height }}"
+                         alt="Obrázek">
                     <div class="slider-content">
                         <h1>{{ slide.title }}</h1>
                         <p>{{ slide.subTitle }}</p>
-                        <button>Nakupovat</button>
+                        {% if slide.buttonUrl.href %}
+                            <a href='{{ slide.buttonUrl.href }}' class='appearance-button mt-4'>
+                                {{ slide.buttonUrl.label ?? slide.buttonUrl.href }}
+                            </a>
+                        {% endif %}
                     </div>
                 </div>
             {% endfor %}
         </div>
         <div class="col-12 col-lg-3 col-md-12 col-sm-12 col-xl-3 slider-right">
             {% for slide in slider.items %}
-                <div class="slider-box {% if loop.index == 1 %}active{% endif %}" onclick="changeSlide({{loop.index0}})">
-                    <h2>{{slide.title}}</h2>
+                <div class="slider-box {% if loop.index == 1 %}active{% endif %}"
+                     @click='activeIndex = {{ loop.index0 }}' :class='{ "active": activeIndex === {{ loop.index0 }} }'>
+                    <h2>{{ slide.title }}</h2>
                 </div>
             {% endfor %}
         </div>
     </div>
 </div>
-
-<script>
-    function changeSlide(index) {
-        let boxes = document.querySelectorAll('.slider-box');
-        let slides = document.querySelectorAll('.slide');
-        boxes.forEach(box => {
-            box.classList.remove('active');
-        });
-        slides.forEach(slide => {
-            slide.classList.remove('active');
-        });
-
-        boxes[index].classList.add('active');
-        slides[index].classList.add('active');
-    }
-</script>

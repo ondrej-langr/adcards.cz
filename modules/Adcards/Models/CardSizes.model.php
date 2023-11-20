@@ -93,7 +93,7 @@ class CardSizes extends Model
       'readonly' => false,
       'type' => 'relationship',
       'targetModel' => 'cardMaterial',
-      'labelConstructor' => 'name',
+      'labelConstructor' => '{{name}}',
       'multiple' => false,
       'fill' => true,
       'foreignKey' => 'id',

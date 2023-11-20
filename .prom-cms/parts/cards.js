@@ -17,15 +17,6 @@ const relationFields = {
     'labelConstructor': '{{name}}',
     'title': 'Země',
   },
-  'sport_id': {
-    'required': true,
-    'translations': false,
-    'type': 'relationship',
-    'multiple': false,
-    'targetModel': 'sports',
-    'labelConstructor': '{{name}}',
-    'title': 'Sport',
-  },
   'size_id': {
     'required': true,
     'translations': false,
@@ -68,7 +59,7 @@ const cardsModel = {
     'name': {
       'required': true,
       'editable': true,
-      'unique': true,
+      'unique': false,
       'hide': false,
       'translations': true,
       'type': 'string',
