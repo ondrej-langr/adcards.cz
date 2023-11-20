@@ -83,7 +83,7 @@ const cardsModel = {
       'admin': {
         'fieldType': 'repeater',
         'columns': {
-          'title': {
+          'name': {
             'required': true,
             'type': 'string',
             readonly: true,

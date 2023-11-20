@@ -97,7 +97,7 @@ class Cards extends Model
         'editor' => ['placement' => 'main', 'width' => 12],
         'fieldType' => 'repeater',
         'columns' => [
-          'title' => [
+          'name' => [
             'hide' => false,
             'required' => true,
             'editable' => true,

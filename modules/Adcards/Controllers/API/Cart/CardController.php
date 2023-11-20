@@ -22,11 +22,16 @@ class CardController
         $this->container = $container;
     }
 
-    public function addOne(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
+    public function addOne(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $cart = $this->container->get(Cart::class);
         $body = $request->getParsedBody();
-        $requiredKeys = ["name", "sizeId", "materialId", "backgroundId", "cardType"];
+        $requiredKeys = [
+            "name",
+            "sizeId",
+            "backgroundId",
+            "cardType"
+        ];
 
         foreach ($requiredKeys as $requiredKey) {
             if (isDefinedInArray($body, $requiredKey) && isNotEmpty($body[$requiredKey])) {
@@ -39,15 +44,30 @@ class CardController
         $card = new CartCard($body["name"], $body["sizeId"], $body["backgroundId"], $body["cardType"]);
 
         if ($body["cardType"] !== "realPlayer") {
-            $fs = $this->container->get("filesystem");
+            $playerImage = CartCard\PlayerImage::create($body["playerImage"], $this->container->get('session')::id(), uniqid());
 
             $card
                 ->setCountry($body["countryId"])
-                ->setPlayerImage($body["playerImage"], $this->container->get('session')::id(), uniqid(), $fs)
+                ->setPlayerImage($playerImage)
                 ->setRating($body["rating"]);
 
             if (isset($body["stats"])) {
-                $card->setStats($body["stats"]);
+                // We need to extract stats from client to backend
+                $processedStats = [];
+                foreach ($body["stats"] as $statKey => $statValue) {
+                    if (empty($statKey)) {
+                        continue;
+                    }
+
+                    $processedStats[] = [
+                        "name" => $statKey,
+                        'value' => $statValue
+                    ];
+                }
+
+                echo json_encode($processedStats);
+
+                $card->setStats(new CartCard\PlayerOrGoalKeeperStats($processedStats));
             }
         }
 

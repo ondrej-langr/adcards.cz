@@ -181,7 +181,8 @@ class Cart
         if (!empty($cardData["playerImagePathname"])) {
             $card = CartCard::fromArray($cardData);
 
-            $card->unsetPlayerImage($this->container->get("filesystem"));
+            // Unset player image
+            $card->setPlayerImage(null);
         }
 
         unset($this->state[CartItemTypes::CARDS->value][$index]);

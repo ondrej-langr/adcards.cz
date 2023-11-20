@@ -8,7 +8,7 @@ const cardBackgroundsModel = {
   'timestamp': true,
   'sorting': true,
   'sharable': false,
-  'draftable': true,
+  'draftable': false,
   'ignoreSeeding': false,
   'ownable': true,
   'tableName': 'card_backgrounds',

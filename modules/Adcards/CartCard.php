@@ -2,11 +2,11 @@
 
 namespace PromCMS\Modules\Adcards;
 
-use GuzzleHttp\Psr7\UploadedFile;
 use JetBrains\PhpStorm\ArrayShape;
 use League\Flysystem\Filesystem;
 use PromCMS\Core\Services\EntryTypeService;
-use PromCMS\Core\Services\FileService;
+use PromCMS\Modules\Adcards\CartCard\PlayerImage;
+use PromCMS\Modules\Adcards\CartCard\PlayerOrGoalKeeperStats;
 
 function getIds(array $array): array
 {
@@ -20,8 +20,8 @@ class CartCard
     private string $sizeId;
     private string $cardType;
     private string|null $countryId = null;
-    private array|null $stats = null;
-    private string|null $playerImagePathname = null;
+    private PlayerOrGoalKeeperStats|null $stats = null;
+    private PlayerImage|null $playerImage = null;
     private int|null $rating = null;
 
     public function __construct(
@@ -37,45 +37,16 @@ class CartCard
         $this->cardType = $cardType;
     }
 
-    public function setPlayerImage(string $uploadedPlayerImage, string $sessionId, $fileName, Filesystem $fs): CartCard
+    /*
+     * Handles setting and unsetting player image. When null is passed then player image is destroyed altogether
+     */
+    public function setPlayerImage(PlayerImage|null $newPlayerImage): CartCard
     {
-        $allowedMimeTypesToFileType = [];
-        foreach ([IMAGETYPE_PNG, IMAGETYPE_GIF, IMAGETYPE_JPEG, IMAGETYPE_WEBP] as $type) {
-            $allowedMimeTypesToFileType[image_type_to_mime_type($type)] = $type;
-        }
-        $allowedMimeTypes = array_keys($allowedMimeTypesToFileType);
-
-        [$uploadedImageMimeType, $imageData] = explode(';', $uploadedPlayerImage);
-        [, $imageData] = explode(',', $imageData);
-        [, $uploadedImageMimeType] = explode(':', $uploadedImageMimeType);
-
-        if (!in_array($uploadedImageMimeType, $allowedMimeTypes)) {
-            throw new \Exception("Nepodporovaný formát $uploadedImageMimeType obrázku hráče. Podporujeme pouze " . implode(", ", $allowedMimeTypes));
+        if (!empty($this->playerImage) && $newPlayerImage === null) {
+            $this->playerImage->deleteFromStorage();
         }
 
-        $extensionForImage = image_type_to_extension($allowedMimeTypesToFileType[$uploadedImageMimeType], false);
-        $filePath = "/interni/temp-uploaded-player-images/$sessionId/$fileName.$extensionForImage";
-        $fs->write($filePath, base64_decode($imageData));
-
-        $this->playerImagePathname = $filePath;
-
-        return $this;
-    }
-
-    public function unsetPlayerImage(Filesystem $fs): CartCard
-    {
-        if (!empty($this->playerImagePathname)) {
-            $fs->delete($this->playerImagePathname);
-
-            $this->playerImagePathname = null;
-        }
-
-        return $this;
-    }
-
-    public function setPlayerImagePathname(string $playerImagePathname): CartCard
-    {
-        $this->playerImagePathname = $playerImagePathname;
+        $this->playerImage = $newPlayerImage;
 
         return $this;
     }
@@ -87,13 +58,9 @@ class CartCard
         return $this;
     }
 
-    public function setStats(array $stats): CartCard
+    public function setStats(PlayerOrGoalKeeperStats $stats): CartCard
     {
-        if (empty($stats)) {
-            throw new \Exception("Prázdné vlastnostni hráče");
-        }
-
-        $this->stats = array_map(fn($row) => intval($row), $stats);
+        $this->stats = $stats;
 
         return $this;
     }
@@ -130,13 +97,12 @@ class CartCard
             "cardType" => $this->cardType,
 
             // nullable fields
-            "playerImagePathname" => $this->playerImagePathname,
+            "playerImagePathname" => $this->playerImage->getPath(),
             "rating" => $this->rating,
-            "stats" => $this->stats,
+            "stats" => $this->stats->asArray(),
             "country_id" => $this->countryId,
         ];
     }
-
 
     /**
      * @param $input array{name: string, background_id: string, size_id: string, cardType: string, playerImagePathname: string|null, rating: string|null, stats: array|null, country_id: string}
@@ -154,12 +120,12 @@ class CartCard
 
         if ($input["cardType"] !== "realPlayer") {
             $instance
-                ->setPlayerImagePathname($input["playerImagePathname"])
+                ->setPlayerImage(new PlayerImage($input["playerImagePathname"]))
                 ->setRating($input["rating"])
                 ->setCountry($input["country_id"]);
 
             if (isset($input["stats"])) {
-                $instance->setStats($input["stats"]);
+                $instance->setStats(new PlayerOrGoalKeeperStats($input["stats"]));
             }
         }
 
@@ -176,22 +142,28 @@ class CartCard
         $countries = $countriesService->getMany([], 1, 999)["data"];
         $backgrounds = $cardBackgroundsService->getMany([], 1, 999)["data"];
 
-        // TODO: use json schema for validation
         if (
+            // Check if background exists
             !in_array(intval($this->backgroundId), getIds($backgrounds)) ||
+            // Check if size exists
             !in_array(intval($this->sizeId), getIds($sizes)) ||
+            // And check if name was provided
             !$this->name
         ) {
             return false;
         }
 
-
+        // If is goalkeeper, player or manager
         if ($this->cardType !== "realPlayer") {
             if (
+                // Check if selected country exists
                 !in_array(intval($this->countryId), getIds($countries)) ||
-                (empty($this->stats) && $this->cardType !== "manager") ||
+                // Everyone (except real player) do have stats
+                ($this->cardType !== "manager" && empty($this->stats)) ||
+                // Check for rating
                 $this->rating === null ||
-                !$this->playerImagePathname
+                // And check for image
+                !$this->playerImage
             ) {
                 return false;
             }

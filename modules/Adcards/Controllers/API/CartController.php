@@ -32,7 +32,6 @@ class CartController
          * @var $session Session
          */
         $fs = $this->container->get("filesystem");
-        $session = $this->container->get('session');
 
         if (empty($cart->getProducts()) && empty($cart->getCards())) {
             return $response->withStatus(400);
@@ -155,17 +154,18 @@ class CartController
         $orderPayload->payment_method = $parsedData["paymentMethod"];
         $orderPayload->status = OrderStatus::CREATED;
 
+        // Process promo code
         if ($promoCode = $cart->getPromoCode()) {
             $orderPayload->promo_code_value = $promoCode["code"];
             $orderPayload->promo_code_amount = intval($promoCode["amount"]);
         }
 
+        // Process cards
         $cardsInCart = $cart->getCards();
         if (!empty($cardsInCart)) {
             $cardsService = new EntryTypeService(new \Cards());
             $orderPayload->cards = ["data" => []];
 
-            // TODO: implement creation
             foreach ($cardsInCart as $cardInCart) {
                 $cardPayload = new \stdClass();
                 $cardInCartAsArray = $cardInCart->asArray();
@@ -191,7 +191,9 @@ class CartController
                     );
 
                     $cardPayload->rating = $cardInCartAsArray["rating"];
-                    $cardPayload->stats = $cardInCartAsArray["stats"];
+                    $cardPayload->stats = [
+                        "data" => $cardInCartAsArray["stats"]
+                    ];
                     $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
                     $cardPayload->player_image = $playerImageEntity->id;
                 }
@@ -203,10 +205,13 @@ class CartController
                 $orderPayload->cards["data"][] = [
                     "card_id" => $createdCard->id
                 ];
-            }
 
+                // Delete image
+                $cardInCart->setPlayerImage(null);
+            }
         }
 
+        // Process products
         $products = $cart->getProducts();
         if (!empty($products)) {
             $mappedProducts = [];
@@ -221,11 +226,15 @@ class CartController
             $orderPayload->products = ["data" => $mappedProducts];
         }
 
+        // Process price
         $orderPayload->subtotal_cost = $cart->getTotal(false);
         $orderPayload->total_cost = $cart->getTotal(true);
         $orderPayload->currency = "CZK";
 
+        // Finally create order
         $ordersService->create((array)$orderPayload);
+
+        // Dont forget to destroy cart!
         $cart->destroyState();
 
         return $response->withHeader("HX-Location", "/objednavky/$orderUuid");

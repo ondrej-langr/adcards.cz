@@ -133,77 +133,10 @@ class BuilderController
         }, $payload["sports"]);
 
         $values = [
-            "cardType" => "player",
+            "cardType" => 'player',
             "rating" => '99',
             "position" => 'CAM',
-            "stats" => array(
-                'player' =>
-                    array(
-                        0 =>
-                            array(
-                                'name' => 'pac',
-                                'value' => 99,
-                            ),
-                        1 =>
-                            array(
-                                'name' => 'dri',
-                                'value' => 99,
-                            ),
-                        2 =>
-                            array(
-                                'name' => 'sho',
-                                'value' => 99,
-                            ),
-                        3 =>
-                            array(
-                                'name' => 'def',
-                                'value' => 99,
-                            ),
-                        4 =>
-                            array(
-                                'name' => 'pas',
-                                'value' => 99,
-                            ),
-                        5 =>
-                            array(
-                                'name' => 'phy',
-                                'value' => 99,
-                            ),
-                    ),
-                'goalKeeper' =>
-                    array(
-                        0 =>
-                            array(
-                                'name' => 'div',
-                                'value' => 99,
-                            ),
-                        1 =>
-                            array(
-                                'name' => 'ref',
-                                'value' => 99,
-                            ),
-                        2 =>
-                            array(
-                                'name' => 'han',
-                                'value' => 99,
-                            ),
-                        3 =>
-                            array(
-                                'name' => 'spe',
-                                'value' => 99,
-                            ),
-                        4 =>
-                            array(
-                                'name' => 'kic',
-                                'value' => 99,
-                            ),
-                        5 =>
-                            array(
-                                'name' => 'pos',
-                                'value' => 99,
-                            ),
-                    ),
-            ),
+            "stats" => CartCard\PlayerOrGoalKeeperStats::$DEFAULT_VALUES
         ];
 
         $queryParams = $request->getQueryParams();

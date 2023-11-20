@@ -2063,6 +2063,11 @@ input[type=radio]:checked + label span {
     padding: 2px
 }
 
+.input-around.with-error {
+    flex-direction: column;
+    align-items: start;
+}
+
 .stats-set .kind {
     min-height: 55px;
     display: flex;

@@ -105,21 +105,6 @@ class CardBackgrounds extends Model
       'foreignKey' => 'id',
     ],
 
-    'is_published' => [
-      'title' => 'Is published',
-      'hide' => false,
-      'required' => false,
-      'unique' => false,
-      'editable' => true,
-      'translations' => false,
-      'admin' => [
-        'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
-      ],
-      'readonly' => false,
-      'type' => 'boolean',
-    ],
-
     'order' => [
       'title' => 'Order',
       'hide' => false,
@@ -205,7 +190,7 @@ class CardBackgrounds extends Model
       'enabled' => self::$enabled,
       'ownable' => true,
       'hasOrdering' => true,
-      'isDraftable' => true,
+      'isDraftable' => false,
       'isSharable' => false,
     ];
   }

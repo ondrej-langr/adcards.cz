@@ -22,6 +22,7 @@ return function (App $app) {
         $mailer->SMTPSecure = false;
     }
 
+    CartCard\PlayerImage::$fs = $container->get("filesystem");
     $container->set(Cart::class, new Cart($container));
 
     // Is being run after each request
