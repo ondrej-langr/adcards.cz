@@ -91,6 +91,7 @@ class Products extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'normal',
       ],
       'readonly' => false,
       'type' => 'longText',

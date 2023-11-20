@@ -57,6 +57,7 @@ class CardMaterial extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 6],
+        'fieldType' => 'normal',
       ],
       'readonly' => false,
       'type' => 'longText',

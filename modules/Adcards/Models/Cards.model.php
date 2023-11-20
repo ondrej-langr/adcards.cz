@@ -95,9 +95,25 @@ class Cards extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'main', 'width' => 12],
-        'fieldType' => 'jsonEditor',
+        'fieldType' => 'repeater',
+        'columns' => [
+          'title' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => true,
+            'type' => 'string',
+          ],
+          'value' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => true,
+            'type' => 'string',
+          ],
+        ],
       ],
-      'readonly' => false,
+      'readonly' => true,
       'type' => 'json',
     ],
 

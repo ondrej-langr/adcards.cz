@@ -79,6 +79,22 @@ const cardsModel = {
       'translations': false,
       'type': 'json',
       'title': 'Stats',
+      readonly: true,
+      'admin': {
+        'fieldType': 'repeater',
+        'columns': {
+          'title': {
+            'required': true,
+            'type': 'string',
+            readonly: true,
+          },
+          'value': {
+            'required': true,
+            'type': 'string',
+            readonly: true,
+          },
+        },
+      },
     },
     'card_type': {
       'required': true,
