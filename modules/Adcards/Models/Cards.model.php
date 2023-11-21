@@ -44,7 +44,25 @@ class Cards extends Model
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 12],
+        'editor' => ['placement' => 'main', 'width' => 6],
+        'fieldType' => 'small-image',
+      ],
+      'readonly' => false,
+      'type' => 'file',
+      'multiple' => false,
+      'typeFilter' => 'image',
+    ],
+
+    'club_image_id' => [
+      'title' => 'Obrázek klubu',
+      'hide' => false,
+      'required' => false,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 6],
         'fieldType' => 'small-image',
       ],
       'readonly' => false,

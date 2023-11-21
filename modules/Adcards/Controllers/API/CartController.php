@@ -166,7 +166,7 @@ class CartController
             $cardsService = new EntryTypeService(new \Cards());
             $orderPayload->cards = ["data" => []];
 
-            foreach ($cardsInCart as $cardInCart) {
+            foreach ($cardsInCart as $cardIndex => $cardInCart) {
                 $cardPayload = new \stdClass();
                 $cardInCartAsArray = $cardInCart->asArray();
 
@@ -177,9 +177,13 @@ class CartController
 
                 // Handle non real player as that has more fields to process
                 if ($cardInCartAsArray["cardType"] !== "realPlayer") {
+                    $cardPayload->club_image_id = null;
+                    $humanCardIndex = $cardIndex + 1;
+
+                    // Process player image
                     $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
-                    $filename = basename($uploadedPlayerImagePath);
-                    $filepath = "/Objednávky/Karty/" . $filename;
+                    $filename = "hrac." . pathinfo(basename($uploadedPlayerImagePath), PATHINFO_EXTENSION);
+                    $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$filename";
                     $playerImageEntity = Files::create([
                         'filepath' => $filepath,
                         'filename' => $filename,
@@ -189,13 +193,30 @@ class CartController
                         $uploadedPlayerImagePath,
                         $filepath
                     );
+                    $cardPayload->player_image = $playerImageEntity->id;
 
+                    if (!empty($cardInCartAsArray["clubImagePathname"])) {
+                        $uploadedClubImagePath = $cardInCartAsArray["clubImagePathname"];
+                        $filename = "klub." . pathinfo(basename($uploadedClubImagePath), PATHINFO_EXTENSION);
+                        $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$filename";
+                        $clubImageEntity = Files::create([
+                            'filepath' => $filepath,
+                            'filename' => $filename,
+                            'mimeType' => $fs->mimeType($uploadedClubImagePath),
+                        ]);
+                        $fs->move(
+                            $uploadedClubImagePath,
+                            $filepath
+                        );
+                        $cardPayload->club_image_id = $clubImageEntity->id;
+                    }
+
+                    // Process other data
                     $cardPayload->rating = $cardInCartAsArray["rating"];
                     $cardPayload->stats = [
                         "data" => $cardInCartAsArray["stats"]
                     ];
                     $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
-                    $cardPayload->player_image = $playerImageEntity->id;
                 }
 
                 $cardPayload->final_price = $cardInCart->getPrice();
@@ -208,6 +229,7 @@ class CartController
 
                 // Delete image
                 $cardInCart->setPlayerImage(null);
+                $cardInCart->setClubImage(null);
             }
         }
 

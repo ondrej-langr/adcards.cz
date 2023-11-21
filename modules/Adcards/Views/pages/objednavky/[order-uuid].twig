@@ -6,7 +6,7 @@
 
 {% block content %}
     <div class='order-underpage'>
-        <div class='text-center'>
+        <div class='text-center thank-you-page-title'>
             <h3 class='text-muted'>{{ "Děkujeme!"|t }}</h3>
             <h1>{{ "Přehled objednávky"|t }}: <span class='text-brands-signature'>#{{ order.id }}</span></h1>
         </div>
@@ -16,7 +16,7 @@
                     <h2>{{ "Základní info"|t }}</h2>
                     <ul>
                         <li>{{ "Číslo objednávky"|t }}: #{{ order.id }}</li>
-                        <li>{{ "Datum objednání"|t }}: {{ order.created_at|date("j. F Y @h:i") }}</li>
+                        <li>{{ "Datum objednání"|t }}: {{ order.created_at|date("j.n. Y @ h:i") }}</li>
                         <li>{{ "Aktuální stav"|t }}: {{ order.status|t }}</li>
                     </ul>
                 </section>
@@ -83,4 +83,11 @@
             </div>
         </div>
     </div>
+    <script>
+      window.document.querySelector('.thank-you-page-title').scrollIntoView({
+        behavior: 'smooth',
+        block: 'center',
+        inline: 'center',
+      })
+    </script>
 {% endblock %}

@@ -5,6 +5,7 @@ namespace PromCMS\Modules\Adcards;
 use JetBrains\PhpStorm\ArrayShape;
 use League\Flysystem\Filesystem;
 use PromCMS\Core\Services\EntryTypeService;
+use PromCMS\Modules\Adcards\CartCard\ClubImage;
 use PromCMS\Modules\Adcards\CartCard\PlayerImage;
 use PromCMS\Modules\Adcards\CartCard\PlayerOrGoalKeeperStats;
 
@@ -21,6 +22,7 @@ class CartCard
     private string $cardType;
     private string|null $countryId = null;
     private PlayerOrGoalKeeperStats|null $stats = null;
+    private ClubImage|null $clubImage = null;
     private PlayerImage|null $playerImage = null;
     private int|null $rating = null;
 
@@ -47,6 +49,20 @@ class CartCard
         }
 
         $this->playerImage = $newPlayerImage;
+
+        return $this;
+    }
+
+    /*
+     * Handles setting and unsetting club image. When null is passed then club image is destroyed altogether
+     */
+    public function setClubImage(ClubImage|null $newClubImage): CartCard
+    {
+        if (!empty($this->clubImage) && $newClubImage === null) {
+            $this->clubImage->deleteFromStorage();
+        }
+
+        $this->clubImage = $newClubImage;
 
         return $this;
     }
@@ -83,7 +99,7 @@ class CartCard
     /**
      * @throws \Exception
      */
-    #[ArrayShape(["name" => "string", "background_id" => "string", "size_id" => "string", "cardType" => "string", "playerImagePathname" => "null|string", "rating" => "int|null", "stats" => "array|null", "country_id" => "null|string"])]
+    #[ArrayShape(["name" => "string", "background_id" => "string", "size_id" => "string", "cardType" => "string", "playerImagePathname" => "null|string", "clubImagePathname" => "null|string", "rating" => "int|null", "stats" => "array|null", "country_id" => "null|string"])]
     function asArray(): array
     {
         if (!$this->isValid()) {
@@ -97,7 +113,8 @@ class CartCard
             "cardType" => $this->cardType,
 
             // nullable fields
-            "playerImagePathname" => $this->playerImage->getPath(),
+            "playerImagePathname" => $this->playerImage ? $this->playerImage->getPath() : null,
+            "clubImagePathname" => $this->clubImage ? $this->clubImage->getPath() : null,
             "rating" => $this->rating,
             "stats" => $this->stats->asArray(),
             "country_id" => $this->countryId,
@@ -105,7 +122,7 @@ class CartCard
     }
 
     /**
-     * @param $input array{name: string, background_id: string, size_id: string, cardType: string, playerImagePathname: string|null, rating: string|null, stats: array|null, country_id: string}
+     * @param $input array{name: string, background_id: string, size_id: string, cardType: string, playerImagePathname: string|null, clubImagePathname: string|null, rating: string|null, stats: array|null, country_id: string}
      * @return CartCard
      * @throws \Exception
      */
@@ -124,8 +141,12 @@ class CartCard
                 ->setRating($input["rating"])
                 ->setCountry($input["country_id"]);
 
-            if (isset($input["stats"])) {
+            if (!empty($input["stats"])) {
                 $instance->setStats(new PlayerOrGoalKeeperStats($input["stats"]));
+            }
+
+            if (!empty($input["clubImagePathname"])) {
+                $instance->setClubImage(new ClubImage($input["clubImagePathname"]));
             }
         }
 

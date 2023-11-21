@@ -54,6 +54,19 @@ const cardsModel = {
       'typeFilter': 'image',
       'admin': {
         'fieldType': 'small-image',
+        editor: { width: 6 },
+      },
+    },
+    'club_image_id': {
+      'required': false,
+      'translations': false,
+      'multiple': false,
+      'type': 'file',
+      'title': 'Obrázek klubu',
+      'typeFilter': 'image',
+      'admin': {
+        'fieldType': 'small-image',
+        editor: { width: 6 },
       },
     },
     'name': {

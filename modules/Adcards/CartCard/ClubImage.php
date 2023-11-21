@@ -4,7 +4,7 @@ namespace PromCMS\Modules\Adcards\CartCard;
 
 use League\Flysystem\Filesystem;
 
-class PlayerImage
+class ClubImage
 {
     static Filesystem $fs;
     private string $imagePathname;
@@ -37,12 +37,12 @@ class PlayerImage
         [, $uploadedImageMimeType] = explode(':', $uploadedImageMimeType);
 
         if (!in_array($uploadedImageMimeType, $allowedMimeTypes)) {
-            throw new \Exception("Nepodporovaný formát $uploadedImageMimeType obrázku hráče. Podporujeme pouze " . implode(", ", $allowedMimeTypes));
+            throw new \Exception("Nepodporovaný formát $uploadedImageMimeType obrázku klubu. Podporujeme pouze " . implode(", ", $allowedMimeTypes));
         }
 
         $extensionForImage = image_type_to_extension($allowedMimeTypesToFileType[$uploadedImageMimeType], false);
         $fileName = uniqid("hrac-");
-        $filePath = "/interni/rozpracované-karty/$sessionId/hrac-$fileName.$extensionForImage";
+        $filePath = "/interni/rozpracované-karty/$sessionId/klub-$fileName.$extensionForImage";
         self::$fs->write($filePath, base64_decode($imageData));
 
         return new self($filePath);

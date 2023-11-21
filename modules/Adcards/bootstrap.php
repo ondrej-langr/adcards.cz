@@ -23,6 +23,7 @@ return function (App $app) {
     }
 
     CartCard\PlayerImage::$fs = $container->get("filesystem");
+    CartCard\ClubImage::$fs = $container->get("filesystem");
     $container->set(Cart::class, new Cart($container));
 
     // Is being run after each request

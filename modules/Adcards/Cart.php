@@ -183,6 +183,7 @@ class Cart
 
             // Unset player image
             $card->setPlayerImage(null);
+            $card->setClubImage(null);
         }
 
         unset($this->state[CartItemTypes::CARDS->value][$index]);

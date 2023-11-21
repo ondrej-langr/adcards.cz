@@ -22,7 +22,6 @@ class CartController
     public function get(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $cart = $this->container->get(Cart::class);
-        $requestLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
 
         return $this
             ->container

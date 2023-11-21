@@ -102,6 +102,9 @@ class BuilderController
             return $filteredContents;
         }, $payload["materials"]);
 
+        // Do not show materials that have no sizes
+        $payload["materials"] = array_values(array_filter($payload["materials"], fn($item) => !empty($item["sizes"])));
+
         $countriesPublicFields = ["id", "flag", "name"];
         $payload["countries"] = array_map(function ($item) use ($countriesPublicFields) {
             return array_filter($item, function ($value, $key) use ($countriesPublicFields) {

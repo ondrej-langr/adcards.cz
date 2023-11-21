@@ -24,6 +24,8 @@ type State = z.output<typeof builderStateSchema> & Omit<BuilderDataOnWindow, 'de
   _backgroundId: string,
   _materialId: string,
   _sportId: string,
+  _clubImageName: string,
+  clubImage?: string,
   getActiveBackground(): object | undefined
   getActiveSizeAsLabel(): string
   getTotalPrice(): string
@@ -32,6 +34,7 @@ type State = z.output<typeof builderStateSchema> & Omit<BuilderDataOnWindow, 'de
   isRealPlayer(): boolean
   getActiveSize(): any
   readPlayerImage(event: Event): void
+  onClubUpload(event: Event): void
   imageUploaderOpen: boolean
   onSubmit(event: SubmitEvent): void
   _step: { current: number, largestStepTaken: number }
@@ -59,6 +62,35 @@ export default function cardBuilder(): AlpineComponent<State> {
     _step: { current: initialState.currentStep ?? 0, largestStepTaken: initialState.currentStep ?? 0 },
     _countryFlagSrc: undefined,
     _countryName: undefined,
+    _clubImageName: 'Kliknutím nahrajte klub',
+    clubImage: undefined,
+    onClubUpload(event) {
+      const target = event.target
+
+      if (!target || !(target instanceof HTMLInputElement) || !target?.files?.length) {
+        console.warn('No event target or files or event target is not an input element')
+
+        return
+      }
+
+      let fileName = target.files?.[0].name
+      let reader = new FileReader()
+      const component = this
+
+      reader.onload = (onLoadImageEvent) => {
+        const resultSrc = onLoadImageEvent.target?.result
+
+
+        if (!resultSrc) {
+          throw new Error('No result after onLoad on user uploaded image')
+        }
+
+        component._clubImageName = fileName
+        component.clubImage = resultSrc.toString()
+      }
+
+      reader.readAsDataURL(target.files[0])
+    },
     setCountry(country) {
       this.countryId = country.id
       this._countryName = country.name

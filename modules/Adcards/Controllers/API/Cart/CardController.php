@@ -44,14 +44,14 @@ class CardController
         $card = new CartCard($body["name"], $body["sizeId"], $body["backgroundId"], $body["cardType"]);
 
         if ($body["cardType"] !== "realPlayer") {
-            $playerImage = CartCard\PlayerImage::create($body["playerImage"], $this->container->get('session')::id(), uniqid());
+            $playerImage = CartCard\PlayerImage::create($body["playerImage"], $this->container->get('session')::id());
 
             $card
                 ->setCountry($body["countryId"])
                 ->setPlayerImage($playerImage)
                 ->setRating($body["rating"]);
 
-            if (isset($body["stats"])) {
+            if (!empty($body["stats"])) {
                 // We need to extract stats from client to backend
                 $processedStats = [];
                 foreach ($body["stats"] as $statKey => $statValue) {
@@ -65,9 +65,12 @@ class CardController
                     ];
                 }
 
-                echo json_encode($processedStats);
-
                 $card->setStats(new CartCard\PlayerOrGoalKeeperStats($processedStats));
+            }
+
+            if (!empty($body["clubImage"])) {
+                $card
+                    ->setClubImage(CartCard\ClubImage::create($body["clubImage"], $this->container->get('session')::id()));
             }
         }
 
