@@ -48,11 +48,14 @@ class BuilderController
         $page = intval($querySearch["page"]);
         $query = !empty($querySearch["query"]) ? $querySearch["query"] : null;
         $payload = [
-            "page" => $page + 1
+            "page" => $page + 1,
+            "isSearch" => true
         ];
 
         $payload["countries"] = $countriesService->getMany(
-            $query ? [["name", "LIKE", "%$query%"]] : [],
+            $query ? [function ($item) use ($query) {
+                return !!preg_match("/$query/i", mb_strtolower($item["name"]));
+            }] : [],
             $page,
             $limit
         )["data"];
@@ -79,7 +82,7 @@ class BuilderController
                 1,
                 999
             )["data"],
-            "countries" => $countriesService->getMany([], 1, 15)["data"],
+            "countries" => $countriesService->getMany([], 1, 8)["data"],
             "backgrounds" => $cardBackgroundsService->getMany([], 1, 999)["data"],
             "sports" => $sportsService->getMany([], 1, 999)["data"],
         ]);

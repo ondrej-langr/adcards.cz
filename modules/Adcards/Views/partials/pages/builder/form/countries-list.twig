@@ -1,15 +1,6 @@
-<div id='countries-list'>
-    {% set currentStepId = random() %}
+{% set currentStepId = random() %}
     {% for country in countries %}
-        <span
-                @click='isOpen = false'
-                {% if loop.last %}
-                    hx-get="{{ url_for("searchCountries") }}?page={{ page ?? 2 }}"
-                    hx-trigger="revealed"
-                    hx-swap="afterend"
-                    hx-indicator='#indicator-{{ currentStepId }}'
-                {% endif %}
-        >
+        <span @click='isOpen = false'>
             {% set flag = "" %}
             {% if country.flag %}
                 {% set flag = getImage(country.flag, 100, 50) %}
@@ -33,10 +24,16 @@
             {{ "Žádné další země pro vaše vyhledávání"|t }}
         </div>
     {% endfor %}
-    <div
-            class='p-2 text-center hx-show-on-request'
+
+{% if countries|length and isSearch is not same as(true) %}
+    <button
+            class='p-2 text-center w-100 mt-0'
             id='indicator-{{ currentStepId }}'
+            hx-target="this"
+            hx-swap="outerHTML"
+            hx-get="{{ url_for("searchCountries") }}?page={{ page ?? 2 }}"
     >
-        {{ "Načítám..."|t }}
-    </div>
-</div>
+        <span class='hx-hide-on-request'>{{ "Načíst další..."|t }}</span>
+        <span class='hx-show-on-request'>{{ "Načítám..."|t }}</span>
+    </button>
+{% endif %}
