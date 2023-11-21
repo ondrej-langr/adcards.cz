@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "@prettier/plugin-php": "^0.20.1",
-    "@prom-cms/admin": "^0.17.1",
+    "@prom-cms/admin": "^0.17.2",
     "@prom-cms/api-client": "^0.10.0",
     "@prom-cms/cli": "^0.21.6",
     "@prom-cms/schema": "^0.5.0",
