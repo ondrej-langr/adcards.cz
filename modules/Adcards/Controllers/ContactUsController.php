@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PromCMS\Modules\Adcards\Controllers\API;
+namespace PromCMS\Modules\Adcards\Controllers;
 
 use DI\Container;
 use PromCMS\Core\Mailer;
@@ -18,7 +18,7 @@ class ContactUsController
         $this->container = $container;
     }
 
-    public function send(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function doSend(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $body = $request->getParsedBody();
         $emailService = $this->container->get(Mailer::class);

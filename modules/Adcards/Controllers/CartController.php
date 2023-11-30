@@ -3,12 +3,18 @@
 namespace PromCMS\Modules\Adcards\Controllers;
 
 use DI\Container;
+use League\Flysystem\Filesystem;
+use PromCMS\Core\Models\Files;
 use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Modules\Adcards\Cart;
+use PromCMS\Modules\Adcards\OrderStatus;
+use PromCMS\Modules\Adcards\StaticMessages;
+use PromCMS\Modules\Adcards\UUID;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
+use Slim\Middleware\Session;
 
 class CartController
 {
@@ -29,7 +35,290 @@ class CartController
             ->render(
                 $response,
                 '@modules:Adcards/pages/kosik.twig',
-                $cart->stateToTemplateVariables()
+                array_merge($cart->stateToTemplateVariables(), [
+                    "paypal" => [
+                        "clientId" => "AVj43B4sq_kFWa-ezLynPy9CslX6F736jAqeCkjBhJAKGwSBYw-46C_zlFZJtXw_oQakEbaQVTxO96q_"
+                    ]
+                ])
             );
+    }
+
+    public function doCheckout_API(ServerRequestInterface $request, ResponseInterface $response, $args)
+    {
+        $cart = $this->container->get(Cart::class);
+        /**
+         * @var $fs Filesystem
+         * @var $session Session
+         */
+        $fs = $this->container->get("filesystem");
+
+        if (empty($cart->getProducts()) && empty($cart->getCards())) {
+            return $response->withStatus(400);
+        }
+
+        $rendering = $this->container->get(RenderingService::class);
+        $parsedData = $request->getParsedBody();
+
+        // This will be json when incoming
+        if (!empty($parsedData["shippingMetadata"])) {
+            $parsedData["shippingMetadata"] = (array)json_decode($parsedData["shippingMetadata"]);
+        }
+
+        $requiredFields = [
+            "firstname",
+            "lastname",
+            "email",
+            "phone",
+            "street",
+            "houseNumber",
+            "city",
+            "postalCode",
+            "paymentMethod",
+            "shippingMethod"
+        ];
+        $resultPayload = [
+            "data" => $parsedData,
+            "state" => [
+                "form" => [
+                    "errors" => [],
+                    "values" => $parsedData
+                ]
+            ]
+        ];
+        $isValid = true;
+
+        $missingFields = array_filter($requiredFields, fn($fieldName) => empty($parsedData[$fieldName]));
+        if (!empty($missingFields)) {
+            foreach ($missingFields as $fieldName) {
+                $resultPayload["state"]["form"]["errors"][$fieldName] = "Vyplňte toto políčko, prosím!";
+            }
+
+            $isValid = false;
+        }
+
+        // Required fields are filled, lets check for validity of shippingMethod and paymentMethod
+        if ($isValid) {
+            if (!in_array($parsedData["paymentMethod"], array_keys(Cart::$availablePaymentMethods))) {
+                $resultPayload["state"]["form"]["errors"]["paymentMethod"] = "Špatná hodnota, zvolte jinou hodnotu.";
+
+                $isValid = false;
+            }
+
+            if (!in_array($parsedData["shippingMethod"], array_keys(Cart::$availableShipping))) {
+                $resultPayload["state"]["form"]["errors"]["shippingMethod"] = "Špatná hodnota, zvolte jinou hodnotu.";
+
+                $isValid = false;
+            } else {
+                $shippingMetadata = Cart::$availableShipping[$parsedData["shippingMethod"]];
+
+                if (!empty($shippingMetadata["metadataRequiredFields"])) {
+                    $metadataRequiredFields = $shippingMetadata["metadataRequiredFields"];
+                    $missingMetadata = array_filter(
+                        $metadataRequiredFields,
+                        fn($metadataFieldName) => empty($parsedData["shippingMetadata"][$metadataFieldName])
+                    );
+
+                    if (!empty($missingMetadata)) {
+                        $resultPayload["state"]["form"]["errors"]["shippingMethod"] = "Dokončete výběr dopravy!";
+
+                        $isValid = false;
+                    }
+                }
+            }
+        }
+
+        if (!$isValid) {
+            $resultPayload["shippingMethods"] = Cart::$availableShipping;
+            $resultPayload["paymentMethods"] = Cart::$availablePaymentMethods;
+
+            $rendering->render($response,
+                "@modules:Adcards/partials/pages/cart/left-side/left-side.twig",
+                $resultPayload
+            );
+
+            return $response->withHeader("HX-Retarget", "#cart-left-side");
+        }
+
+        // Prepare
+        $orderUuid = UUID::create();
+        $ordersService = new EntryTypeService(new \Orders());
+
+        // Create order payload
+        $orderPayload = new \stdClass();
+        $orderPayload->_uuid = $orderUuid;
+        $orderPayload->currency = "CZK";
+        $orderPayload->firstName = $parsedData["firstname"];
+        $orderPayload->lastName = $parsedData["lastname"];
+        $orderPayload->email = $parsedData["email"];
+        $orderPayload->phone = $parsedData["phone"];
+        $orderPayload->street = $parsedData["street"];
+        $orderPayload->building_number = $parsedData["houseNumber"];
+        $orderPayload->city = $parsedData["city"];
+        $orderPayload->postal_code = $parsedData["postalCode"];
+        $orderPayload->note = $parsedData["note"];
+        $orderPayload->shipping_method = $parsedData["shippingMethod"];
+
+        // parse shipping into readable format, but still leave that parsable
+        $shippingMetadata = Cart::$availableShipping[$parsedData["shippingMethod"]];
+        if (!empty($shippingMetadata["metadataRequiredFields"])) {
+            $orderPayload->shipping_method .= "; ";
+            $orderPayload->shipping_method .= implode(
+                ", ",
+                array_map(
+                    fn($metadataFieldName) => $parsedData["shippingMetadata"][$metadataFieldName],
+                    $shippingMetadata["metadataRequiredFields"]
+                )
+            );
+        }
+        $orderPayload->payment_method = $parsedData["paymentMethod"];
+        $orderPayload->status = OrderStatus::CREATED;
+
+        // Process promo code
+        if ($promoCode = $cart->getPromoCode()) {
+            $orderPayload->promo_code_value = $promoCode["code"];
+            $orderPayload->promo_code_amount = intval($promoCode["amount"]);
+        }
+
+        // Process cards
+        $cardsInCart = $cart->getCards();
+        if (!empty($cardsInCart)) {
+            $cardsService = new EntryTypeService(new \Cards());
+            $orderPayload->cards = ["data" => []];
+
+            foreach ($cardsInCart as $cardIndex => $cardInCart) {
+                $cardPayload = new \stdClass();
+                $cardInCartAsArray = $cardInCart->asArray();
+
+                $cardPayload->name = $cardInCartAsArray["name"];
+                $cardPayload->background_id = intval($cardInCartAsArray["background_id"]);
+                $cardPayload->size_id = intval($cardInCartAsArray["size_id"]);
+                $cardPayload->card_type = $cardInCartAsArray["cardType"];
+
+                // Handle non real player as that has more fields to process
+                if ($cardInCartAsArray["cardType"] !== "realPlayer") {
+                    $cardPayload->club_image_id = null;
+                    $humanCardIndex = $cardIndex + 1;
+
+                    // Process player image
+                    $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
+                    $filename = "hrac." . pathinfo(basename($uploadedPlayerImagePath), PATHINFO_EXTENSION);
+                    $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$filename";
+                    $playerImageEntity = Files::create([
+                        'filepath' => $filepath,
+                        'filename' => $filename,
+                        'mimeType' => $fs->mimeType($uploadedPlayerImagePath),
+                    ]);
+                    $fs->move(
+                        $uploadedPlayerImagePath,
+                        $filepath
+                    );
+                    $cardPayload->player_image = $playerImageEntity->id;
+
+                    if (!empty($cardInCartAsArray["clubImagePathname"])) {
+                        $uploadedClubImagePath = $cardInCartAsArray["clubImagePathname"];
+                        $filename = "klub." . pathinfo(basename($uploadedClubImagePath), PATHINFO_EXTENSION);
+                        $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$filename";
+                        $clubImageEntity = Files::create([
+                            'filepath' => $filepath,
+                            'filename' => $filename,
+                            'mimeType' => $fs->mimeType($uploadedClubImagePath),
+                        ]);
+                        $fs->move(
+                            $uploadedClubImagePath,
+                            $filepath
+                        );
+                        $cardPayload->club_image_id = $clubImageEntity->id;
+                    }
+
+                    // Process other data
+                    $cardPayload->rating = $cardInCartAsArray["rating"];
+                    $cardPayload->stats = [
+                        "data" => $cardInCartAsArray["stats"]
+                    ];
+                    $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
+                }
+
+                $cardPayload->final_price = $cardInCart->getPrice();
+                $cardPayload->currency = "CZK";
+
+                $createdCard = $cardsService->create((array)$cardPayload);
+                $orderPayload->cards["data"][] = [
+                    "card_id" => $createdCard->id
+                ];
+
+                // Delete image
+                $cardInCart->setPlayerImage(null);
+                $cardInCart->setClubImage(null);
+            }
+        }
+
+        // Process products
+        $products = $cart->getProducts();
+        if (!empty($products)) {
+            $mappedProducts = [];
+
+            foreach ($products as $productInCartId => $productInCartInfo) {
+                $mappedProducts[] = [
+                    "product_id" => intval($productInCartId),
+                    "count" => intval($productInCartInfo["count"])
+                ];
+            }
+
+            $orderPayload->products = ["data" => $mappedProducts];
+        }
+
+        // Process price
+        $orderPayload->subtotal_cost = $cart->getTotal(false);
+        $orderPayload->total_cost = $cart->getTotal(true);
+        $orderPayload->currency = "CZK";
+
+        // Finally create order
+        $ordersService->create((array)$orderPayload);
+
+        // Dont forget to destroy cart!
+        $cart->destroyState();
+
+        return $response->withHeader("HX-Location", "/objednavky/$orderUuid");
+    }
+
+    public function doTogglePromoCode_API(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    {
+        $cart = $this->container->get(Cart::class);
+        $body = $request->getParsedBody();
+
+        if (!isset($body["code"])) {
+            $response->withStatus(401);
+        }
+
+        $userHasPromoCodeAlready = !!$cart->getPromoCode();
+        $template = "@modules:Adcards/partials/pages/cart/right-side/right-side.twig";
+        $resultPayload = [
+            "state" => [
+                "successes" => [],
+                "errors" => [],
+            ]
+        ];
+
+
+        if ($userHasPromoCodeAlready) {
+            $cart->deletePromoCode();
+
+            $resultPayload["state"]["successes"][] = StaticMessages::PROMO_CODE_REMOVED;
+        } else {
+            $successfullyAdded = $cart->setPromoCode($body["code"]);
+
+            if ($successfullyAdded) {
+                $resultPayload["state"]["successes"][] = StaticMessages::PROMO_CODE_ADDED;
+            } else {
+                // In twig we check if "promoCode" is in array - keep this key here, otherview it will be rendered as
+                // toast message
+                $resultPayload["state"]["errors"]["promoCode"] = StaticMessages::PROMO_CODE_ACTIVATION_FAILED;
+            }
+        }
+
+        $resultPayload = array_merge($resultPayload, $cart->stateToTemplateVariables());
+        $this->container->get(RenderingService::class)->render($response, $template, $resultPayload);
+
+        return $response;
     }
 }

@@ -31,8 +31,14 @@ class Cart
         ]
     ];
     public static array $availablePaymentMethods = [
-        "gopay" => [
-            "title" => "GOPAY"
+        /**  "gopay" => [
+         * "title" => "GOPAY"
+         * ],*/
+        "paypal" => [
+            "title" => "Paypal / Kartou",
+            "details" => [
+                "onSelect" => "Pro platbu přes Paypal můžete použít i platební kartu. K platbě Vás vyzveme před dokončením objednávky."
+            ]
         ],
         "bank-transfer" => [
             "title" => "Bankovním převodem"

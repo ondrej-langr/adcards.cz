@@ -1,6 +1,6 @@
 <?php
 
-namespace PromCMS\Modules\Adcards\Controllers\API\Cart;
+namespace PromCMS\Modules\Adcards\Controllers\Cart;
 
 use DI\Container;
 use PromCMS\Core\Services\RenderingService;
@@ -119,7 +119,7 @@ class ProductController
         $resultPayload = array_merge($resultPayload, $cart->stateToTemplateVariables());
         $rendering
             ->render($response, $template, $resultPayload);
-        
+
         $rendering
             ->render($response, '@modules:Adcards/partials/mini-cart.twig', [
                 'cartSize' => $cart->getCount(),

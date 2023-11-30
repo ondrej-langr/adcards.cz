@@ -1,7 +1,7 @@
 <?php
 
 
-namespace PromCMS\Modules\Adcards\Controllers\API;
+namespace PromCMS\Modules\Adcards\Controllers;
 
 use DI\Container;
 use DrewM\MailChimp\MailChimp;

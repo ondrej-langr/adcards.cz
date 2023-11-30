@@ -1,6 +1,6 @@
 <?php
 
-namespace PromCMS\Modules\Adcards\Controllers\API\Cart;
+namespace PromCMS\Modules\Adcards\Controllers\Cart;
 
 use DI\Container;
 use PromCMS\Core\Services\RenderingService;
@@ -9,7 +9,6 @@ use PromCMS\Modules\Adcards\CartCard;
 use PromCMS\Modules\Adcards\StaticMessages;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Routing\RouteContext;
 use function PromCMS\Modules\Adcards\Controllers\isDefinedInArray;
 use function PromCMS\Modules\Adcards\Controllers\isNotEmpty;
 
