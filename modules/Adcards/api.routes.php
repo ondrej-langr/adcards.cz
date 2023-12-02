@@ -5,7 +5,6 @@ use Slim\App;
 use Slim\Routing\RouteCollectorProxy;
 
 return function (App $app, RouteCollectorProxy $router) {
-
     $router
         ->post('/cart/card/add', Controllers\Cart\CardController::class . ":addOne")
         ->setName("createNewCard");
@@ -41,4 +40,16 @@ return function (App $app, RouteCollectorProxy $router) {
     $router
         ->post('/newsletter/subscribe', Controllers\NewsletterController::class . ":subscribe")
         ->setName('newsletterSubscribe');
+
+    // Order
+
+    $router->group("/objednavky/{orderUuid}", function ($orderRouter) {
+        $orderRouter
+            ->get('/pay/paypal/create', Controllers\OrdersController::class . ":payPalCreatePayment_API")
+            ->setName('paypal-create-order');
+
+        $orderRouter
+            ->get('/pay/paypal/capture', Controllers\OrdersController::class . ":payPalCapturePayment_API")
+            ->setName('paypal-capture-order');
+    });
 };

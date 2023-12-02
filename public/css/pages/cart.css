@@ -118,28 +118,39 @@ form:not(.ignore-form-styles) .form-group textarea::placeholder {
     font-weight: 800;
 }
 
-.price-full span.number {
-    font-weight: 800;
-}
-
-.price-full span.number strike {
-    font-weight: 400;
-}
-
-.price-full {
+.price-full, .price-partial {
     width: 100%;
     text-align: right;
     display: flex;
     justify-content: space-between;
-    padding-top: 25px;
-    padding-bottom: 25px;
+}
+
+.price-full {
+    padding: 15px 0;
+}
+
+.price-full span, .price-partial span {
+    text-transform: uppercase;
 }
 
 .price-full span {
     font-size: 22px;
-    text-transform: uppercase;
-    font-weight: 800;
+    font-weight: 800
 }
+
+.price-partial span {
+    font-size: 18px;
+    color: rgba(105, 105, 105, 0.95);
+}
+
+.price-partial {
+    padding: 5px 0;
+}
+
+.price-partial:first-child {
+    padding-top: 1.5rem;
+}
+
 
 .info .size,
 .info .price {

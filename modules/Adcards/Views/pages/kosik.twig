@@ -6,7 +6,16 @@
 {% endblock %}
 
 {% block content %}
-    <div class="cart-around" id="app-cart">
+    <div class="cart-around" id="app-cart"
+         x-data='cartForm({
+            initialData: JSON.parse(`{{ { state }|json_encode }}`),
+            validationSchema: JSON.parse(`{{ validationSchema|replace({"\n": "", "\r": "", "\t": ""}) }}`),
+            shippingMethods: JSON.parse(`{{ shippingMethods|json_encode|replace({"\n": "", "\r": "", "\t": ""}) }}`),
+            errorMessagesForRequiredFields: JSON.parse(`{{ errorMessagesForRequiredFields|json_encode|replace({"\n": "", "\r": "", "\t": ""}) }}`),
+            cart: {
+                total: JSON.parse(`{{ cart.total|json_encode }}`)
+            }
+         })'>
         <div class="cart-inner">
             <div class="headline">
                 <h1>{{ 'Dokončení objednávky'|t }}</h1>

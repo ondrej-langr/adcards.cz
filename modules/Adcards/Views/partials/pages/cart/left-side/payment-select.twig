@@ -10,6 +10,7 @@
                    name='paymentMethod'
                    class="input-required"
                    x-model="paymentMethod"
+                   x-on:change='doValidate()'
                    value="{{ paymentId }}"
                    id="payment-method-{{ paymentId }}"
             >
@@ -22,6 +23,7 @@
             </label>
         </div>
     {% endfor %}
+
 
     <small class='field-error' x-text='state.form.errors.paymentMethod'></small>
 </div>

@@ -243,6 +243,26 @@ class Cards extends Model
       'foreignKey' => 'id',
     ],
 
+    'order_id' => [
+      'title' => 'Objednávka',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+      ],
+      'readonly' => false,
+      'type' => 'relationship',
+      'targetModel' => 'orders',
+      'labelConstructor' => '#{{id}} ({{total_cost}} {{currency}})',
+      'multiple' => false,
+      'fill' => true,
+      'foreignKey' => 'id',
+    ],
+
     'order' => [
       'title' => 'Order',
       'hide' => false,

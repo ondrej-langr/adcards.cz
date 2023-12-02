@@ -9,6 +9,7 @@
                    name="shippingMethod"
                    value='{{ shippingKey }}'
                    x-model="shippingMethod"
+                   x-on:change='doValidate()'
                    id="shipping-{{ shippingKey }}">
 
             <label for="shipping-{{ shippingKey }}" id="shipping-{{ shippingKey }}-label" class="tab">

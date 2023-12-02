@@ -31,7 +31,54 @@
 
 }
 
-
 .order-underpage__content > div:first-of-type {
     border-right: 1px solid rgba(0, 0, 0, .1);
+}
+
+.payment-dialog {
+    width: 100%;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(1rem);
+    border: none;
+    position: fixed;
+    display: flex;
+    overflow: auto;
+    padding: 2rem;
+}
+
+.payment-dialog__content {
+    max-width: 350px;
+    width: 100%;
+    margin: auto;
+}
+
+.payment-dialog__content-inner {
+    background: white;
+    border-radius: 0.5rem;
+    padding: 1rem;
+}
+
+.payment-dialog__logo {
+    width: 6rem;
+    height: auto;
+    display: block;
+    margin: 1.5rem auto;
+}
+
+.payment-dialog__close-link {
+    margin-top: 1rem;
+    text-align: center;
+    color: white;
+    opacity: .7;
+    display: block;
+}
+
+.payment-dialog__close-link:hover {
+    text-decoration: underline;
+    color: white;
+    opacity: 1;
 }

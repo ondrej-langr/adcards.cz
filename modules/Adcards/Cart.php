@@ -35,7 +35,7 @@ class Cart
          * "title" => "GOPAY"
          * ],*/
         "paypal" => [
-            "title" => "Paypal / Kartou",
+            "title" => "Kartou nebo PayPal",
             "details" => [
                 "onSelect" => "Pro platbu přes Paypal můžete použít i platební kartu. K platbě Vás vyzveme před dokončením objednávky."
             ]
@@ -213,7 +213,7 @@ class Cart
 
         foreach ($this->state as $typeGroupKey => $typeGroup) {
 
-            // Ignore promo codes
+            // Ignore promo codes and other items
             if ($typeGroupKey == CartItemTypes::PROMO_CODE->value) {
                 continue;
             }

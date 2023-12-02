@@ -10,15 +10,23 @@
         <p>{{ "Odesláním formuláře souhlasíte se všeobecnými podmíkami a se zpracováním osobních údajů."|t }}</p>
     </div>
 
-    <button type="submit" form='cart-form'>
-        <span>{{ 'Odeslat objednávku'|t }}</span>
-    </button>
+    <div>
+        <button id='submit-form-button' type="submit" form='cart-form' :disabled='!isValid'
+                class='mb-3' x-ref='submitButton'>
+            <span x-text='paymentMethod === "paypal" ? "{{ 'Odeslat objednávku a zaplatit'|t }}" : "{{ 'Odeslat objednávku'|t }}"'>{{ 'Odeslat objednávku'|t }}</span>
+        </button>
 
+        <small x-show='!isValid' class='field-error' :class='{ "d-block": !isValid }'
+               style='display: none'>{{ ("Dokončete formulář")|t }}</small>
+    </div>
+
+    {#  For printing messages - user updateds cart item or does something #}
     {% if state.successes is not empty %}
         {% for key, success in state.successes %}
             {{ include("@modules:Adcards/components/toast-alert.twig", {message: success}) }}
         {% endfor %}
     {% endif %}
+
     {% if state.focusOn is not null %}
         <script>
           window.focusOnElement = document.querySelector("{{ state.focusOn|raw }}")

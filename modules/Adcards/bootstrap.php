@@ -1,9 +1,6 @@
 <?php
 // In this file you can tell what this module contains or have here something that should be loaded before your models, routes, ..etc
-use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Mailer;
-use PromCMS\Core\Services\EntryTypeService;
-use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\CartCard;
@@ -25,6 +22,15 @@ return function (App $app) {
     CartCard\PlayerImage::$fs = $container->get("filesystem");
     CartCard\ClubImage::$fs = $container->get("filesystem");
     $container->set(Cart::class, new Cart($container));
+
+    if (!empty($_ENV["LOGTAIL_TOKEN"])) {
+        $logtailToken = $_ENV["LOGTAIL_TOKEN"];
+
+        $logger = new \Monolog\Logger("adcards.cz");
+        $logger->pushHandler(new \Logtail\Monolog\LogtailHandler($logtailToken));
+
+        $container->set(\Monolog\Logger::class, $logger);
+    }
 
     // Is being run after each request
     $customApplicationMiddleware = function ($request, $handler) use ($rendering, $container) {

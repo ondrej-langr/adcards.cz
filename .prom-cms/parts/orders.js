@@ -1,5 +1,24 @@
 /**
  *
+ * @type {['vytvořeno', 'nezaplaceno', 'nepotvrzeno', 'potvrzeno', 'zrušeno', 'dokončeno']}
+ */
+export const orderStatuses = [
+  // This is for newly created order (which may need to be paid)
+  'vytvořeno',
+  // This is for when user selected payment by gateway (such as paypal)
+  'nezaplaceno',
+  // This is for when user has paid the order (or has chosen the bank transfer)
+  'nepotvrzeno',
+  // This is for when admin changes this manually and accepts the order
+  'potvrzeno',
+  // This is for when user cancels order
+  'zrušeno',
+  // This is for when the order is finished
+  'dokončeno',
+]
+
+/**
+ *
  * @type {(typeof import('@prom-cms/schema').databaseConfigModelSchema)['_input']}
  */
 const ordersModel = {
@@ -102,13 +121,23 @@ const ordersModel = {
       'title': 'Note',
     },
     'shipping_method': {
-      'editable': false,
       'required': true,
+      readonly: true,
       'translations': false,
       'type': 'string',
-      'title': 'Typ dopravy',
+      'title': 'Doprava',
       'admin': {
-        editor: { width: 6 },
+        editor: { width: 8 },
+      },
+    },
+    'shipping_rate': {
+      'required': true,
+      readonly: true,
+      'translations': false,
+      'type': 'number',
+      'title': 'Cena za dopravu',
+      'admin': {
+        editor: { width: 4 },
       },
     },
     'payment_method': {
@@ -126,19 +155,32 @@ const ordersModel = {
       'required': true,
       'translations': false,
       'type': 'enum',
-      'enum': [
-        // This is for newly created order (which may need to be paid)
-        'CREATED',
-        // This is for when user cancels order
-        'CANCELED',
-        // This is for when user has paid the order (or has chosen the bank transfer)
-        'PENDING',
-        // This is for when admin changes this manually and accepts the order
-        'CONFIRMED',
-        // This is for when the order is finished
-        'FINISHED',
-      ],
+      'enum': orderStatuses,
       'title': 'Stav',
+      admin: {
+        editor: {
+          placement: 'aside',
+        },
+      },
+    },
+    'total_cost': {
+      'type': 'number',
+      'title': 'Celková částka',
+      'required': true,
+      'translations': false,
+      readonly: true,
+      admin: {
+        editor: {
+          placement: 'aside',
+        },
+      },
+    },
+    'paypal_transaction_id': {
+      'type': 'string',
+      'required': false,
+      'translations': false,
+      'title': 'ID PayPal transakce',
+      readonly: true,
       admin: {
         editor: {
           placement: 'aside',
@@ -193,21 +235,6 @@ const ordersModel = {
       },
     },
 
-    'subtotal_cost': {
-      'required': true,
-      'editable': false,
-      'unique': false,
-      'hide': false,
-      'translations': false,
-      'type': 'number',
-      'title': 'Mezisoučet',
-      readonly: true,
-      admin: {
-        editor: {
-          placement: 'aside',
-        },
-      },
-    },
     'promo_code_value': {
       'required': false,
       'translations': false,
@@ -234,20 +261,7 @@ const ordersModel = {
         },
       },
     },
-    'total_cost': {
-      'required': true,
-      'editable': false,
-      'unique': false,
-      'translations': false,
-      'type': 'number',
-      'title': 'Celková částka',
-      readonly: true,
-      admin: {
-        editor: {
-          placement: 'aside',
-        },
-      },
-    },
+    // TODO Add paypal transaction id here for better clarity
     'currency': {
       'required': true,
       'editable': false,

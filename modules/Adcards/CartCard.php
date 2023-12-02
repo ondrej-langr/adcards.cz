@@ -116,7 +116,7 @@ class CartCard
             "playerImagePathname" => $this->playerImage ? $this->playerImage->getPath() : null,
             "clubImagePathname" => $this->clubImage ? $this->clubImage->getPath() : null,
             "rating" => $this->rating,
-            "stats" => $this->stats->asArray(),
+            "stats" => $this->stats ? $this->stats->asArray() : null,
             "country_id" => $this->countryId,
         ];
     }

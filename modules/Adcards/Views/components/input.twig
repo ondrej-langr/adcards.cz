@@ -6,6 +6,7 @@
     placeholder: placeholder ? placeholder ~ (required ? " *" : "") : null,
     value: initialValue,
     required: required ? "" : null,
+    "x-on:change": onChange ? onChange : null,
     ":class":  bindAlpine ? "state?.form?.errors?.['" ~ name ~ "'] ? 'error' : ''" : null,
     "x-model": bindAlpine ? name : null
 } %}

@@ -1,11 +1,12 @@
 <!-- start @modules:Adcards/partials/pages/cart/left-side/left-side.twig -->
-<div class="cart-left w50 w100-mob" id='cart-left-side' x-data='cartForm(`{{ { state }|json_encode|raw }}`)'>
+<div class="cart-left w50 w100-mob">
     <h3>{{ "Kontaktní údaje"|t }}</h3>
     <form
             role="form"
             id="cart-form"
             hx-swap="outerHTML"
             hx-target="#app-cart"
+            hx-select='#app-cart'
             action="{{ url_for('finish-order') }}"
             method="POST"
             hx-post="{{ url_for('finish-order') }}"
@@ -16,6 +17,7 @@
                 placeholder: 'Jméno'|t,
                 initialValue: state.form.values.firstname,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
@@ -25,6 +27,7 @@
                 placeholder: 'Příjmení'|t,
                 initialValue: state.form.values.lastname,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
@@ -35,6 +38,7 @@
                 type: "email",
                 initialValue: state.form.values.email,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
@@ -45,6 +49,7 @@
                 type: "tel",
                 initialValue: state.form.values.phone,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
@@ -54,6 +59,7 @@
                 placeholder: 'Ulice'|t,
                 initialValue: state.form.values.street,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
@@ -63,6 +69,7 @@
                 placeholder: 'Číslo popisné'|t,
                 initialValue: state.form.values.houseNumber,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
@@ -72,6 +79,7 @@
                 placeholder: 'Město'|t,
                 initialValue: state.form.values.city,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
@@ -82,15 +90,17 @@
                 type: "number",
                 initialValue: state.form.values.postalCode,
                 required: true,
+                onChange: "doValidate()",
                 bindAlpine: true
             }) }}
         </div>
         <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
-                            <textarea name="note" class="form-control" rows="3"
-                                      placeholder="{{ 'Poznámka k objednávce'|t }}"
-                                      value='{{ state.form.values.note }}'
-                                      x-model='note'
-                            ></textarea>
+            <textarea name="note" class="form-control" rows="3"
+                      placeholder="{{ 'Poznámka k objednávce'|t }}"
+                      x-on:change='doValidate()'
+                      value='{{ state.form.values.note }}'
+                      x-model='note'>
+            </textarea>
         </div>
 
         {{ include("@modules:Adcards/partials/pages/cart/left-side/shipping-select.twig") }}

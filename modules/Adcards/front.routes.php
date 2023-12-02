@@ -20,15 +20,23 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
     $router->get('/', function (
         ServerRequestInterface $request,
         ResponseInterface      $response,
-                               $args,
     ) use ($twig, $container) {
+
+
         $currentLanguage = $container->get(LocalizationService::class)->getCurrentLanguage();
         $cardMaterialService = new EntryTypeService(new CardMaterial(), $currentLanguage);
+        $cardSizesService = new EntryTypeService(new \CardSizes(), $currentLanguage);
         $sliderItemsService = new EntryTypeService(new MainPageSlides(), $currentLanguage);
+
+        $cardSizes = $cardSizesService->getMany([], 1, 999)["data"];
 
         return $twig->render($response, '@modules:Adcards/pages/home.twig', [
             "cards" => [
-                "materials" => $cardMaterialService->getMany([], 1, 999)["data"],
+                "materials" => $cardMaterialService->getMany(
+                    ["id", "IN", array_unique(array_map(fn($item) => $item["material_id"], $cardSizes))],
+                    1,
+                    999
+                )["data"],
             ],
             "slider" => [
                 "items" => $sliderItemsService->getMany([], 1, 999, ["order" => "desc", "id" => "desc"])["data"]
@@ -48,6 +56,11 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
         ResponseInterface      $response,
                                $args,
     ) use ($twig) {
+
+        $path = $request->getUri()->getPath();
+        $content = file_get_contents(__DIR__ . "/text.txt");
+        $newContent = "$path";
+        file_put_contents(__DIR__ . "/text.txt", empty($content) ? $newContent : "$content\n$newContent");
 
         return $twig->render($response, '@modules:Adcards/pages/faq.twig', [
             "items" => [

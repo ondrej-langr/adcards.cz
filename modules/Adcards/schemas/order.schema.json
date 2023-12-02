@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "firstname": {
+      "type": "string",
+      "minLength": 1
+    },
+    "lastname": {
+      "type": "string",
+      "minLength": 1
+    },
+    "email": {
+      "type": "string",
+      "format": "email",
+      "minLength": 1
+    },
+    "phone": {
+      "type": "string",
+      "minLength": 1
+    },
+    "street": {
+      "type": "string",
+      "minLength": 1
+    },
+    "houseNumber": {
+      "type": "string",
+      "minLength": 1
+    },
+    "city": {
+      "type": "string",
+      "minLength": 1
+    },
+    "postalCode": {
+      "type": "string",
+      "minLength": 1
+    },
+    "paymentMethod": {
+      "type": "string",
+      "enum": [
+        "Toto se vymění za reálné hodnoty definované v Cart class. Tohle vyměňování se dělá v CartControlleru"
+      ]
+    },
+    "shippingMethod": {
+      "type": "string",
+      "enum": [
+        "Toto se vymění za reálné hodnoty definované v Cart class. Tohle vyměňování se dělá v CartControlleru"
+      ]
+    },
+    "shippingMetadata": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "zip": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "zip"
+      ]
+    },
+    "note": {
+      "type": "string"
+    }
+  },
+  "required": [
+    "firstname",
+    "lastname",
+    "email",
+    "phone",
+    "street",
+    "houseNumber",
+    "city",
+    "postalCode",
+    "paymentMethod",
+    "shippingMethod"
+  ],
+  "if": {
+    "properties": {
+      "shippingMethod": {
+        "const": "zasilkovna"
+      }
+    }
+  },
+  "then": {
+    "required": [
+      "shippingMetadata"
+    ]
+  }
+}

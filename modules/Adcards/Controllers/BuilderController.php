@@ -78,7 +78,7 @@ class BuilderController
 
         $payload = array_merge($payload, [
             "materials" => $cardMaterialService->getMany(
-                ["id", "IN", array_unique(array_map(fn($item) => $item["id"], $payload["sizes"]))],
+                ["id", "IN", array_unique(array_map(fn($item) => $item["material_id"], $payload["sizes"]))],
                 1,
                 999
             )["data"],
@@ -104,9 +104,6 @@ class BuilderController
 
             return $filteredContents;
         }, $payload["materials"]);
-
-        // Do not show materials that have no sizes
-        $payload["materials"] = array_values(array_filter($payload["materials"], fn($item) => !empty($item["sizes"])));
 
         $countriesPublicFields = ["id", "flag", "name"];
         $payload["countries"] = array_map(function ($item) use ($countriesPublicFields) {

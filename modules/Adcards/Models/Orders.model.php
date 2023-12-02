@@ -198,19 +198,35 @@ class Orders extends Model
     ],
 
     'shipping_method' => [
-      'title' => 'Typ dopravy',
+      'title' => 'Doprava',
       'hide' => false,
       'required' => true,
       'unique' => false,
-      'editable' => false,
+      'editable' => true,
       'translations' => false,
       'admin' => [
         'isHidden' => false,
-        'editor' => ['placement' => 'main', 'width' => 6],
+        'editor' => ['placement' => 'main', 'width' => 8],
         'fieldType' => 'normal',
       ],
-      'readonly' => false,
+      'readonly' => true,
       'type' => 'string',
+    ],
+
+    'shipping_rate' => [
+      'title' => 'Cena za dopravu',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 4],
+      ],
+      'readonly' => true,
+      'type' => 'number',
+      'autoIncrement' => false,
     ],
 
     'payment_method' => [
@@ -242,7 +258,46 @@ class Orders extends Model
       ],
       'readonly' => false,
       'type' => 'enum',
-      'enum' => ['CREATED', 'CANCELED', 'PENDING', 'CONFIRMED', 'FINISHED'],
+      'enum' => [
+        'vytvořeno',
+        'nezaplaceno',
+        'nepotvrzeno',
+        'potvrzeno',
+        'zrušeno',
+        'dokončeno',
+      ],
+    ],
+
+    'total_cost' => [
+      'title' => 'Celková částka',
+      'hide' => false,
+      'required' => true,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'aside', 'width' => 12],
+      ],
+      'readonly' => true,
+      'type' => 'number',
+      'autoIncrement' => false,
+    ],
+
+    'paypal_transaction_id' => [
+      'title' => 'ID PayPal transakce',
+      'hide' => false,
+      'required' => false,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'aside', 'width' => 12],
+        'fieldType' => 'normal',
+      ],
+      'readonly' => true,
+      'type' => 'string',
     ],
 
     'cards' => [
@@ -314,22 +369,6 @@ class Orders extends Model
       'type' => 'json',
     ],
 
-    'subtotal_cost' => [
-      'title' => 'Mezisoučet',
-      'hide' => false,
-      'required' => true,
-      'unique' => false,
-      'editable' => false,
-      'translations' => false,
-      'admin' => [
-        'isHidden' => false,
-        'editor' => ['placement' => 'aside', 'width' => 12],
-      ],
-      'readonly' => true,
-      'type' => 'number',
-      'autoIncrement' => false,
-    ],
-
     'promo_code_value' => [
       'title' => 'Slevový kód - název',
       'hide' => false,
@@ -356,22 +395,6 @@ class Orders extends Model
       'admin' => [
         'isHidden' => false,
         'editor' => ['placement' => 'aside', 'width' => 6],
-      ],
-      'readonly' => true,
-      'type' => 'number',
-      'autoIncrement' => false,
-    ],
-
-    'total_cost' => [
-      'title' => 'Celková částka',
-      'hide' => false,
-      'required' => true,
-      'unique' => false,
-      'editable' => false,
-      'translations' => false,
-      'admin' => [
-        'isHidden' => false,
-        'editor' => ['placement' => 'aside', 'width' => 12],
       ],
       'readonly' => true,
       'type' => 'number',

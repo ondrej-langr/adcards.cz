@@ -41,8 +41,8 @@ class ClubImage
         }
 
         $extensionForImage = image_type_to_extension($allowedMimeTypesToFileType[$uploadedImageMimeType], false);
-        $fileName = uniqid("hrac-");
-        $filePath = "/interni/rozpracované-karty/$sessionId/klub-$fileName.$extensionForImage";
+        $fileName = uniqid("klub-");
+        $filePath = "/interni/rozpracované-karty/$sessionId/$fileName.$extensionForImage";
         self::$fs->write($filePath, base64_decode($imageData));
 
         return new self($filePath);

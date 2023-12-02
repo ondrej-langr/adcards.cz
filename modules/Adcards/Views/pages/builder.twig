@@ -19,7 +19,7 @@
 {% endblock %}
 
 {% block content %}
-    <div id='builder-root' class='builder' x-data="cardBuilder">
+    <div id='builder-root' class='builder' x-data="cardBuilder()">
         <nav class='builder__steps-navigation align-items-center flex'>
             <template x-for='i in 4'>
                 <button @click='currentStep = i-1' :class='currentStep === i-1 ? "current" : ""' x-text='i'

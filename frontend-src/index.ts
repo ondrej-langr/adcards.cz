@@ -1,8 +1,9 @@
-import 'htmx.org'
 import Alpine from 'alpinejs'
-import cardBuilder from './alpine-components/cardBuilder'
 import cartForm from './alpine-components/cartForm'
+import orderPage from './alpine-components/orderPage'
+
 import 'cropperjs/dist/cropper.css'
+import 'htmx.org'
 
 declare global {
   interface Window {
@@ -42,13 +43,18 @@ window.Alpine = Alpine
 if (window.location.pathname.includes('/kosik')) {
   // @ts-expect-error
   import('./packeta.js')
-  Alpine.data(cartForm.name, cartForm)
+  Alpine.data(cartForm.name, cartForm as any)
 } else if (window.location.pathname.includes('/karty/builder')) {
-  Alpine.data(cardBuilder.name, cardBuilder)
+
+  // Import this dynamically
+  const {
+    default: cardBuilderComponent,
+  } = await import('./alpine-components/cardBuilder')
+  Alpine.data(cardBuilderComponent.name, cardBuilderComponent)
 }
 
-window.Alpine.start()
-
+Alpine.data(orderPage.name, orderPage as any)
+Alpine.start()
 
 // handles reset of all input fields([name="quantity"]) that belongs to product on current page
 // This is triggered usually when there is a product rendered

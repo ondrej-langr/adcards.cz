@@ -8,13 +8,14 @@ namespace PromCMS\Modules\Adcards;
 class OrderStatus
 {
     // This is for newly created order (which may need to be paid)
-    public const CREATED = 'CREATED';
+    public const CREATED = 'vytvořeno';
     // This is for when user cancels order
-    public const CANCELED = 'CANCELED';
+    public const CANCELED = 'zrušeno';
     // This is for when user has paid the order (or has chosen the bank transfer)
-    public const PENDING = 'PENDING';
+    public const PENDING = 'nepotvrzeno';
+    public const UNPAID = 'nezaplaceno';
     // This is for when admin changes this manually and accepts the order
-    public const CONFIRMED = 'CONFIRMED';
+    public const CONFIRMED = 'potvrzeno';
     // This is for when the order is finished
-    public const FINISHED = 'FINISHED';
+    public const FINISHED = 'dokončeno';
 }

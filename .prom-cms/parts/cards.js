@@ -26,6 +26,15 @@ const relationFields = {
     'labelConstructor': '{{width}}x{{height}}cm',
     'title': 'Velikost',
   },
+  'order_id': {
+    'required': true,
+    'translations': false,
+    'type': 'relationship',
+    'multiple': false,
+    'targetModel': 'orders',
+    'labelConstructor': '#{{id}} ({{total_cost}} {{currency}})',
+    'title': 'Objednávka',
+  },
 }
 
 /**

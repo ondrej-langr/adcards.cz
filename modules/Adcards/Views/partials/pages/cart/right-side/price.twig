@@ -1,12 +1,22 @@
-<div class="price-full">
-    <span>{{ 'Cena celkem'|t }}:</span>
-    <input type="hidden" id="priceTotal" value="{{ priceTotal }}"
-           data-comment="this is for JS only, you don't have to bother changing it :-)">
-
-    <span class="number">
-                            {% if cart.promoCode.isset %}
-                                <strike>{{ cart.total.withoutPromo }}{{ 'Kč'|t }}</strike>
-                            {% endif %}
-        {{ cart.total.withPromo }}{{ 'Kč'|t }}
-                        </span>
+<div class='price'>
+    <div class="price-partial">
+        <span>{{ 'Mezisoučet'|t }}:</span>
+        <span class="number">
+            {% if cart.promoCode.isset %}<strike>{{ cart.total.withoutPromo }} {{ 'Kč'|t }}</strike> {% endif %}
+            {{ cart.total.withPromo }} {{ 'Kč'|t }}
+        </span>
+    </div>
+    <div class="price-partial">
+        <span>{{ 'Cena za dopravu'|t }}:</span>
+        <span class="number">
+            <span x-text='getShippingRate()'>---</span> {{ 'Kč'|t }}
+        </span>
+    </div>
+    <div class="price-full">
+        <span>{{ 'Cena celkem'|t }}:</span>
+        <span class="number">
+            <span x-text='{{ cart.total.withPromo }} + getShippingRate()'>---</span>
+            {{ 'Kč'|t }}
+        </span>
+    </div>
 </div>

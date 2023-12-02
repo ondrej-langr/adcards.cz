@@ -33,7 +33,8 @@
                 {% else %}
                     <span>Cena za kus: <b>{{ orderedProduct.price.total ?? orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
                     <br />
-                    <span>Celkově: <b class='text-brands-signature'>{{ orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
+                    <span>Celkově: <b
+                                class='text-brands-signature'>{{ orderedProduct.product.price * orderedProduct.count }} {{ "Kč"|t }}</b></span>
                 {% endif %}
             </div>
         </div>
