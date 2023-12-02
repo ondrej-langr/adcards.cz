@@ -10,10 +10,7 @@ use Slim\Routing\RouteCollectorProxy;
 use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\Controllers;
 
-// FIXME: This file is being run twice for some reason - fix this
-$runCount = 0;
-
-return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
+return function (App $app, RouteCollectorProxy $router) {
     $container = $app->getContainer();
     $twig = $container->get(RenderingService::class);
 
@@ -21,8 +18,6 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
         ServerRequestInterface $request,
         ResponseInterface      $response,
     ) use ($twig, $container) {
-
-
         $currentLanguage = $container->get(LocalizationService::class)->getCurrentLanguage();
         $cardMaterialService = new EntryTypeService(new CardMaterial(), $currentLanguage);
         $cardSizesService = new EntryTypeService(new \CardSizes(), $currentLanguage);
@@ -56,12 +51,6 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
         ResponseInterface      $response,
                                $args,
     ) use ($twig) {
-
-        $path = $request->getUri()->getPath();
-        $content = file_get_contents(__DIR__ . "/text.txt");
-        $newContent = "$path";
-        file_put_contents(__DIR__ . "/text.txt", empty($content) ? $newContent : "$content\n$newContent");
-
         return $twig->render($response, '@modules:Adcards/pages/faq.twig', [
             "items" => [
                 [
@@ -118,9 +107,6 @@ return function (App $app, RouteCollectorProxy $router) use (&$runCount) {
         return $twig->render($response, '@modules:Adcards/pages/team.twig');
     })->setName("team");
 
-    if ($runCount == 0) {
-        $app->redirect('/obchodni-podminky', '/pdf/trade-agreement.pdf', 301)->setName("trade-agreement");
-        $app->redirect('/gdpr', '/pdf/gdpr.pdf', 301)->setName("gdpr");
-    }
-    $runCount++;
+    $app->redirect('/obchodni-podminky', '/pdf/trade-agreement.pdf', 301)->setName("trade-agreement");
+    $app->redirect('/gdpr', '/pdf/gdpr.pdf', 301)->setName("gdpr");
 };
