@@ -123,7 +123,8 @@ export default function orderPage(params: CartFormProps): AlpineComponent<any> {
             //   (3) Successful transaction -> Show confirmation or thank you message
             async onApprove(data, actions) {
               try {
-                const response = await fetch(new URL(`${payPal.routes.capture}?order_id=${data.orderID}`, 'http://localhost:3001'), {
+                // TODO: origin is like this, but should be 3001. Current vite proxy hits routes twice
+                const response = await fetch(new URL(`${payPal.routes.capture}?order_id=${data.orderID}`, window.location.origin), {
                   method: 'GET',
                 })
                 const orderData = await response.json()
