@@ -4,6 +4,7 @@ namespace PromCMS\Modules\Adcards\Controllers\Cart;
 
 use DI\Container;
 use PromCMS\Core\Services\RenderingService;
+use PromCMS\Core\Session;
 use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\CartCard;
 use PromCMS\Modules\Adcards\StaticMessages;
@@ -69,7 +70,7 @@ class CardController
 
         if (!empty($body["clubImage"])) {
             $card
-                ->setClubImage(CartCard\ClubImage::create($body["clubImage"], $this->container->get('session')::id()));
+                ->setClubImage(CartCard\ClubImage::create($body["clubImage"], $this->container->get(Session::class)::id()));
         }
         //}
 
