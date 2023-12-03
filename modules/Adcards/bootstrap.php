@@ -34,7 +34,7 @@ return function (App $app) {
 
     // Is being run after each request
     $customApplicationMiddleware = function ($request, $handler) use ($rendering, $container) {
-        $session = $container->get('session');
+        $session = $container->get(\PromCMS\Core\Session::class);
         $cartFromSession = $container->get(Cart::class);
 
         // Load cart items from session into Cart class instance
