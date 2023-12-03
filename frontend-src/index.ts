@@ -1,6 +1,7 @@
 import Alpine from 'alpinejs'
 import cartForm from './alpine-components/cartForm'
 import orderPage from './alpine-components/orderPage'
+import cardBuilder from './alpine-components/cardBuilder'
 
 import 'cropperjs/dist/cropper.css'
 import 'htmx.org'
@@ -45,12 +46,7 @@ if (window.location.pathname.includes('/kosik')) {
   import('./packeta.js')
   Alpine.data(cartForm.name, cartForm as any)
 } else if (window.location.pathname.includes('/karty/builder')) {
-
-  // Import this dynamically
-  const {
-    default: cardBuilderComponent,
-  } = await import('./alpine-components/cardBuilder')
-  Alpine.data(cardBuilderComponent.name, cardBuilderComponent)
+  Alpine.data(cardBuilder.name, cardBuilder)
 }
 
 Alpine.data(orderPage.name, orderPage as any)
