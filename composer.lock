@@ -2109,12 +2109,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PromCMS/Core.git",
-                "reference": "b7b1130d9dbafd44b3127cdf36134a569bf47d8f"
+                "reference": "1a669ede82ccb0de65340ae1e56953f980e7bc17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PromCMS/Core/zipball/b7b1130d9dbafd44b3127cdf36134a569bf47d8f",
-                "reference": "b7b1130d9dbafd44b3127cdf36134a569bf47d8f",
+                "url": "https://api.github.com/repos/PromCMS/Core/zipball/1a669ede82ccb0de65340ae1e56953f980e7bc17",
+                "reference": "1a669ede82ccb0de65340ae1e56953f980e7bc17",
                 "shasum": ""
             },
             "require": {
@@ -2161,7 +2161,7 @@
                 "issues": "https://github.com/PromCMS/Core/issues",
                 "source": "https://github.com/PromCMS/Core/tree/develop"
             },
-            "time": "2023-12-03T11:56:54+00:00"
+            "time": "2023-12-03T12:06:22+00:00"
         },
         {
             "name": "psr/clock",
