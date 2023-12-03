@@ -42,36 +42,36 @@ class CardController
 
         $card = new CartCard($body["name"], $body["sizeId"], $body["backgroundId"], $body["cardType"]);
 
-        if ($body["cardType"] !== "realPlayer") {
-            $playerImage = CartCard\PlayerImage::create($body["playerImage"], $this->container->get('session')::id());
+        //if ($body["cardType"] !== "realPlayer") {
+        $playerImage = CartCard\PlayerImage::create($body["playerImage"], $this->container->get('session')::id());
 
-            $card
-                ->setCountry($body["countryId"])
-                ->setPlayerImage($playerImage)
-                ->setRating($body["rating"]);
+        $card
+            ->setCountry($body["countryId"])
+            ->setPlayerImage($playerImage)
+            ->setRating($body["rating"]);
 
-            if (!empty($body["stats"])) {
-                // We need to extract stats from client to backend
-                $processedStats = [];
-                foreach ($body["stats"] as $statKey => $statValue) {
-                    if (empty($statKey)) {
-                        continue;
-                    }
-
-                    $processedStats[] = [
-                        "name" => $statKey,
-                        'value' => $statValue
-                    ];
+        if (!empty($body["stats"])) {
+            // We need to extract stats from client to backend
+            $processedStats = [];
+            foreach ($body["stats"] as $statKey => $statValue) {
+                if (empty($statKey)) {
+                    continue;
                 }
 
-                $card->setStats(new CartCard\PlayerOrGoalKeeperStats($processedStats));
+                $processedStats[] = [
+                    "name" => $statKey,
+                    'value' => $statValue
+                ];
             }
 
-            if (!empty($body["clubImage"])) {
-                $card
-                    ->setClubImage(CartCard\ClubImage::create($body["clubImage"], $this->container->get('session')::id()));
-            }
+            $card->setStats(new CartCard\PlayerOrGoalKeeperStats($processedStats));
         }
+
+        if (!empty($body["clubImage"])) {
+            $card
+                ->setClubImage(CartCard\ClubImage::create($body["clubImage"], $this->container->get('session')::id()));
+        }
+        //}
 
         if (!$card->isValid()) {
             return $response->withStatus(400);

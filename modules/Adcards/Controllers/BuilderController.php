@@ -8,6 +8,7 @@ use PromCMS\Core\Services\FileService;
 use PromCMS\Core\Services\ImageService;
 use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
+use PromCMS\Modules\Adcards\CardType;
 use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\CartCard;
 use Psr\Http\Message\ResponseInterface;
@@ -136,7 +137,7 @@ class BuilderController
         }, $payload["sports"]);
 
         $values = [
-            "cardType" => 'player',
+            "cardType" => CardType::PLAYER,
             "rating" => '99',
             "position" => 'CAM',
             "stats" => CartCard\PlayerOrGoalKeeperStats::$DEFAULT_VALUES

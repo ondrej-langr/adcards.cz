@@ -2,10 +2,12 @@
 
 namespace PromCMS\Modules\Adcards\CartCard;
 
+use PromCMS\Modules\Adcards\CardType;
+
 class PlayerOrGoalKeeperStats
 {
     static array $DEFAULT_VALUES = [
-        'player' =>
+        CardType::PLAYER =>
             [
                 [
                     'name' => 'pac',
@@ -32,7 +34,7 @@ class PlayerOrGoalKeeperStats
                     'value' => 99,
                 ],
             ],
-        'goalKeeper' =>
+        CardType::GOAL_KEEPER =>
             [
                 [
                     'name' => 'div',

@@ -204,54 +204,54 @@ class CartController
                 $cardPayload->card_type = $cardInCartAsArray["cardType"];
 
                 // Handle non real player as that has more fields to process
-                if ($cardInCartAsArray["cardType"] !== "realPlayer") {
-                    $cardPayload->club_image_id = null;
-                    $humanCardIndex = $cardIndex + 1;
+                //if ($cardInCartAsArray["cardType"] !== "realPlayer") {
+                $cardPayload->club_image_id = null;
+                $humanCardIndex = $cardIndex + 1;
 
-                    // Process player image
-                    $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
-                    $extension = pathinfo(basename($uploadedPlayerImagePath), PATHINFO_EXTENSION);
-                    $filename = "hrac.$extension";
-                    $randomFileName = "hrac-" . $this->getRandomFileName($extension);
+                // Process player image
+                $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
+                $extension = pathinfo(basename($uploadedPlayerImagePath), PATHINFO_EXTENSION);
+                $filename = "hrac.$extension";
+                $randomFileName = "hrac-" . $this->getRandomFileName($extension);
+
+                $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$randomFileName";
+                $playerImageEntity = Files::create([
+                    'filepath' => $filepath,
+                    'filename' => $filename,
+                    'mimeType' => $fs->mimeType($uploadedPlayerImagePath),
+                ]);
+                $fs->move(
+                    $uploadedPlayerImagePath,
+                    $filepath
+                );
+                $cardPayload->player_image = $playerImageEntity->id;
+
+                if (!empty($cardInCartAsArray["clubImagePathname"])) {
+                    $uploadedClubImagePath = $cardInCartAsArray["clubImagePathname"];
+                    $extension = pathinfo(basename($uploadedClubImagePath), PATHINFO_EXTENSION);
+                    $filename = "klub.$extension";
+                    $randomFileName = "klub-" . $this->getRandomFileName($extension);
 
                     $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$randomFileName";
-                    $playerImageEntity = Files::create([
+                    $clubImageEntity = Files::create([
                         'filepath' => $filepath,
                         'filename' => $filename,
-                        'mimeType' => $fs->mimeType($uploadedPlayerImagePath),
+                        'mimeType' => $fs->mimeType($uploadedClubImagePath),
                     ]);
                     $fs->move(
-                        $uploadedPlayerImagePath,
+                        $uploadedClubImagePath,
                         $filepath
                     );
-                    $cardPayload->player_image = $playerImageEntity->id;
-
-                    if (!empty($cardInCartAsArray["clubImagePathname"])) {
-                        $uploadedClubImagePath = $cardInCartAsArray["clubImagePathname"];
-                        $extension = pathinfo(basename($uploadedClubImagePath), PATHINFO_EXTENSION);
-                        $filename = "klub.$extension";
-                        $randomFileName = "klub-" . $this->getRandomFileName($extension);
-
-                        $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$randomFileName";
-                        $clubImageEntity = Files::create([
-                            'filepath' => $filepath,
-                            'filename' => $filename,
-                            'mimeType' => $fs->mimeType($uploadedClubImagePath),
-                        ]);
-                        $fs->move(
-                            $uploadedClubImagePath,
-                            $filepath
-                        );
-                        $cardPayload->club_image_id = $clubImageEntity->id;
-                    }
-
-                    // Process other data
-                    $cardPayload->rating = $cardInCartAsArray["rating"];
-                    $cardPayload->stats = [
-                        "data" => $cardInCartAsArray["stats"]
-                    ];
-                    $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
+                    $cardPayload->club_image_id = $clubImageEntity->id;
                 }
+
+                // Process other data
+                $cardPayload->rating = $cardInCartAsArray["rating"];
+                $cardPayload->stats = [
+                    "data" => $cardInCartAsArray["stats"]
+                ];
+                $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
+                //}
 
                 $cardPayload->final_price = $cardInCart->getPrice();
                 $cardPayload->currency = "CZK";

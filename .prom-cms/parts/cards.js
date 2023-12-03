@@ -122,7 +122,7 @@ const cardsModel = {
       'required': true,
       'translations': false,
       'type': 'enum',
-      'enum': ['goalKeeper', 'realPlayer', 'player', 'manager'],
+      'enum': ['goalKeeper', 'player', 'manager'],
       'title': 'Typ karty',
     },
     'final_price': {

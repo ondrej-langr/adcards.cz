@@ -19,14 +19,15 @@
             {{ include("@modules:Adcards/partials/pages/builder/form/size-select.twig") }}
             <div class="card worko-tabs">
                 <div class="tabs flex-tabs">
-                    <button @click='cardType = "player"' class="tab tab1"
+                    {#        <button @click='cardType = "player"' class="tab tab1"
                             :data-is-active="!isRealPlayer()">{{ 'Vlastní karta'|t }}</button>
 
                     <button @click='cardType = "realPlayer"' class="tab tab2"
                             :data-is-active="isRealPlayer()">{{ 'Karta reálného hráče'|t }}</button>
+                    #}
 
                     {{ include("@modules:Adcards/partials/pages/builder/form/player-fields.twig") }}
-                    {{ include("@modules:Adcards/partials/pages/builder/form/real-player-fields.twig") }}
+                    {# include("@modules:Adcards/partials/pages/builder/form/real-player-fields.twig") #}
                 </div>
             </div>
             <div class="card">

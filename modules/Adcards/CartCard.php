@@ -135,20 +135,19 @@ class CartCard
             $input["cardType"],
         );
 
-        if ($input["cardType"] !== "realPlayer") {
-            $instance
-                ->setPlayerImage(new PlayerImage($input["playerImagePathname"]))
-                ->setRating($input["rating"])
-                ->setCountry($input["country_id"]);
+        $instance
+            ->setPlayerImage(new PlayerImage($input["playerImagePathname"]))
+            ->setRating($input["rating"])
+            ->setCountry($input["country_id"]);
 
-            if (!empty($input["stats"])) {
-                $instance->setStats(new PlayerOrGoalKeeperStats($input["stats"]));
-            }
-
-            if (!empty($input["clubImagePathname"])) {
-                $instance->setClubImage(new ClubImage($input["clubImagePathname"]));
-            }
+        if (!empty($input["stats"])) {
+            $instance->setStats(new PlayerOrGoalKeeperStats($input["stats"]));
         }
+
+        if (!empty($input["clubImagePathname"])) {
+            $instance->setClubImage(new ClubImage($input["clubImagePathname"]));
+        }
+
 
         return $instance;
     }
@@ -164,6 +163,8 @@ class CartCard
         $backgrounds = $cardBackgroundsService->getMany([], 1, 999)["data"];
 
         if (
+            // Check player type
+            !CardType::exists($this->cardType) ||
             // Check if background exists
             !in_array(intval($this->backgroundId), getIds($backgrounds)) ||
             // Check if size exists
@@ -174,20 +175,17 @@ class CartCard
             return false;
         }
 
-        // If is goalkeeper, player or manager
-        if ($this->cardType !== "realPlayer") {
-            if (
-                // Check if selected country exists
-                !in_array(intval($this->countryId), getIds($countries)) ||
-                // Everyone (except real player) do have stats
-                ($this->cardType !== "manager" && empty($this->stats)) ||
-                // Check for rating
-                $this->rating === null ||
-                // And check for image
-                !$this->playerImage
-            ) {
-                return false;
-            }
+        if (
+            // Check if selected country exists
+            !in_array(intval($this->countryId), getIds($countries)) ||
+            // Everyone (except real player) do have stats
+            ($this->cardType !== CardType::MANAGER && empty($this->stats)) ||
+            // Check for rating
+            $this->rating === null ||
+            // And check for image
+            !$this->playerImage
+        ) {
+            return false;
         }
 
         return true;
