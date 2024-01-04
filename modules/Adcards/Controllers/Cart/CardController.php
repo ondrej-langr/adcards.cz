@@ -44,7 +44,7 @@ class CardController
         $card = new CartCard($body["name"], $body["sizeId"], $body["backgroundId"], $body["cardType"]);
 
         //if ($body["cardType"] !== "realPlayer") {
-        $playerImage = CartCard\PlayerImage::create($body["playerImage"], $this->container->get('session')::id());
+        $playerImage = CartCard\PlayerImage::create($body["playerImage"], $this->container->get(Session::class)::id());
 
         $card
             ->setCountry($body["countryId"])

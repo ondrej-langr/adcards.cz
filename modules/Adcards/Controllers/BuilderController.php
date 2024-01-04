@@ -3,13 +3,12 @@
 namespace PromCMS\Modules\Adcards\Controllers;
 
 use DI\Container;
+use Monolog\Logger;
+use PromCMS\Core\Config;
 use PromCMS\Core\Services\EntryTypeService;
-use PromCMS\Core\Services\FileService;
-use PromCMS\Core\Services\ImageService;
 use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Modules\Adcards\CardType;
-use PromCMS\Modules\Adcards\Cart;
 use PromCMS\Modules\Adcards\CartCard;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -67,74 +66,49 @@ class BuilderController
     public function get(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $requestLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
-        $cardMaterialService = new EntryTypeService(new \CardMaterial(), $requestLanguage);
-        $countriesService = new EntryTypeService(new \Countries(), $requestLanguage);
-        $cardSizesService = new EntryTypeService(new \CardSizes(), $requestLanguage);
-        $cardBackgroundsService = new EntryTypeService(new \CardBackgrounds(), $requestLanguage);
-        $sportsService = new EntryTypeService(new \Sports(), $requestLanguage);
-        $imageService = $this->container->get(ImageService::class);
-        $fileService = $this->container->get(FileService::class);
+        $logger = $this->container->get(Logger::class);
+        $config = $this->container->get(Config::class);
 
-        $payload["sizes"] = $cardSizesService->getMany([], 1, 999)["data"];
+        $payload = [];
 
-        $payload = array_merge($payload, [
-            "materials" => $cardMaterialService->getMany(
-                ["id", "IN", array_unique(array_map(fn($item) => $item["material_id"], $payload["sizes"]))],
-                1,
-                999
-            )["data"],
-            "countries" => $countriesService->getMany([], 1, 8)["data"],
-            "backgrounds" => $cardBackgroundsService->getMany([], 1, 999)["data"],
-            "sports" => $sportsService->getMany([], 1, 999)["data"],
-        ]);
+        // Materials
+        $payload['materials'] = (new \CardMaterial())->query()->setLanguage($requestLanguage)
+            ->join(function ($material) use ($requestLanguage, &$payload) {
+                $sizes = (new \CardSizes())->query()->setLanguage($requestLanguage)
+                    ->where(["material_id", "=", $material["id"]])
+                    ->getMany();
 
-        $sizesPublicFields = ["id", "image", "price", "width", "height", "material_id"];
-        $payload["sizes"] = array_map(function ($item) use ($sizesPublicFields) {
-            return array_filter($item, function ($value, $key) use ($sizesPublicFields) {
-                return in_array($key, $sizesPublicFields);
-            }, ARRAY_FILTER_USE_BOTH);
-        }, $payload["sizes"]);
+                foreach ($sizes as $size) {
+                    $payload['sizes'][$size['id']] = $size;
+                }
 
-        $payload["materials"] = array_map(function ($item) use ($payload) {
-            $materialPublicFields = ["id", "image", "name", "description"];
-            $filteredContents = array_filter($item, function ($value, $key) use ($materialPublicFields) {
-                return in_array($key, $materialPublicFields);
-            }, ARRAY_FILTER_USE_BOTH);
+                return $sizes;
+            }, "sizes")
+            ->select(['sizes'])
+            ->getMany();
 
-            $filteredContents["sizes"] = array_values(array_filter($payload["sizes"], fn($size) => $size["material_id"] === $item["id"]));
+        $payload['materials'] = array_values(array_filter($payload['materials'], fn($material) => count($material['sizes'] ?? [])));
+        $payload['sizes'] = array_values($payload['sizes']);
 
-            return $filteredContents;
-        }, $payload["materials"]);
+        // Countries
+        $payload['countries'] = \Countries::setLanguage($requestLanguage)
+            ->limit(8)
+            ->getMany();
 
-        $countriesPublicFields = ["id", "flag", "name"];
-        $payload["countries"] = array_map(function ($item) use ($countriesPublicFields) {
-            return array_filter($item, function ($value, $key) use ($countriesPublicFields) {
-                return in_array($key, $countriesPublicFields);
-            }, ARRAY_FILTER_USE_BOTH);
-        }, $payload["countries"]);
+        // Backgrounds
+        $payload['backgrounds'] = \CardBackgrounds::setLanguage($requestLanguage)
+            ->getMany();
 
-        $payload["backgrounds"] = array_map(function ($item) use ($imageService, $fileService) {
-            $backgroundsPublicFields = ["id", "image", "name", "description", "textColor"];
-            $backgroundResults = array_filter($item, function ($value, $key) use ($backgroundsPublicFields, $imageService, $fileService) {
-                return in_array($key, $backgroundsPublicFields);
-            }, ARRAY_FILTER_USE_BOTH);
+        $payload['backgrounds'] = array_map(function ($cardBackground) use ($config) {
+            $imageId = $cardBackground['image'];
+            $cardBackground['imageSrc'] = $config->app->baseUrl . "/api/entry-types/files/items/$imageId/raw?w=400";
 
-            $imageInfo = $fileService->getById($backgroundResults["image"]);
-            $imageResult = $imageService->getProcessed($imageInfo->getData(), [
-                'w' => 400,
-            ]);
+            return $cardBackground;
+        }, $payload['backgrounds']);
 
-            $backgroundResults["imageSrc"] = $imageResult["src"];
 
-            return $backgroundResults;
-        }, $payload["backgrounds"]);
-
-        $sportsPublicFields = ["id", "image", "name", "description"];
-        $payload["sports"] = array_map(function ($item) use ($sportsPublicFields) {
-            return array_filter($item, function ($value, $key) use ($sportsPublicFields) {
-                return in_array($key, $sportsPublicFields);
-            }, ARRAY_FILTER_USE_BOTH);
-        }, $payload["sports"]);
+        $payload['sports'] = \Sports::setLanguage($requestLanguage)
+            ->getMany();
 
         $values = [
             "cardType" => CardType::PLAYER,
@@ -149,6 +123,7 @@ class BuilderController
         $materialIds = array_column($payload["materials"], "id");
         $backgroundIds = array_column($payload["backgrounds"], "id");
 
+        // Check if preselected params are valid
         if (isset($queryParams["materialId"]) && in_array(trim($queryParams["materialId"]), $materialIds)) {
             $values["materialId"] = trim($queryParams["materialId"]);
 

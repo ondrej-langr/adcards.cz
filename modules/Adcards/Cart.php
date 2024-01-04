@@ -232,12 +232,11 @@ class Cart
         $productsFromCart = $this->state[CartItemTypes::PRODUCTS->value];
         $hasCards = !empty($this->state[CartItemTypes::CARDS->value]);
 
-        $productsFromDatabase = (new \PromCMS\Core\Services\EntryTypeService(
-            new \Products(),
-            $this->container->get(LocalizationService::class)->getCurrentLanguage()
-        ))->getMany([
-            ["id", "IN", array_keys($productsFromCart)]
-        ], 1, 999);
+        $productsFromDatabase = (new \Products())
+            ->query()
+            ->setLanguage($this->container->get(LocalizationService::class)->getCurrentLanguage())
+            ->where(["id", "IN", array_keys($productsFromCart)])
+            ->getMany();
 
         foreach ($productsFromDatabase["data"] as $product) {
             if (!$hasCards && $product["is_bonus"]) {

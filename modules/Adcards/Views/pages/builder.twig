@@ -64,7 +64,7 @@
                             <div class='builder__grid-item-image_wrapper'>
                                 {% set currentImage = getImage(sport.image, 440) %}
                                 <img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}"
-                                     height="{{ currentImage.height }}">
+                                     height="{{ currentImage.height }}" loading='lazy'>
                             </div>
                             <h4>{{ sport.name }}</h4>
                             {% if sport.description %}
@@ -89,7 +89,7 @@
                             <div class='builder__grid-item-image_wrapper'>
                                 {% set currentImage = getImage(background.image, 440) %}
                                 <img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}"
-                                     height="{{ currentImage.height }}">
+                                     height="{{ currentImage.height }}" loading='lazy'>
                             </div>
                             <h4>{{ background.name }}</h4>
                             {% if background.description %}

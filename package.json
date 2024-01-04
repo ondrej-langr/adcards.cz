@@ -4,8 +4,11 @@
   "description": "",
   "license": "MIT",
   "type": "module",
+  "workspaces": [
+    "modules/*"
+  ],
   "scripts": {
-    "build": "vite build",
+    "build": "vite build --emptyOutDir && pnpm --filter @adcards/email-templates build",
     "update:prom": "npx @prom-cms/cli project update --no-admin",
     "update:prom:all": "npx @prom-cms/cli project update",
     "dev": "vite"
