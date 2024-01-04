@@ -1,11 +1,11 @@
 <div class="header">
-    <div class="slider-container" x-data='{ activeIndex: 0 }'>
+    <div class="slider-container" x-data='frontpageSlider({ slidesCount: {{ slider.items|length }} })'>
         <div class="overlay"></div>
         <div class="col-12 col-lg-9 col-md-12 col-sm-12 col-xl-9 slider-left">
             {% for slide in slider.items %}
                 <div class="slide {% if loop.index == 1 %}active{% endif %}" id="slide-{{ loop.index0 }}"
                      :class='{ "active": activeIndex === {{ loop.index0 }} }'>
-                    {% set currentImage = getImage(slide.image, null,500) %}
+                    {% set currentImage = getImage(slide.image, 1420) %}
                     <img src="{{ currentImage.src }}" width="{{ currentImage.width }}"
                          height="{{ currentImage.height }}"
                          alt="Obrázek">
@@ -21,13 +21,92 @@
                 </div>
             {% endfor %}
         </div>
-        <div class="col-12 col-lg-3 col-md-12 col-sm-12 col-xl-3 slider-right">
+        <div class="col-12 col-lg-3 col-md-12 col-sm-12 col-xl-3 slider-right"
+             :style='{ "--slide-duration": _slideDuration + "ms", "--animation-play-state": _activeNativeInterval === undefined ? "paused" : "running" }'
+             @mouseenter='pauseInterval()'
+             @mouseleave='resumeInterval()'
+        >
             {% for slide in slider.items %}
                 <div class="slider-box {% if loop.index == 1 %}active{% endif %}"
-                     @click='activeIndex = {{ loop.index0 }}' :class='{ "active": activeIndex === {{ loop.index0 }} }'>
+                     @click='changeSlide({{ loop.index0 }})' :class='{ "active": activeIndex === {{ loop.index0 }} }'>
                     <h2>{{ slide.title }}</h2>
                 </div>
             {% endfor %}
         </div>
     </div>
 </div>
+<!-- No need to include this in its own javascript file -->
+<script>
+  function frontpageSlider(props) {
+    const { slidesCount } = props
+    const maxSlideIndex = slidesCount - 1
+
+    if (!slidesCount) {
+      throw new Error('No slides count provided or no slides at all')
+    }
+
+    const INTERVAL = 10 // in milliseconds
+    const SLIDE_DURATION_MAX = 8_000 // in milliseconds
+
+    const wrapSlideIndex = (index) => {
+      if (typeof index !== 'number') {
+        return 0
+      }
+
+      if (index < 0) {
+        return maxSlideIndex
+      } else if (index > maxSlideIndex) {
+        return 0
+      }
+
+      return index
+    }
+
+    return {
+      _activeNativeInterval: undefined,
+      _slideDuration: SLIDE_DURATION_MAX,
+      activeIndex: 0,
+      remainingDuration: SLIDE_DURATION_MAX,
+
+      getRemainingDurationInPercentage() {
+        const remainder = (this.remainingDuration / SLIDE_DURATION_MAX) * 100
+
+        return `${remainder}%`
+      },
+
+      changeSlide(toIndex) {
+        this.activeIndex = wrapSlideIndex(toIndex)
+        this.resetInterval()
+      },
+      goNext() {
+        this.changeSlide(this.activeIndex + 1)
+      },
+
+      startInterval() {
+        // Set native interval that decreases by specified interval
+        this._activeNativeInterval = setInterval(() => {
+          this.remainingDuration -= INTERVAL
+
+          // If no more remaining duration in current slide then we go next
+          if (this.remainingDuration <= 0) {
+            this.goNext()
+          }
+        }, INTERVAL)
+      },
+      pauseInterval() {
+        clearInterval(this._activeNativeInterval)
+        this._activeNativeInterval = undefined
+      },
+      resumeInterval() {
+        this.startInterval()
+      },
+      resetInterval() {
+        this.remainingDuration = SLIDE_DURATION_MAX
+      },
+
+      init() {
+        this.startInterval()
+      },
+    }
+  }
+</script>

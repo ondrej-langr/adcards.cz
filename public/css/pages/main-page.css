@@ -495,7 +495,7 @@
     content: "";
     position: absolute;
     top: 50%;
-    left: -20px;
+    left: 0;
     transform: translateY(-50%);
     width: 0;
     height: 0;
@@ -503,10 +503,41 @@
     border-bottom: 20px solid transparent;
     border-right: 20px solid #000000;
     opacity: 0;
+    transition: left 600ms;
 }
 
 .slider-box.active:before {
     opacity: 1;
+    left: -20px
+}
+
+.slider-box:after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+    opacity: 0;
+    width: 100%;
+    background: var(---colors-brand-signature);
+}
+
+@keyframes from100To0 {
+    from {
+        width: 100%
+    }
+    to {
+        width: 0%
+    }
+}
+
+.slider-box.active:after {
+    opacity: 1;
+    animation-name: from100To0;
+    animation-duration: var(--slide-duration);
+    animation-timing-function: linear;
+    animation-fill-mode: forwards;
+    animation-play-state: var(--animation-play-state, 'paused');
 }
 
 @media (max-width: 767px) {
