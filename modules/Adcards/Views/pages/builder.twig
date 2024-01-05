@@ -63,7 +63,9 @@
                         <div class="builder__grid-item" @click='(sportId = {{ sport.id }}) && ++currentStep'>
                             <div class='builder__grid-item-image_wrapper'>
                                 {% set currentImage = getImage(sport.image, 440) %}
-                                <img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}"
+                                {% set placeholderImage = getImage(sport.image, 90) %}
+                                <img alt='' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
+                                     width="{{ currentImage.width }}"
                                      height="{{ currentImage.height }}" loading='lazy'>
                             </div>
                             <h4>{{ sport.name }}</h4>
@@ -88,7 +90,9 @@
                              @click='(backgroundId = {{ background.id }}) && ++currentStep'>
                             <div class='builder__grid-item-image_wrapper'>
                                 {% set currentImage = getImage(background.image, 440) %}
-                                <img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}"
+                                {% set placeholderImage = getImage(background.image, 10) %}
+                                <img alt='' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
+                                     width="{{ currentImage.width }}"
                                      height="{{ currentImage.height }}" loading='lazy'>
                             </div>
                             <h4>{{ background.name }}</h4>

@@ -1,12 +1,15 @@
 <!-- start @modules:Adcards/components/small-product.twig -->
 {% set rootId = "small-product-" ~ orderedProduct.product.id %}
 <div id='{{ rootId }}' class='d-flex small-product'>
-    {% if orderedProduct.product.images[0] %}
+    {% if orderedProduct.product.images %}
         <div class='small-product__image'>
+
             {% set currentImage = getImage(orderedProduct.product.images[0], 200) %}
-            <img class='h-100 w-100 position-absolute' src="{{ currentImage.src }}"
+            {% set placeholderImage = getImage(orderedProduct.product.images[0], 10) %}
+            <img class='h-100 w-100 position-absolute' src='{{ placeholderImage.src }}'
+                 data-src="{{ currentImage.src }}"
                  width='{{ currentImage.width }}'
-                 height='{{ currentImage.height }}' />
+                 height='{{ currentImage.height }}' loading='lazy' />
         </div>
     {% endif %}
     {#    This will be replaced when user updates quantity #}

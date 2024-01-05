@@ -1095,6 +1095,14 @@ img:not([src]):not([srcset]) {
     visibility: hidden
 }
 
+img[loading="lazy"]:not([data-loaded="true"]) {
+    filter: blur(10px);
+}
+
+.lazy-image-loading {
+    filter: blur(4px);
+}
+
 .language-btn {
     color: #000;
     height: 54px;

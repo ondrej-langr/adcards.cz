@@ -29,7 +29,18 @@
     max-width: 100%;
     width: 100%;
     margin-bottom: 15px;
-    height: auto;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    object-fit: contain;
+}
+
+.shop-box .image-wrap {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1/1.1;
 }
 
 .shop-box h2 {

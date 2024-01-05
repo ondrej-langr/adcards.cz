@@ -1,8 +1,10 @@
 <!-- start @modules:Adcards/components/product.twig -->
 <div id="product-item-{{ id }}" class="col-12 col-lg-4 col-md-4 col-sm-6 col-xl-4 shop-box">
-    <a href='{{ url_for('productUnderpage', { 'productId': id }) }}'>
+    <a href='{{ url_for('productUnderpage', { 'productId': id }) }}' class='image-wrap'>
         {% set currentImage = getImage(images[0], 440) %}
-        <img src="{{ currentImage.src }}" width="{{ currentImage.width }}" height="{{ currentImage.height }}"
+        {% set placeholderImage = getImage(images[0], 10) %}
+        <img loading='lazy' data-src="{{ currentImage.src }}" src='{{ placeholderImage.src }}'
+             width="{{ currentImage.width }}" height="{{ currentImage.height }}"
              alt="Obrázek produktu">
     </a>
     <a class='hover:underline' href='{{ url_for('productUnderpage', { 'productId': id }) }}'>

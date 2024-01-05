@@ -10,7 +10,8 @@
             <div class="col-12 col-lg-6 col-md-12 col-sm-12 col-xl-6 product-page-image">
                 {% for imageId in images %}
                     {% set currentImage = getImage(imageId, 500) %}
-                    <img src="{{ currentImage.src }}"
+                    {% set placeholderImage = getImage(imageId, 10) %}
+                    <img loading='lazy' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
                          width='{{ currentImage.width }}'
                          height='{{ currentImage.height }}' />
                 {% endfor %}
