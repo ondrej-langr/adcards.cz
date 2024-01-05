@@ -10,6 +10,9 @@ declare global {
   interface Window {
     Alpine: typeof Alpine
     Packeta: any,
+
+    applyLazyLoad(): void,
+
     application: {
       builder?: {
         materials: { id: string, sizes?: NonNullable<Window['application']['builder']>['sizes'] }[],
@@ -70,3 +73,22 @@ document.body.addEventListener('resetAddToCartQuantity', function(evt) {
     }
   }
 })
+
+window.applyLazyLoad = () => {
+  const images = document.querySelectorAll('img[loading="lazy"]') as NodeListOf<HTMLImageElement>
+  images.forEach((img: HTMLImageElement) => {
+    img.src = img.dataset.src ?? img.src
+
+    img.onload = function() {
+      img.dataset.loaded = String(true)
+    }
+  })
+}
+
+if ('loading' in HTMLImageElement.prototype) {
+  window.applyLazyLoad()
+} else {
+  const script = document.createElement('script')
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/lazysizes/5.1.2/lazysizes.min.js'
+  document.body.appendChild(script)
+}

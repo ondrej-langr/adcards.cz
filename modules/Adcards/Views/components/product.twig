@@ -1,5 +1,5 @@
 <!-- start @modules:Adcards/components/product.twig -->
-<div id="product-item-{{ id }}" class="col-12 col-lg-4 col-md-4 col-sm-6 col-xl-4 shop-box">
+<div id="product-item-{{ id }}" class="col-12 col-sm-6 col-xl-4 shop-box">
     <a href='{{ url_for('productUnderpage', { 'productId': id }) }}' class='image-wrap'>
         {% set currentImage = getImage(images[0], 440) %}
         {% set placeholderImage = getImage(images[0], 10) %}

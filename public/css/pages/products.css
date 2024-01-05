@@ -28,7 +28,6 @@
 .shop-box img {
     max-width: 100%;
     width: 100%;
-    margin-bottom: 15px;
     height: 100%;
     position: absolute;
     top: 0;
@@ -41,6 +40,7 @@
     position: relative;
     width: 100%;
     aspect-ratio: 1/1.1;
+    margin-bottom: 15px;
 }
 
 .shop-box h2 {

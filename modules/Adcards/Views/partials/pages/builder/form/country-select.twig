@@ -3,10 +3,9 @@
     <div id="country-dropdown-btn" class="dropdown country-dropdown-btn" @click='isOpen = !isOpen'>
         <template x-if='_countryFlagSrc'>
             <div class="dropdown-icon-container">
-                <img loading="lazy"
-                     
-                     :src="_countryFlagSrc"
-                     alt="" class="dropdown-icon">
+                <img
+                        :src="_countryFlagSrc"
+                        alt="" class="dropdown-icon">
             </div>
         </template>
         <span x-text='_countryName ? _countryName : "{{ 'Kliknutím vyberte zemi'|t }}"'>{{ 'Kliknutím vyberte zemi'|t }}</span>
