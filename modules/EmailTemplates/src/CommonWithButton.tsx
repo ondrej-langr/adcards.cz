@@ -6,7 +6,7 @@ import { Button } from './components/Button'
 
 const defaultProps = {
   baseUrl: '{{ baseUrl }}',
-  buttonUrl: '{{ orderUrl }}',
+  buttonUrl: '{{ buttonUrl }}',
   texts: {
     preview: '{{texts.preview}}',
     content: '{{texts.content}}',
@@ -31,7 +31,7 @@ export default function CommonWithButton() {
         {texts.preview}
       </Preview>
       <WhiteSection className='p-5'>
-        <Text>
+        <Text className='text-lg'>
           {texts.content}
         </Text>
         <Button

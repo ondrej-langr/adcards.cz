@@ -337,7 +337,9 @@ class CartController
                 $userEmailTemplatePayload['products'][] = [
                     'title' => $productInCartInfo['product']['name'] . " " . $productInCartInfo["count"] . "x",
                     'price' => "Cena: <b>" . $productInCartInfo['price']['total'] . " Kč</b>",
-                    'imgSrc' => $config->app->baseUrl . "/api/entry-types/files/items/$createdCard->background_id/raw?w=90"
+                    'img' => [
+                        'src' => $config->app->baseUrl . "/api/entry-types/files/items/$createdCard->background_id/raw?w=90"
+                    ]
                 ];
             }
 

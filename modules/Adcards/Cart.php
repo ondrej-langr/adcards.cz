@@ -238,7 +238,7 @@ class Cart
             ->where(["id", "IN", array_keys($productsFromCart)])
             ->getMany();
 
-        foreach ($productsFromDatabase["data"] as $product) {
+        foreach ($productsFromDatabase as $product) {
             if (!$hasCards && $product["is_bonus"]) {
                 $this->removeProduct($product["id"]);
 

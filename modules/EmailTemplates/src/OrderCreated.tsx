@@ -99,7 +99,7 @@ export default function OrderCreated() {
         {texts.preview}
       </Preview>
       <WhiteSection className='px-5 pb-5'>
-        <Text>
+        <Text className='text-lg'>
           {texts.summary}
         </Text>
         <Button
