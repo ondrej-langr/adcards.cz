@@ -1,6 +1,7 @@
 import { AlpineComponent } from 'alpinejs'
 import Cropper from 'cropperjs'
 import { z } from 'zod'
+import { ajv } from '../lib/ajv'
 
 const builderStateSchema = z.object({
   materialId: z.string().optional(),
@@ -41,7 +42,8 @@ type State = z.output<typeof builderStateSchema> & Omit<BuilderDataOnWindow, 'de
   _country?: undefined | BuilderDataOnWindow['countries'][number]
   _countryFlagSrc?: undefined | string;
   _countryName?: string;
-  setCountry(param: any): void
+  setCountry(param: any): void;
+  doValidate(doNotAddErrorToFields?: boolean): boolean
 }
 
 export default function cardBuilder(): AlpineComponent<State> {
@@ -52,6 +54,19 @@ export default function cardBuilder(): AlpineComponent<State> {
   }
 
   const initialState = builderStateSchema.partial().parse(builderValues.state.form.values)
+
+  const schema = z.object({
+    name: z.string({ required_error: 'Vyplňte' }).min(1, 'Vyplňte'),
+    countryId: z.string({ required_error: 'Vyplňte' }).min(1, 'Vyplňte'),
+    club: z.string({ required_error: 'Vyplňte' }).min(1, 'Vyplňte'),
+    playerImage: z.string({ required_error: 'Vyplňte' }).min(1, 'Vyplňte'),
+    rating: z.number({ required_error: 'Vyplňte' }).default(99),
+    position: z.string({ required_error: 'Vyplňte' }).default('CAM'),
+    stats: z.array(z.object({
+      name: z.string().min(1, 'Vyplňte'),
+      value: z.number().default(99),
+    })).min(6).max(6).optional(),
+  })
 
   let cropperImage: Element | null = null
   let cropper: Cropper | null = null
@@ -64,6 +79,24 @@ export default function cardBuilder(): AlpineComponent<State> {
     _countryName: undefined,
     _clubImageName: 'Kliknutím nahrajte klub',
     clubImage: undefined,
+    cardType: initialState.cardType ?? null,
+    countryId: initialState.countryId ?? '',
+    name: initialState.name ?? '',
+    stats: initialState.stats ?? null,
+    rating: initialState.rating ?? null,
+    sizeId: String(initialState.sizeId ?? ''),
+    position: initialState.position ?? '',
+    imageUploaderOpen: false,
+    playerImage: '',
+    _backgroundId: initialState.backgroundId ?? '',
+    _materialId: initialState.materialId ?? '',
+    _sportId: initialState.sportId ?? '',
+    state: {
+      form: {
+        errors: {},
+      },
+    },
+
     onClubUpload(event) {
       const target = event.target
 
@@ -90,6 +123,8 @@ export default function cardBuilder(): AlpineComponent<State> {
       }
 
       reader.readAsDataURL(target.files[0])
+
+      this.doValidate()
     },
     setCountry(country) {
       this.countryId = country.id
@@ -101,6 +136,8 @@ export default function cardBuilder(): AlpineComponent<State> {
       } else {
         this._countryFlagSrc = undefined
       }
+
+      this.doValidate()
     },
     get largestStepTaken() {
       return this._step.largestStepTaken
@@ -114,6 +151,45 @@ export default function cardBuilder(): AlpineComponent<State> {
       }
 
       this._step.current = nextValue
+    },
+    doValidate(doNotAddErrorToFields) {
+      const formValues: Record<any, any> = {
+        name: this.name,
+        countryId: this.countryId,
+        club: this.clubImage,
+        playerImage: this.playerImage,
+        rating: Number(this.rating),
+        position: this.position,
+      }
+
+      if (this.cardType !== 'manager') {
+        formValues.stats = this.cardType === 'goalKeeper' ? this.stats.goalKeeper : this.stats.player
+
+        formValues.stats = formValues.stats.map((row) => ({ ...row, value: Number(row.value) }))
+      }
+
+      const validationResponse = schema.safeParse(formValues)
+      this.state.form.errors = {}
+
+      if (!doNotAddErrorToFields) {
+        if (!validationResponse.success) {
+          console.log(validationResponse.error.errors)
+          for (const errorItem of validationResponse.error.errors) {
+            this.state.form.errors ??= {}
+
+            this.state.form.errors[errorItem.path.join('.')] = errorItem.message
+          }
+        } else {
+          if (this.cardType !== 'manager') {
+            this.stats[this.cardType === 'goalKeeper' ? 'goalKeeper' : 'player'] = validationResponse.data.stats
+          }
+
+          this.rating = String(validationResponse.data.rating)
+          this.position = validationResponse.data.position
+        }
+      }
+
+      return validationResponse.success
     },
     get isFormValid() {
       let requiredFields: any[] = []
@@ -135,30 +211,6 @@ export default function cardBuilder(): AlpineComponent<State> {
 
       return valid
     },
-    init() {
-      const component = this
-
-      cropperImage = document.querySelector('.image-preview')
-
-      if (cropperImage && (cropperImage instanceof HTMLImageElement)) {
-        cropper = new Cropper(cropperImage, {
-          preview: '#card-image',
-          zoomOnWheel: !0,
-          background: !0,
-          restore: !1,
-          responsive: !0,
-          cropBoxResizable: !0,
-        })
-
-        cropperImage.addEventListener('ready', () => {
-          component.playerImage = cropper?.getCroppedCanvas().toDataURL() ?? component.playerImage
-        })
-
-        cropperImage.addEventListener('cropend', () => {
-          component.playerImage = cropper?.getCroppedCanvas().toDataURL() ?? component.playerImage
-        })
-      }
-    },
     updateSearchParamsWithState() {
       const { backgroundId, materialId, sportId } = this
       const nextSearch = new URLSearchParams(window.location.search)
@@ -172,7 +224,6 @@ export default function cardBuilder(): AlpineComponent<State> {
       history.pushState(null, '', window.location.pathname + '?' + nextSearch.toString())
     },
 
-    _backgroundId: initialState.backgroundId ?? '',
     get backgroundId() {
       return this._backgroundId
     },
@@ -180,8 +231,6 @@ export default function cardBuilder(): AlpineComponent<State> {
       this._backgroundId = nextValue
       this.updateSearchParamsWithState()
     },
-
-    _materialId: initialState.materialId ?? '',
     get materialId() {
       return this._materialId
     },
@@ -197,8 +246,6 @@ export default function cardBuilder(): AlpineComponent<State> {
 
       this.updateSearchParamsWithState()
     },
-
-    _sportId: initialState.sportId ?? '',
     get sportId() {
       return this._sportId
     },
@@ -206,16 +253,6 @@ export default function cardBuilder(): AlpineComponent<State> {
       this._sportId = nextValue
       this.updateSearchParamsWithState()
     },
-
-    cardType: initialState.cardType ?? null,
-    countryId: initialState.countryId ?? '',
-    name: initialState.name ?? '',
-    stats: initialState.stats ?? null,
-    rating: initialState.rating ?? null,
-    sizeId: String(initialState.sizeId ?? ''),
-    position: initialState.position ?? '',
-    imageUploaderOpen: false,
-    playerImage: '',
     getActiveBackground() {
       if (!this.backgroundId) {
         return
@@ -223,7 +260,6 @@ export default function cardBuilder(): AlpineComponent<State> {
 
       return this.backgrounds.find(item => String(item.id) === String(this.backgroundId))
     },
-
     getActiveCountry() {
       if (!this.countryId) {
         return
@@ -231,7 +267,6 @@ export default function cardBuilder(): AlpineComponent<State> {
 
       return this.countries.find(item => String(item.id) === String(this.countryId))
     },
-
     getActiveSizeAsLabel() {
       if (!this.sizeId) {
         return ''
@@ -246,7 +281,6 @@ export default function cardBuilder(): AlpineComponent<State> {
 
       return `${size!.width}x${size!.height}cm`
     },
-
     getActiveSize() {
       if (!this.sizeId) {
         return ''
@@ -254,13 +288,11 @@ export default function cardBuilder(): AlpineComponent<State> {
 
       return this.sizes.find(item => String(item.id) === String(this.sizeId))!
     },
-
     getTotalPrice() {
       const size = this.getActiveSize()
 
       return size.price + 'Kč'
     },
-
     readPlayerImage(event) {
       const target = event.target
 
@@ -304,19 +336,49 @@ export default function cardBuilder(): AlpineComponent<State> {
       }
 
       reader.readAsDataURL(target.files[0])
-    },
 
+    },
     isRealPlayer() {
       return this.cardType === 'realPlayer'
     },
-
     /**
      * This actually behaves like a "middleware" that checks fields before sending it to server
      */
     onSubmit(event) {
       console.log(event)
 
-      event.preventDefault()
+      if (!this.doValidate()) {
+        event.stopImmediatePropagation()
+        event.preventDefault()
+
+      }
+    },
+    init() {
+      const component = this
+
+      cropperImage = document.querySelector('.image-preview')
+
+      if (cropperImage && (cropperImage instanceof HTMLImageElement)) {
+        cropper = new Cropper(cropperImage, {
+          preview: '#card-image',
+          zoomOnWheel: !0,
+          background: !0,
+          restore: !1,
+          responsive: !0,
+          cropBoxResizable: !0,
+        })
+
+        cropperImage.addEventListener('ready', () => {
+          component.playerImage = cropper?.getCroppedCanvas().toDataURL() ?? component.playerImage
+
+          this.doValidate()
+        })
+
+        cropperImage.addEventListener('cropend', () => {
+          component.playerImage = cropper?.getCroppedCanvas().toDataURL() ?? component.playerImage
+          this.doValidate()
+        })
+      }
     },
   }
 }

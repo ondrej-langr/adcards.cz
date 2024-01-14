@@ -30,11 +30,11 @@
         {#        Rating #}
         <div class="rating-position">
             <div class="rating">
-                <span class="stats-show" x-text='rating'></span>
+                <span class="stats-show" x-text='rating || 99'></span>
                 <span class="info-hide ch">{{ 'Celkové hodnocení'|t }}</span>
             </div>
             <div class="position">
-                <span class="stats-show" x-text='position'></span>
+                <span class="stats-show" x-text='position || "CAM"'></span>
                 <span class="info-hide pos">{{ 'Pozice'|t }}</span>
             </div>
             <div class="country stats-show">
@@ -60,36 +60,36 @@
                 {#        <div v-if="textColor == 'white'" class="line-white"></div> #}
                 {#        <div v-if="textColor == 'black'" class="line-black"></div> #}
                 <div class="row">
-                    <div class="col">
+                    <div class="col w-50">
                         <p class="stats-show">
-                            <span x-text='stats.player[0].value'></span>
+                            <span x-text='stats.player[0].value || 99'></span>
                             <b x-text='stats.player[0].name'></b>
                         </p>
                         <p class="info-hide">{{ 'rychlost'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.player[2].value'></span>
+                            <span x-text='stats.player[2].value || 99'></span>
                             <b x-text='stats.player[2].name'></b>
                         </p>
                         <p class="info-hide">{{ 'střela'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.player[4].value'></span>
+                            <span x-text='stats.player[4].value || 99'></span>
                             <b x-text='stats.player[4].name'></b>
                         </p>
                         <p class="info-hide">{{ 'přihrávka'|t }}</p>
                     </div>
-                    <div class="col">
+                    <div class="col w-50">
                         <p class="stats-show">
-                            <span x-text='stats.player[1].value'></span>
+                            <span x-text='stats.player[1].value || 99'></span>
                             <b x-text='stats.player[1].name'></b>
                         </p>
                         <p class="info-hide">{{ 'dribling'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.player[3].value'></span>
+                            <span x-text='stats.player[3].value || 99'></span>
                             <b x-text='stats.player[3].name'></b>
                         </p>
                         <p class="info-hide">{{ 'obrana'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.player[5].value'></span>
+                            <span x-text='stats.player[5].value || 99'></span>
                             <b x-text='stats.player[5].name'></b>
                         </p>
                         <p class="info-hide">{{ 'fyzička'|t }}</p>
@@ -100,36 +100,36 @@
                 {#        <div v-if="textColor == 'white'" class="line-white"></div> #}
                 {#        <div v-if="textColor == 'black'" class="line-black"></div> #}
                 <div class="row">
-                    <div class="col">
+                    <div class="col w-50">
                         <p class="stats-show">
-                            <span x-text='stats.goalKeeper[0].value'></span>
+                            <span x-text='stats.goalKeeper[0].value || 99'></span>
                             <b x-text='stats.goalKeeper[0].name'></b>
                         </p>
                         <p class="info-hide">{{ 'skoky'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.goalKeeper[2].value'></span>
+                            <span x-text='stats.goalKeeper[2].value || 99'></span>
                             <b x-text='stats.goalKeeper[2].name'></b>
                         </p>
                         <p class="info-hide">{{ 'chytání'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.goalKeeper[4].value'></span>
+                            <span x-text='stats.goalKeeper[4].value || 99'></span>
                             <b x-text='stats.goalKeeper[4].name'></b>
                         </p>
                         <p class="info-hide">{{ 'technika'|t }}</p>
                     </div>
-                    <div class="col">
+                    <div class="col w-50">
                         <p class="stats-show">
-                            <span x-text='stats.goalKeeper[1].value'></span>
+                            <span x-text='stats.goalKeeper[1].value || 99'></span>
                             <b x-text='stats.goalKeeper[1].name'></b>
                         </p>
                         <p class="info-hide">{{ 'reflexy'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.goalKeeper[3].value'></span>
+                            <span x-text='stats.goalKeeper[3].value || 99'></span>
                             <b x-text='stats.goalKeeper[3].name'></b>
                         </p>
                         <p class="info-hide">{{ 'rychlost'|t }}</p>
                         <p class="stats-show">
-                            <span x-text='stats.goalKeeper[5].value'></span>
+                            <span x-text='stats.goalKeeper[5].value || 99'></span>
                             <b x-text='stats.goalKeeper[5].name'></b>
                         </p>
                         <p class="info-hide">{{ 'pozice'|t }}</p>

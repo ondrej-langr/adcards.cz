@@ -301,7 +301,9 @@ footer .img-bg {
     position: absolute;
     z-index: 0;
     min-height: 100%;
-    min-width: 100%
+    min-width: 100%;
+    top: 0;
+    left: 0;
 }
 
 footer ul {
@@ -3043,6 +3045,10 @@ button.rotate {
     display: none
 }
 
+.stats-show {
+    word-break: break-all;
+}
+
 .info-hide {
     display: none;
     font-size: 18px !important;
@@ -3421,7 +3427,11 @@ form .form-group textarea {
 }
 
 form .form-group input.error,
-form .form-group textarea.error {
+form .form-group textarea.error,
+.card input.error,
+.card textarea.error,
+.card button.error,
+.dropdown.error {
     border: 1px solid var(---colors-brand-signature) !important;
 }
 

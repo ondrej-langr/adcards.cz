@@ -1,6 +1,7 @@
 <div class="card-body col-xl-7">
     <div class="upload-around relative ignore-button-styles">
-        <button class="upload relative ignore-button-styles" @click="imageUploaderOpen = !imageUploaderOpen">
+        <button class="upload relative ignore-button-styles" @click="imageUploaderOpen = !imageUploaderOpen"
+                :class='state.form.errors.playerImage ? "error" : ""'>
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50"
                  height="50" viewbox="0 0 172 172">
                 <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -16,6 +17,8 @@
             </svg>
             <span>{{ 'Kliknutím nahrajte svou fotografii'|t }}</span>
         </button>
+        <small class="field-error"
+               x-text="state.form.errors.playerImage"></small>
     </div>
 
     {#    Image editor modal #}

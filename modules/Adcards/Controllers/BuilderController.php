@@ -89,26 +89,40 @@ class BuilderController
 
         $payload['materials'] = array_values(array_filter($payload['materials'], fn($material) => count($material['sizes'] ?? [])));
         $payload['sizes'] = array_values($payload['sizes']);
+        $payload['backgrounds'] = [];
 
         // Countries
         $payload['countries'] = \Countries::setLanguage($requestLanguage)
             ->limit(8)
             ->getMany();
 
-        // Backgrounds
-        $payload['backgrounds'] = \CardBackgrounds::setLanguage($requestLanguage)
-            ->getMany();
-
-        $payload['backgrounds'] = array_map(function ($cardBackground) use ($config) {
-            $imageId = $cardBackground['image'];
-            $cardBackground['imageSrc'] = $config->app->baseUrl . "/api/entry-types/files/items/$imageId/raw?w=400";
-
-            return $cardBackground;
-        }, $payload['backgrounds']);
-
-
+        // Sports and their backgrounds
+        $backgroundIds = [];
         $payload['sports'] = \Sports::setLanguage($requestLanguage)
+            ->join(function ($sport) use ($requestLanguage, &$payload, $config, &$backgroundIds) {
+                $backgrounds = (new \CardBackgrounds)
+                    ->query()
+                    ->setLanguage($requestLanguage)
+                    ->where(["sport_id", "=", $sport["id"]])
+                    ->getMany();
+
+                foreach ($backgrounds as $background) {
+                    $imageId = $background['image'];
+                    $background['imageSrc'] = $config->app->baseUrl . "/api/entry-types/files/items/$imageId/raw?w=400";
+
+                    $backgroundIds[] = $background['id'];
+                    $payload['backgrounds'][$background['id']] = $background;
+                }
+
+                return array_values($backgrounds);
+            }, "backgrounds")
+            ->select(['backgrounds'])
             ->getMany();
+        $backgroundIds = array_unique($backgroundIds);
+
+        // Sports without a background is not a valid sport to select
+        $payload['sports'] = array_values(array_filter($payload['sports'], fn($sport) => count($sport['backgrounds']) > 0));
+        $payload['backgrounds'] = array_values($payload['backgrounds']);
 
         $values = [
             "cardType" => CardType::PLAYER,
@@ -121,7 +135,6 @@ class BuilderController
         $values["currentStep"] = 0;
         $sportIds = array_column($payload["sports"], "id");
         $materialIds = array_column($payload["materials"], "id");
-        $backgroundIds = array_column($payload["backgrounds"], "id");
 
         // Check if preselected params are valid
         if (isset($queryParams["materialId"]) && in_array(trim($queryParams["materialId"]), $materialIds)) {

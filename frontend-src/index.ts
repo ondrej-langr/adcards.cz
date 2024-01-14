@@ -23,7 +23,7 @@ declare global {
 
         state: {
           form: {
-            values: {
+            values?: {
               rating?: string,
               position?: string,
               cardType: string
@@ -33,8 +33,8 @@ declare global {
               backgroundId?: string
               currentStep: number
             },
-            errors: any[],
-            successes: any[],
+            errors?: Record<any, any>,
+            successes?: Record<any, any>,
           }
         }
       }

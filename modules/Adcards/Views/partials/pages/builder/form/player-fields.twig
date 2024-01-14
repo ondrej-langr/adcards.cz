@@ -32,16 +32,22 @@
             {{ include("@modules:Adcards/partials/pages/builder/form/club-input.twig") }}
         </div>
         <div class="card-body no-padding-side flexi col-xl-6">
-            <div class="input-around col-6 col-lg-12 col-sm-12 col-xl-12">
-                <input class="form-control required-field"
-                       required
-                       type="text"
-                       x-model="name"
-                       placeholder="{{ 'Jméno'|t }}" />
+            <div class='col-6 col-lg-12 col-sm-12 col-xl-12 px-0'>
+                <div class="input-around">
+                    <input class="form-control required-field"
+                           required
+                           type="text"
+                           x-model="name"
+                           @change='doValidate()'
+                           placeholder="{{ 'Jméno'|t }}"
+                           :class='state.form.errors.name ? "error" : ""'
+                    />
+                </div>
+                <small class="field-error" x-text="state.form.errors.name"></small>
             </div>
             <div class="input-around col-3 col-lg-6 col-sm-6 col-xl-6">
                 <input class="form-control required-field"
-                       type="text"
+                       type="number"
                        x-model="rating"
                        placeholder="99"
                 />
@@ -55,7 +61,7 @@
     </div>
     <div class="card flexi" style="padding: 0px 2px;">
         {{ include("@modules:Adcards/partials/pages/builder/form/image-select.twig") }}
-        <div class="card-body col-xl-5">
+        <div class="card-body col-xl-5 pl-xl-1">
             <div class="stats-set stats-standard" x-show="cardType === 'player'" style='display: none'>
                 <template x-for="(stat, key) in stats.player">
                     <div class="input-around col-6 col-lg-6 col-sm-6 col-xl-6"
@@ -63,9 +69,10 @@
                         <div class="number input-around col-lg-6 col-sm-6 col-xl-6"
                              style="padding: 2px 2px 2px 0px;">
                             <input class="form-control required-field"
-                                   type="text"
+                                   type="number"
                                    x-model="stat.value"
-                                   placeholder="99" maxlength="2"
+                                   placeholder="99"
+                                   max='99'
                                    data-initial="true"
                             /></div>
                         <div class="kind input-around col-lg-6 col-sm-6 col-xl-6"
@@ -73,7 +80,8 @@
                             <input class="form-control required-field"
                                    type="text"
                                    x-model="stat.name"
-                                   maxlength="3"
+                                   :class='state.form.errors[`stats.${key}.name`] ? "error" : ""'
+                                   @input='doValidate()'
                             /></div>
                     </div>
                 </template>
@@ -85,16 +93,17 @@
                         <div class="number input-around col-lg-6 col-sm-6 col-xl-6"
                              style="padding: 2px 2px 2px 0px;">
                             <input class="form-control required-field"
-                                   type="text"
+                                   type="number"
                                    x-model="stat.value"
-                                   placeholder="99" maxlength="2"
+                                   max='99'
+                                   placeholder="99"
                             />
                         </div>
                         <div class="kind input-around col-lg-6 col-sm-6 col-xl-6"
                              style="padding: 2px 0px 2px 2px;">
                             <input class="form-control required-field" type="text"
                                    x-model="stat.name"
-                                   maxlength="3" />
+                            />
                         </div>
                     </div>
                 </template>

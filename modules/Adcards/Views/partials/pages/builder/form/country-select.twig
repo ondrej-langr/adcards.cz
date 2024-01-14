@@ -1,6 +1,7 @@
 <!-- start @modules:Adcards/partials/pages/builder/form/country-select.twig -->
 <div style="width: 100%; position: relative; padding: 2px;" x-data='{ isOpen: false }' @click.outside='isOpen=false'>
-    <div id="country-dropdown-btn" class="dropdown country-dropdown-btn" @click='isOpen = !isOpen'>
+    <div id="country-dropdown-btn" class="dropdown country-dropdown-btn" @click='isOpen = !isOpen'
+         :class='state.form.errors.club ? "error" : ""'>
         <template x-if='_countryFlagSrc'>
             <div class="dropdown-icon-container">
                 <img

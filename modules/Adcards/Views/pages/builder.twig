@@ -84,24 +84,26 @@
                     {% if (state.form.values.currentStep != 2) %}style='display: none'{% endif %}
             >
                 <h3 class='text-center'>{{ "Vyberte pozadí karty"|t }}</h3>
-                <div class="builder__grid">
-                    {% for background in backgrounds %}
-                        <div class="builder__grid-item"
-                             @click='(backgroundId = {{ background.id }}) && ++currentStep'>
-                            <div class='builder__grid-item-image_wrapper'>
-                                {% set currentImage = getImage(background.image, 440) %}
-                                {% set placeholderImage = getImage(background.image, 10) %}
-                                <img alt='' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
-                                     width="{{ currentImage.width }}"
-                                     height="{{ currentImage.height }}" loading='lazy'>
+                {% for sport in sports %}
+                    <div class="builder__grid" style='display: none' x-show='Number(sportId) === {{ sport.id }}'>
+                        {% for background in sport.backgrounds %}
+                            <div class="builder__grid-item"
+                                 @click='(backgroundId = {{ background.id }}) && ++currentStep'>
+                                <div class='builder__grid-item-image_wrapper'>
+                                    {% set currentImage = getImage(background.image, 440) %}
+                                    {% set placeholderImage = getImage(background.image, 10) %}
+                                    <img alt='' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
+                                         width="{{ currentImage.width }}"
+                                         height="{{ currentImage.height }}" loading='lazy'>
+                                </div>
+                                <h4>{{ background.name }}</h4>
+                                {% if background.description %}
+                                    <p>{{ background.description }}</p>
+                                {% endif %}
                             </div>
-                            <h4>{{ background.name }}</h4>
-                            {% if background.description %}
-                                <p>{{ background.description }}</p>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endfor %}
             </div>
 
             <div class='builder__steps__step'

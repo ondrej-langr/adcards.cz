@@ -3,7 +3,9 @@
         <div class="card-body no-padding-side flexi">
             <div class="input-around col-lg-12 col-sm-12 col-xl-12">
                 <input class="form-control required-field"
-                       type="text" x-model="name" placeholder="Jméno reálného hráče" /></div>
+                       type="text" x-model="name" placeholder="Jméno reálného hráče" />
+                <small class="field-error" x-text="state.form.errors.name"></small>
+            </div>
             <div class="alert-around">
 											<span class="alert-text">
 												<i class="fas fa-exclamation-triangle"></i>
