@@ -1,15 +1,15 @@
 <!-- start @modules:Adcards/partials/pages/builder/form/country-select.twig -->
 <div style="width: 100%; position: relative; padding: 2px;" x-data='{ isOpen: false }' @click.outside='isOpen=false'>
     <div id="country-dropdown-btn" class="dropdown country-dropdown-btn" @click='isOpen = !isOpen'
-         :class='state.form.errors.club ? "error" : ""'>
-        <template x-if='_countryFlagSrc'>
+         :class='errors.countryId ? "error" : ""'>
+        <template x-if='getCountry()?.flag?.src'>
             <div class="dropdown-icon-container">
                 <img
-                        :src="_countryFlagSrc"
+                        :src="getCountry().flag.src"
                         alt="" class="dropdown-icon">
             </div>
         </template>
-        <span x-text='_countryName ? _countryName : "{{ 'Kliknutím vyberte zemi'|t }}"'>{{ 'Kliknutím vyberte zemi'|t }}</span>
+        <span x-text='_country ? _country.name : "{{ 'Kliknutím vyberte zemi'|t }}"'>{{ 'Kliknutím vyberte zemi'|t }}</span>
         <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20"
              height="20" viewbox="0 0 172 172" style=" fill:#000000;">
             <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -24,7 +24,7 @@
             </g>
         </svg>
     </div>
-    <small class='field-error' x-text='state.form.errors.countryId'></small>
+    <small class='field-error' x-text='errors.countryId'></small>
 
 
     <div class="dropdown-content country-dropdown-content"
@@ -95,7 +95,7 @@
         {#                   onchange="readURL(this, 'country')" /></div> #}
         {# Search - Country #}
 
-        <div id='countries-list'>
+        <div id='countries-list' @click='isOpen = false'>
             {{ include("@modules:Adcards/partials/pages/builder/form/countries-list.twig") }}
         </div>
     </div>

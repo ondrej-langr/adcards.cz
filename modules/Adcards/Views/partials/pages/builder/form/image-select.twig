@@ -1,7 +1,7 @@
-<div class="card-body col-xl-7">
+<div class="card-body col-xl-7" x-data='{ uploaderOpen: false }'>
     <div class="upload-around relative ignore-button-styles">
-        <button class="upload relative ignore-button-styles" @click="imageUploaderOpen = !imageUploaderOpen"
-                :class='state.form.errors.playerImage ? "error" : ""'>
+        <button class="upload relative ignore-button-styles" @click="uploaderOpen = !uploaderOpen"
+                :class='errors.playerImage ? "error" : ""'>
             <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="50"
                  height="50" viewbox="0 0 172 172">
                 <g fill="none" fill-rule="nonzero" stroke="none" stroke-width="1"
@@ -18,13 +18,13 @@
             <span>{{ 'Kliknutím nahrajte svou fotografii'|t }}</span>
         </button>
         <small class="field-error"
-               x-text="state.form.errors.playerImage"></small>
+               x-text="errors.playerImage"></small>
     </div>
 
     {#    Image editor modal #}
-    <div class="image-editor" :class='imageUploaderOpen ? "toggled" : ""'>
+    <div class="image-editor" :class='uploaderOpen ? "toggled" : ""'>
         <div class="image-editor-content">
-            <span class="close" @click="imageUploaderOpen = !imageUploaderOpen"></span>
+            <span class="close" @click="uploaderOpen = !uploaderOpen"></span>
             {{ include("@modules:Adcards/partials/pages/builder/form/card-preview.twig") }}
             <div class="alert-box">
                 <h4>
@@ -33,17 +33,17 @@
                 <span>{{ 'Všechny karty projdou před tiskem grafickými úpravami. Fotografie, loga, ap.. budou upraveny profesionálními grafiky.'|t }}</span>
             </div>
             <div class="edit">
-                <img :src="playerImage" alt="" class="image-preview" />
+                <img :src="_playerImage" alt="" class="image-preview" />
                 <div class="buttons-around">
                     <label class="file-input col-6 col-lg-7 col-sm-7 col-xl-7">
                         {{ 'Kliknutím nahrajte fotografii'|t }}
                         <input name="fileup"
                                type="file"
                                accept=".png, .jpg, .jpeg, .webp"
-                               @change="readPlayerImage($event)" />
+                               @change="handlePlayerImageUpload($event)" />
                     </label>
                     <button class="save col-4 col-lg-3 col-sm-3 col-xl-3"
-                            @click="imageUploaderOpen = !imageUploaderOpen">{{ 'Uložit'|t }}</button>
+                            @click="uploaderOpen = !uploaderOpen">{{ 'Uložit'|t }}</button>
                 </div>
             </div>
         </div>

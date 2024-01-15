@@ -1097,12 +1097,9 @@ img:not([src]):not([srcset]) {
     visibility: hidden
 }
 
-img[loading="lazy"]:not([data-loaded="true"]) {
+img[loading="lazy"]:not([data-ll-status="loaded"]) {
     filter: blur(10px);
-}
-
-.lazy-image-loading {
-    filter: blur(4px);
+    background: rgba(250, 250, 250, 0.66);
 }
 
 .language-btn {
@@ -2946,12 +2943,13 @@ button.rotate {
 
 .dropdown-icon-container {
     display: inline-block;
-    text-align: left
+    text-align: left;
 }
 
 .dropdown-icon {
     display: inline-block;
-    height: 32px;
+    height: 30px;
+    width: auto;
     object-fit: cover;
     margin-right: 15px
 }

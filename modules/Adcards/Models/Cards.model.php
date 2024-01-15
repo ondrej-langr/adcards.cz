@@ -16,6 +16,8 @@ class Cards extends Model
 
   public static array $casts = [
     'stats' => 'array',
+
+    'bonuses' => 'array',
   ];
 
   public static array $tableColumns = [
@@ -148,7 +150,7 @@ class Cards extends Model
       ],
       'readonly' => false,
       'type' => 'enum',
-      'enum' => ['goalKeeper', 'realPlayer', 'player', 'manager'],
+      'enum' => ['goalKeeper', 'player', 'manager'],
     ],
 
     'final_price' => [
@@ -261,6 +263,47 @@ class Cards extends Model
       'multiple' => false,
       'fill' => true,
       'foreignKey' => 'id',
+    ],
+
+    'bonuses' => [
+      'title' => 'Bonusové informace za příplatek',
+      'hide' => false,
+      'required' => false,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'repeater',
+        'columns' => [
+          'name' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => true,
+            'type' => 'string',
+          ],
+          'value' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => true,
+            'type' => 'string',
+            'title' => 'Popisek',
+          ],
+          'price' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => true,
+            'type' => 'number',
+            'title' => 'Cena v Kč',
+          ],
+        ],
+      ],
+      'readonly' => true,
+      'type' => 'json',
     ],
 
     'order' => [

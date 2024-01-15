@@ -20,6 +20,7 @@ class CartCard
     private string $backgroundId;
     private string $sizeId;
     private string $cardType;
+    private array $bonuses = [];
     private string|null $countryId = null;
     private PlayerOrGoalKeeperStats|null $stats = null;
     private ClubImage|null $clubImage = null;
@@ -37,6 +38,11 @@ class CartCard
         $this->sizeId = $sizeId;
         $this->backgroundId = $backgroundId;
         $this->cardType = $cardType;
+    }
+
+    public function getSizeId()
+    {
+        return intval($this->sizeId);
     }
 
     /*
@@ -96,10 +102,26 @@ class CartCard
         return $size->price;
     }
 
+    public function setBonuses(array $bonuses)
+    {
+        $this->bonuses = array_filter($bonuses, fn($bonusValue, $bonusKey) => !empty($bonusKey) && !empty($bonusValue), ARRAY_FILTER_USE_BOTH);
+
+        foreach ($this->bonuses as $bonusKey => $bonus) {
+            $this->bonuses[$bonusKey] = htmlspecialchars($bonus);
+        }
+
+        return $this;
+    }
+
+    public function getBonuses()
+    {
+        return $this->bonuses;
+    }
+
     /**
      * @throws \Exception
      */
-    #[ArrayShape(["name" => "string", "background_id" => "string", "size_id" => "string", "cardType" => "string", "playerImagePathname" => "null|string", "clubImagePathname" => "null|string", "rating" => "int|null", "stats" => "array|null", "country_id" => "null|string"])]
+    #[ArrayShape(["name" => "string", "background_id" => "string", "size_id" => "string", "cardType" => "string", "playerImagePathname" => "null|string", "clubImagePathname" => "null|string", "rating" => "int|null", "bonuses" => "array", "stats" => "array|null", "country_id" => "null|string"])]
     function asArray(): array
     {
         if (!$this->isValid()) {
@@ -111,6 +133,7 @@ class CartCard
             "background_id" => $this->backgroundId,
             "size_id" => $this->sizeId,
             "cardType" => $this->cardType,
+            "bonuses" => $this->getBonuses(),
 
             // nullable fields
             "playerImagePathname" => $this->playerImage ? $this->playerImage->getPath() : null,
@@ -148,36 +171,31 @@ class CartCard
             $instance->setClubImage(new ClubImage($input["clubImagePathname"]));
         }
 
+        if (!empty($input['bonuses'])) {
+            $instance->setBonuses($input['bonuses']);
+        }
 
         return $instance;
     }
 
     function isValid(): bool
     {
-        $countriesService = new EntryTypeService(new \Countries());
-        $cardSizesService = new EntryTypeService(new \CardSizes());
-        $cardBackgroundsService = new EntryTypeService(new \CardBackgrounds());
-
-        $sizes = $cardSizesService->getMany([], 1, 999)["data"];
-        $countries = $countriesService->getMany([], 1, 999)["data"];
-        $backgrounds = $cardBackgroundsService->getMany([], 1, 999)["data"];
-
-        if (
-            // Check player type
-            !CardType::exists($this->cardType) ||
-            // Check if background exists
-            !in_array(intval($this->backgroundId), getIds($backgrounds)) ||
-            // Check if size exists
-            !in_array(intval($this->sizeId), getIds($sizes)) ||
-            // And check if name was provided
-            !$this->name
-        ) {
+        try {
+            // Check for background
+            $cardBackground = (new \CardBackgrounds())->query()->getOneById(intval($this->backgroundId));
+            // Check for size
+            $cardSize = (new \CardSizes())->query()->getOneById(intval($this->sizeId));
+            // Check for country
+            $country = (new \Countries())->query()->getOneById(intval($this->countryId));
+        } catch (\Exception $error) {
             return false;
         }
 
         if (
-            // Check if selected country exists
-            !in_array(intval($this->countryId), getIds($countries)) ||
+            // Check player type
+            !CardType::exists($this->cardType) ||
+            // And check if name was provided
+            !$this->name ||
             // Everyone (except real player) do have stats
             ($this->cardType !== CardType::MANAGER && empty($this->stats)) ||
             // Check for rating

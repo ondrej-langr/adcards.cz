@@ -35,7 +35,10 @@
     "alpinejs": "^3.13.3",
     "cropperjs": "^1.6.1",
     "htmx.org": "^1.9.8",
+    "js-cookie": "^3.0.5",
+    "keen-slider": "^6.8.6",
     "lodash": "^4.17.21",
+    "vanilla-lazyload": "^17.8.5",
     "zod": "^3.22.4"
   }
 }

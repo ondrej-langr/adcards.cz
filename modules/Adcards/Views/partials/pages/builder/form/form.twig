@@ -7,8 +7,8 @@
                 <div class="card-body">
                     <div class="price-around">
                         <h1>
-                            <span x-text='getActiveBackground()?.name'></span><br />
-                            <small class="total-price">(<span x-text='getActiveSizeAsLabel()'></span>)</small>
+                            <span x-text='getBackground()?.name'></span><br />
+                            <small class="total-price">(<span x-text='sizeToLabel(getSize())'></span>)</small>
                         </h1>
 
                         <span x-text='getTotalPrice()' class="total-price">
@@ -38,27 +38,71 @@
                         hx-target='#builder-root'
                         hx-post="{{ url_for('createNewCard') }}"
                         hx-swap="outerHTML"
-                        @submit='onSubmit'
+                        class='ignore-form-styles'
+                        @submit='handleSubmit'
                 >
-
-                    <input type="hidden" name="playerImage" x-model="playerImage" />
-                    <input type="hidden" name="clubImage" x-model="clubImage" />
-                    <input type="hidden" name="countryId" x-model="countryId" />
-                    <input type="hidden" name="rating" x-model="rating" />
-                    <input type="hidden" name="position" x-model="position" />
-                    <input type="hidden" name="name" x-model="name" />
-                    <input type="hidden" name="backgroundId" x-model="backgroundId" />
-                    <input type="hidden" name="materialId" x-model="materialId" />
-                    <input type="hidden" name="sportId" x-model="sportId" />
-                    <input type="hidden" name="cardType" x-model="cardType" />
-                    <input type="hidden" name="sizeId" x-model="sizeId" />
-                    <template x-for='stat in stats[cardType]'>
+                    {# TODO: Move all fields from upper scope to form which would make it easier to submit form data to server as bounding to alpine properties feels redundant #}
+                    <input type="hidden" name="playerImage" :value="_playerImage" />
+                    <input type="hidden" name="clubImage" :value="_club?.fileContent" />
+                    <input type="hidden" name="countryId" :value="_country?.id" />
+                    <input type="hidden" name="rating" :value="getRating()" />
+                    <input type="hidden" name="position" :value="getPosition()" />
+                    <input type="hidden" name="name" :value="_name" />
+                    <input type="hidden" name="backgroundId" :value="_backgroundId" />
+                    <input type="hidden" name="materialId" :value="_materialId" />
+                    <input type="hidden" name="sportId" :value="_sportId" />
+                    <input type="hidden" name="cardType" :value="_cardType" />
+                    <input type="hidden" name="sizeId" :value="_sizeId" />
+                    <template x-for='stat in _stats[_cardType]'>
                         <input type="hidden"
                                :name="'stats[' + stat.name + ']'"
                                :value="stat.value" />
                     </template>
-                    <button class="btn btn-primary" type="submit" id="add-to-cart-btn"
-                            :title='!isFormValid ? "Dokončete formulář" : ""'>{{ 'Přidat do košíku'|t }}</button>
+
+                    <template x-if='getMaterial()?.bonuses'>
+                        <div>
+                            <hr />
+                            <h4 class='mt-4'>
+                                Extra
+                            </h4>
+
+                            <div class='builder-bonus-list'>
+                                <template
+                                        x-for='(bonus, index) in getMaterial()?.bonuses?.data'>
+                                    <div class='builder-bonus-disclosure'>
+                                        <label :for='`builder-disclosure-${index}`' class='control'>
+                                            <input type='checkbox' :id='`builder-disclosure-${index}`'
+                                                   :checked='bonus.name in bonuses'
+                                                   @input='toggleBonus(bonus.name)' />
+                                            <span class='small-checkbox'
+                                                  :data-checked='String(bonus.name in bonuses)'></span>
+                                            <span x-text='`${bonus.name} (+ ${bonus.price}Kč)`'></span>
+                                        </label>
+                                        <template x-if='bonus.name in bonuses'>
+                                            <div class='w-full'>
+                                                <textarea type="string"
+                                                          class='content'
+                                                          :class='errors[`bonuses.${bonus.name}`] ? "error" : null'
+                                                          :name="'bonuses[' + bonus.name + ']'"
+                                                          x-model='bonuses[bonus.name]'
+                                                          rows='5'
+                                                          @input.debounce.100ms='doValidate()'
+                                                          placeholder='{{ "Vaše věnování"|t }}'
+                                                ></textarea>
+                                                <small class='field-error'
+                                                       x-text='errors[`bonuses.${bonus.name}`]'></small>
+                                            </div>
+                                        </template>
+                                    </div>
+                                </template>
+                            </div>
+                        </div>
+                    </template>
+
+                    <hr class='mt-4' />
+
+                    <button class="btn btn-primary" type="submit"
+                            id="add-to-cart-btn">{{ 'Přidat do košíku'|t }}</button>
                     <div style="width: 100%; text-align: center; margin-top: 8px;">
                         <p class="conditions">{{ "Odesláním formuláře souhlasíte se <a href='#' target='_blank'>všeobecnými podmíkami"|t|raw }}
                             a se zpracováním osobních údajů.</p>

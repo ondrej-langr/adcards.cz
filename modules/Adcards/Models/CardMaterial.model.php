@@ -14,6 +14,10 @@ class CardMaterial extends Model
   protected static bool $enabled = true;
   protected static array $adminSettings = ['hidden' => false];
 
+  public static array $casts = [
+    'bonuses' => 'array',
+  ];
+
   public static array $tableColumns = [
     'id' => [
       'title' => 'ID',
@@ -79,6 +83,39 @@ class CardMaterial extends Model
       'type' => 'file',
       'multiple' => false,
       'typeFilter' => 'image',
+    ],
+
+    'bonuses' => [
+      'title' => 'Bonusové informace za příplatek',
+      'hide' => false,
+      'required' => false,
+      'unique' => false,
+      'editable' => true,
+      'translations' => false,
+      'admin' => [
+        'isHidden' => false,
+        'editor' => ['placement' => 'main', 'width' => 12],
+        'fieldType' => 'repeater',
+        'columns' => [
+          'name' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => false,
+            'type' => 'string',
+          ],
+          'price' => [
+            'hide' => false,
+            'required' => true,
+            'editable' => true,
+            'readonly' => false,
+            'type' => 'number',
+            'title' => 'Cena v Kč',
+          ],
+        ],
+      ],
+      'readonly' => false,
+      'type' => 'json',
     ],
 
     'order' => [

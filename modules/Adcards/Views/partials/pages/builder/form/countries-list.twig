@@ -1,24 +1,23 @@
 {% set currentStepId = random() %}
     {% for country in countries %}
-        <span @click='isOpen = false'>
-            {% set flag = "" %}
-            {% if country.flag %}
-                {% set flag = getImage(country.flag, 100, 50) %}
+        {% set flag = "" %}
+        {% set setCountryOptions = {
+            id: country.id,
+            name: country.name
+        } %}
+        {% if country.flag %}
+            {% set flag = getImage(country.flag, 100, 50) %}
+            {% set setCountryOptions = setCountryOptions|merge({ flag: { src: flag.src }}) %}
+        {% endif %}
+        <button class="dropdown-item dropdown-item-country ignore-button-styles"
+                @click='setCountry(JSON.parse(`{{ setCountryOptions|json_encode }}`))'>
+            {% if flag %}
+                <img class="dropdown-icon"
+                     src='{{ flag.src }}'
+                     alt="" width='45' height='auto' loading='lazy' />
             {% endif %}
-            <input id='country-{{ country.id }}' type="radio" value='{{ country.id }}' x-model='countryId'
-                   name="countryId" />
-            <label class="dropdown-item dropdown-item-country"
-                   @click='setCountry({ id: "{{ country.id }}", name: "{{ country.name }}" {% if flag %}, flag: { src: "{{ flag.src }}" }{% endif %}})'>
-                    {% if flag %}
-                        <div class="dropdown-icon-container">
-                            <img class="dropdown-icon"
-                                 src='{{ flag.src }}'
-                                 alt="" width='45' height='auto' loading='lazy' />
-                        </div>
-                    {% endif %}
-                <span class="label-name">{{ country.name }}</span>
-            </label>
-        </span>
+            <span class="label-name">{{ country.name }}</span>
+        </button>
     {% else %}
         <div class='p-2 text-center'>
             {{ "Žádné další země pro vaše vyhledávání"|t }}

@@ -47,7 +47,7 @@
 
 
     <script>
-      window.application ??= {}
+        window.application ??= {}
     </script>
     {% if getConfig().env.development is not same as(true) %}
         {% include("@modules:Adcards/layouts/site-layout/tracking.twig") %}
@@ -55,10 +55,10 @@
         {# Cookies banner #}
         <script src="https://cookiehub.net/c2/ae4b67a4.js"></script>
         <script type="text/javascript">
-          document.addEventListener('DOMContentLoaded', function(event) {
-            var cpm = {}
-            window.cookiehub.load(cpm)
-          })
+            document.addEventListener('DOMContentLoaded', function(event) {
+                var cpm = {}
+                window.cookiehub.load(cpm)
+            })
         </script>
     {% endif %}
     {% block head %}{% endblock %}
@@ -103,7 +103,6 @@
 {% endif %}
 
 <script src="https://code.jquery.com/jquery-2.2.4.min.js" type="text/javascript"></script>
-<script src="/scripts/slick.min.js"></script>
 <script src="/scripts/scripts.js"></script>
 </body>
 </html>

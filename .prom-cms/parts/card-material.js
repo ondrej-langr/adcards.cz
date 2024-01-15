@@ -56,6 +56,26 @@ const cardMaterialModel = {
         },
       },
     },
+    'bonuses': {
+      'required': false,
+      'translations': false,
+      'type': 'json',
+      'title': 'Bonusové informace za příplatek',
+      'admin': {
+        'fieldType': 'repeater',
+        'columns': {
+          'name': {
+            'required': true,
+            'type': 'string',
+          },
+          'price': {
+            'required': true,
+            'type': 'number',
+            title: 'Cena v Kč',
+          },
+        },
+      },
+    },
   },
 }
 

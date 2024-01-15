@@ -262,13 +262,28 @@ class Cart
     public function getTotal($applyPromoCode = true)
     {
         $total = 0;
+        $currentLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
+
         foreach ($this->getProducts() as $productFromCartInfo) {
             $total += $productFromCartInfo["price"]["total"];
         }
 
         foreach ($this->getCards() as $card) {
             $total += $card->getPrice();
+
+            $size = (new \CardSizes())->query()->setLanguage($currentLanguage)->join(function ($size) use ($currentLanguage) {
+                return (new \CardMaterial())->query()->setLanguage($currentLanguage)->getOneById(intval($size['material_id']))->getData();
+            }, "material")->select(['material'])->getOneById($card->getSizeId())->getData();
+            $materialBonuses = $size['material']['bonuses']['data'];
+            $cardBonuses = $card->getBonuses();
+
+            foreach ($materialBonuses as $item) {
+                if (!empty($cardBonuses[$item['name']])) {
+                    $total += $item['price'];
+                }
+            }
         }
+
 
         if ($applyPromoCode && $promoCode = $this->getPromoCode()) {
             $total = ceil($total - ($total / 100) * (int)$promoCode["amount"]);
@@ -302,34 +317,47 @@ class Cart
         $promoCode = $this->getPromoCode();
         $totalWithoutPromo = $this->getTotal(false);
 
-        $cardSizes = [];
-        $cardSizesService = new EntryTypeService(new \CardSizes(), $currentLanguage);
-        $sizes = $cardSizesService->getMany([], 1, 999)["data"];
-        foreach ($sizes as $size) {
-            $cardSizes[$size["id"]] = $size;
-        }
-
-        $cardMaterials = [];
-        $cardMaterialService = new EntryTypeService(new \CardMaterial(), $currentLanguage);
-        $materials = $cardMaterialService->getMany([], 1, 999)["data"];
-        foreach ($materials as $material) {
-            $cardMaterials[$material["id"]] = $material;
-        }
-
         return [
             "cart" => [
                 "size" => $this->getCount(),
-                "cards" => array_map(function (CartCard $item) use ($cardSizes, $cardMaterials, $currentLanguage) {
+                "cards" => array_map(function (CartCard $item) use ($currentLanguage) {
                     $result = $item->asArray();
 
                     $result["background"] = (new \CardBackgrounds())
                         ->query()
                         ->setLanguage($currentLanguage)
-                        ->where(["id", "=", intval($result["background_id"])])
+                        ->getOneById(intval($result["background_id"]))
+                        ->getData();
+
+                    $result['size'] = (new \CardSizes())
+                        ->query()
+                        ->setLanguage($currentLanguage)
+                        ->where(["id", "=", intval($result["size_id"])])
+                        ->join(function ($size) use ($currentLanguage) {
+                            return (new \CardMaterial())->query()
+                                ->setLanguage($currentLanguage)
+                                ->getOneById(intval($size["material_id"]))
+                                ->getData();
+                        }, 'material')
+                        ->select(['material'])
                         ->getOne()
                         ->getData();
-                    $result["size"] = $cardSizes[intval($result["size_id"])];
-                    $result["size"]["material"] = $cardMaterials[intval($result["size"]["material_id"])];
+
+                    $materialBonuses = $result['size']['material']['bonuses']['data'] ?? [];
+
+                    $newBonuses = [];
+                    foreach ($materialBonuses as $materialBonus) {
+                        if (!empty($result['bonuses'][$materialBonus['name']])) {
+                            $newBonuses[] = [
+                                'name' => $materialBonus['name'],
+                                'value' => $result['bonuses'][$materialBonus['name']],
+                                'price' => $materialBonus['price']
+                            ];
+                        }
+                    }
+                    $result['bonuses'] = [
+                        'data' => $newBonuses
+                    ];
 
                     return $result;
                 }, $this->getCards()),
@@ -348,8 +376,6 @@ class Cart
                     "withPromo" => $promoCode ? $this->getTotal(true) : $totalWithoutPromo
                 ]
             ],
-            "cardSizes" => $cardSizes,
-            "cardMaterials" => $cardMaterials,
             "shippingMethods" => Cart::$availableShipping,
             "paymentMethods" => Cart::$availablePaymentMethods,
             "extras" => $this->getRecommendedProducts()

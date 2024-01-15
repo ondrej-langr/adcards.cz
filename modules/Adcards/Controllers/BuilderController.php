@@ -66,9 +66,7 @@ class BuilderController
     public function get(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
     {
         $requestLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
-        $logger = $this->container->get(Logger::class);
         $config = $this->container->get(Config::class);
-
         $payload = [];
 
         // Materials
@@ -98,7 +96,7 @@ class BuilderController
 
         // Sports and their backgrounds
         $backgroundIds = [];
-        $payload['sports'] = \Sports::setLanguage($requestLanguage)
+        $payload['sports'] = (new \Sports())->query()->setLanguage($requestLanguage)
             ->join(function ($sport) use ($requestLanguage, &$payload, $config, &$backgroundIds) {
                 $backgrounds = (new \CardBackgrounds)
                     ->query()
@@ -106,7 +104,7 @@ class BuilderController
                     ->where(["sport_id", "=", $sport["id"]])
                     ->getMany();
 
-                foreach ($backgrounds as $background) {
+                foreach ($backgrounds as &$background) {
                     $imageId = $background['image'];
                     $background['imageSrc'] = $config->app->baseUrl . "/api/entry-types/files/items/$imageId/raw?w=400";
 

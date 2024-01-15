@@ -12,6 +12,7 @@ use PromCMS\Core\Config;
 use PromCMS\Core\Mailer;
 use PromCMS\Core\Models\Files;
 use PromCMS\Core\Services\EntryTypeService;
+use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Core\Utils\FsUtils;
 use PromCMS\Modules\Adcards\Cart;
@@ -131,9 +132,7 @@ class CartController
             )[0];
 
             foreach ($missingFields as $missingField) {
-                $message = isset(self::$errorMessagesForRequiredFields[$missingField])
-                    ? self::$errorMessagesForRequiredFields[$missingField]
-                    : self::$errorMessagesForRequiredFields["*"];
+                $message = isset(self::$errorMessagesForRequiredFields[$missingField]) ?? self::$errorMessagesForRequiredFields["*"];
 
                 $resultPayload["state"]["form"]["errors"][$missingField] = $message;
             }
@@ -148,6 +147,7 @@ class CartController
 
         // Prepare
         $orderUuid = UUID::create();
+        $currentLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
         $ordersService = new EntryTypeService(new \Orders());
         $config = $this->container->get(Config::class);
         $userEmailTemplatePayload = [
@@ -246,8 +246,36 @@ class CartController
 
                 $cardPayload->name = $cardInCartAsArray["name"];
                 $cardPayload->background_id = intval($cardInCartAsArray["background_id"]);
-                $cardPayload->size_id = intval($cardInCartAsArray["size_id"]);
+                $cardPayload->size_id = intval($cardInCart->getSizeId());
                 $cardPayload->card_type = $cardInCartAsArray["cardType"];
+                $cardPayload->final_price = $cardInCart->getPrice();
+                $cardPayload->bonuses = ['data' => []];
+
+                $size = (new \CardSizes())
+                    ->query()
+                    ->setLanguage($currentLanguage)
+                    ->join(function ($size) use ($currentLanguage) {
+                        return (new \CardMaterial())->query()
+                            ->setLanguage($currentLanguage)
+                            ->getOneById(intval($size["material_id"]))
+                            ->getData();
+                    }, 'material')
+                    ->select(['material'])
+                    ->getOneById($cardPayload->size_id)
+                    ->getData();
+                $sizeMaterialBonuses = $size['material']['bonuses']['data'] ?? [];
+                $cardBonuses = $cardInCart->getBonuses();
+
+                foreach ($sizeMaterialBonuses as $bonus) {
+                    if (!empty($cardBonuses[$bonus['name']])) {
+                        $cardPayload->bonuses['data'][] = [
+                            'name' => $bonus['name'],
+                            'value' => $cardBonuses[$bonus['name']],
+                            'price' => $bonus['price']
+                        ];
+                        $cardPayload->final_price += $bonus['price'];
+                    }
+                }
 
                 // Handle non real player as that has more fields to process
                 //if ($cardInCartAsArray["cardType"] !== "realPlayer") {
@@ -299,7 +327,6 @@ class CartController
                 $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
                 //}
 
-                $cardPayload->final_price = $cardInCart->getPrice();
                 $cardPayload->currency = "CZK";
 
                 $createdCard = $cardsService->create((array)$cardPayload);

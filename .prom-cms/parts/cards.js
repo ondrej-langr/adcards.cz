@@ -147,6 +147,35 @@ const cardsModel = {
       readonly: true,
     },
     ...relationFields,
+    'bonuses': {
+      'required': false,
+      'translations': false,
+      'type': 'json',
+      'title': 'Bonusové informace za příplatek',
+      readonly: true,
+      'admin': {
+        'fieldType': 'repeater',
+        'columns': {
+          'name': {
+            'required': true,
+            'type': 'string',
+            readonly: true,
+          },
+          'value': {
+            'required': true,
+            'type': 'string',
+            title: 'Popisek',
+            readonly: true,
+          },
+          'price': {
+            'required': true,
+            'type': 'number',
+            title: 'Cena v Kč',
+            readonly: true,
+          },
+        },
+      },
+    },
   },
 }
 

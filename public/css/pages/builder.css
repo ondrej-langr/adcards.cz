@@ -1,5 +1,87 @@
 .builder {
-    padding-top: 130px;
+    padding-top: 80px;
+
+    @media screen and (min-width: 768px) {
+        & {
+            padding-top: 130px;
+        }
+    }
+}
+
+.builder-bonus-list {
+    & > *:not(:first-of-type) {
+        margin-top: 1.4rem;
+    }
+}
+
+.builder-bonus-disclosure {
+    .control {
+        cursor: pointer;
+        font-size: 1.5rem;
+        display: flex;
+        align-items: center;
+    }
+
+    .content {
+        width: 100%;
+        padding: 10px 15px;
+        font-size: 1.3rem;
+    }
+
+    .small-checkbox {
+        background: var(---colors-brand-signature);
+        width: 35px;
+        height: 35px;
+        position: relative;
+        display: inline-block;
+        margin-right: 1rem;
+
+        &::after {
+            content: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" viewBox="0 0 24 24" stroke-width="3" stroke="white" fill="none" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none"/><path d="M5 12l5 5l10 -10" /></svg>');
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            color: white;
+            width: 30px;
+            height: 30px;
+            opacity: 0;
+            scale: 0.5;
+            transform: translateY(10px);
+            transition-duration: 150ms;
+        }
+    }
+
+    & input[type="checkbox"]:checked ~ .small-checkbox {
+        &::after {
+            opacity: 1;
+            scale: 1;
+            transform: translateY(0px);
+        }
+    }
+
+    & textarea {
+        border: 1px solid #e4e4e4;
+        text-transform: uppercase;
+    }
+}
+
+.dropdown-item-country {
+    padding: 1rem 1.5rem;
+    display: flex;
+    align-items: center;
+    font-size: 1.3rem;
+    color: #1c1c1c;
+
+    & img {
+        height: 23px;
+    }
+}
+
+#builder-form {
+    & h4 {
+        margin: 2rem 0 1rem;
+        font-size: 2rem;
+    }
 }
 
 .flex {
@@ -33,113 +115,130 @@
     align-items: center;
     justify-content: center;
     gap: 0.6rem;
+
+    & button {
+        width: 56px;
+        height: 56px;
+        border-radius: 99px;
+        padding: unset;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:disabled {
+            opacity: .6;
+            cursor: not-allowed;
+        }
+
+        &:not(.current) {
+            transform: scale(0.7);
+        }
+
+        &.current {
+            filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
+        }
+    }
 }
 
 .worko-tabs .flex-tabs .panel {
     display: block !important;
 }
 
-.builder__steps-navigation button {
-    width: 56px;
-    height: 56px;
-    border-radius: 99px;
-    padding: unset;
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.builder__steps-navigation button:disabled {
-    opacity: .6;
-    cursor: not-allowed;
-}
-
-.builder__steps-navigation button:not(.current) {
-    transform: scale(0.7);
-}
-
-.builder__steps-navigation button.current {
-    filter: drop-shadow(0 10px 8px rgb(0 0 0 / 0.04)) drop-shadow(0 4px 3px rgb(0 0 0 / 0.1));
-}
-
-.builder__steps {
-
-}
 
 .builder__steps__step {
     margin-bottom: 2rem;
+    overflow: hidden;
+    padding-left: 0;
+
+    & h3 {
+        font-size: 3rem;
+        margin-bottom: 2.5rem;
+        margin-top: 3.5rem;
+    }
+
+    @media screen and (min-width: 1500px) {
+        & {
+            padding-left: 20px;
+        }
+    }
 }
 
-.builder__steps__step h3 {
-    font-size: 3rem;
-    margin-bottom: 2.5rem;
-    margin-top: 3.5rem;
-}
-
-.builder__grid {
-    display: flex;
-    flex-flow: wrap;
-    gap: 10px;
-    justify-content: center;
-    align-items: center;
+.builder-slider {
     max-width: 1500px;
     width: 100%;
     margin: auto;
-
-    --number-of-items-on-row: 1;
-}
-
-.builder__grid-item {
-    cursor: pointer;
-    text-align: center;
-    width: calc(100% / var(--number-of-items-on-row) - 20px);
-    margin-bottom: 2rem;
     display: flex;
-    flex-flow: column;
-}
+    overflow: auto;
 
-.builder__grid-item h4 {
-    font-size: 2.5rem !important;
-    margin-top: auto;
-}
+    .keen-slider__slide {
+        text-align: center;
+        max-width: 90vw;
+        min-width: 90vw;
 
-.builder__grid-item p {
-    font-size: 1.2rem;
-    margin-top: 1rem;
-}
+        & h4 {
+            font-size: 2.5rem !important;
+            margin-top: 1.5rem;
+        }
 
-.builder__grid-item:hover {
+        & p {
+            font-size: 1.2rem;
+            margin-top: 0.5rem;
+        }
 
-}
+        & img {
+            height: auto;
+            width: 100%;
+            transition: all;
+            transition-duration: 0.5s;
+        }
 
-.builder__grid-item-image_wrapper {
-    margin-bottom: 1rem;
-    padding: 0 1rem;
-}
+        &:hover {
+            cursor: pointer;
 
-.builder__grid-item-image_wrapper img {
-    height: auto;
-    width: 100%;
-    transition: all;
-    transition-duration: 0.5s;
+            & .image-wrap {
+                -webkit-filter: drop-shadow(10px 5px 5px #222);
+                filter: drop-shadow(10px 5px 5px rgb(247 11 53 / 36%));
+            }
+        }
 
-    -webkit-filter: drop-shadow(5px 5px 5px #22222250);
-    filter: drop-shadow(5px 5px 5px #22222250);
-}
+        .image-wrap {
+            padding: 0 15px;
+            -webkit-filter: drop-shadow(5px 5px 5px #22222250);
+            filter: drop-shadow(5px 5px 5px #22222250);
+        }
 
-.builder__grid-item:hover .builder__grid-item-image_wrapper img {
-    -webkit-filter: drop-shadow(10px 5px 5px #222);
-    filter: drop-shadow(10px 5px 5px rgb(247 11 53 / 36%));
+        @media screen and (min-width: 640px) {
+            & {
+                max-width: 70vw;
+                min-width: 70vw;
+            }
+        }
+
+        @media screen and (min-width: 800px) {
+            & {
+                max-width: 500px;
+                min-width: 500px;
+            }
+        }
+
+        @media screen and (min-width: 1200px) {
+            & {
+                max-width: 400px;
+                min-width: 400px;
+            }
+        }
+
+    }
 }
 
 .builder.thank-you {
     text-align: center;
     margin: 2rem 0;
-}
 
-.builder.thank-you .thank-you__title p {
-    font-size: 1.5rem;
+    .thank-you__title p {
+        font-size: 1.5rem;
+    }
 }
 
 .thank-you__more-stuff {
@@ -152,12 +251,11 @@
     padding: 0 15px;
     width: 100%;
     margin: 3.5rem auto 0;
-}
 
-.thank-you__more-stuff h2 {
-    color: var(---colors-brand-signature);
+    & h2 {
+        color: var(---colors-brand-signature);
+    }
 }
-
 
 @media screen and (min-width: 640px) {
     .builder__grid {

@@ -1,24 +1,24 @@
-<div x-show="!isRealPlayer()" style='display: none'>
+<div>
     <div class="card flexi">
         <div class="card-body col-xl-12">
             <div class="form-input-around">
                 <div class="checkbox-around col-lg-4 col-sm-4 col-xl-4">
                     <input type="radio" name="cardType" value="player" id="player"
-                           x-model="cardType" />
+                           x-model="_cardType" />
                     <label for="player">
                         <span class="label-name">{{ 'Hráč'|t }}</span>
                     </label>
                 </div>
                 <div class="checkbox-around col-lg-4 col-sm-4 col-xl-4">
                     <input type="radio" name="cardType" value="goalKeeper" id="goalKeeper"
-                           x-model="cardType" />
+                           x-model="_cardType" />
                     <label for="goalKeeper">
                         <span class="label-name">{{ 'Brankář'|t }}</span>
                     </label>
                 </div>
                 <div class="checkbox-around col-lg-4 col-sm-4 col-xl-4">
                     <input type="radio" name="cardType" value="manager" id="manager"
-                           x-model="cardType" />
+                           x-model="_cardType" />
                     <label for="manager">
                         <span class="label-name">{{ 'Manažer'|t }}</span>
                     </label>
@@ -37,33 +37,36 @@
                     <input class="form-control required-field"
                            required
                            type="text"
-                           x-model="name"
-                           @change='doValidate()'
+                           x-model="_name"
+                           @input.throttle.100ms='doValidate()'
                            placeholder="{{ 'Jméno'|t }}"
-                           :class='state.form.errors.name ? "error" : ""'
+                           :class='errors.name ? "error" : ""'
                     />
                 </div>
-                <small class="field-error" x-text="state.form.errors.name"></small>
+                <small class="field-error" x-text="errors.name"></small>
             </div>
-            <div class="input-around col-3 col-lg-6 col-sm-6 col-xl-6">
+            <div class="input-around col-3 col-lg-6 col-sm-6 col-xl-6 "
+                 style="align-items:baseline;">
                 <input class="form-control required-field"
                        type="number"
-                       x-model="rating"
+                       x-model.number="_rating"
+                       @input='doValidate()'
                        placeholder="99"
                 />
             </div>
-            <div class="input-around col-3 col-lg-6 col-sm-6 col-xl-6">
+            <div class="input-around col-3 col-lg-6 col-sm-6 col-xl-6" style="align-items:baseline;">
                 <input class="form-control position-input required-field"
                        type="text"
-                       x-model="position"
+                       x-model="_position"
+                       @input='doValidate()'
                        placeholder="CAM" /></div>
         </div>
     </div>
     <div class="card flexi" style="padding: 0px 2px;">
         {{ include("@modules:Adcards/partials/pages/builder/form/image-select.twig") }}
         <div class="card-body col-xl-5 pl-xl-1">
-            <div class="stats-set stats-standard" x-show="cardType === 'player'" style='display: none'>
-                <template x-for="(stat, key) in stats.player">
+            <div class="stats-set stats-standard" x-show="isNormalPlayer()" style='display: none'>
+                <template x-for="(stat, key) in _stats.player">
                     <div class="input-around col-6 col-lg-6 col-sm-6 col-xl-6"
                          style="padding: 2px 2px 2px 0px;">
                         <div class="number input-around col-lg-6 col-sm-6 col-xl-6"
@@ -80,14 +83,14 @@
                             <input class="form-control required-field"
                                    type="text"
                                    x-model="stat.name"
-                                   :class='state.form.errors[`stats.${key}.name`] ? "error" : ""'
+                                   :class='errors[`_stats.${key}.name`] ? "error" : ""'
                                    @input='doValidate()'
                             /></div>
                     </div>
                 </template>
             </div>
-            <div class="stats-set stats-goalkeeper" x-show="cardType === 'goalKeeper'" style='display: none'>
-                <template x-for="(stat, key) in stats.goalKeeper">
+            <div class="stats-set stats-goalkeeper" x-show="isGoalKeeper()" style='display: none'>
+                <template x-for="(stat, key) in _stats.goalKeeper">
                     <div class="input-around col-6 col-lg-6 col-sm-6 col-xl-6"
                          style="padding: 2px 2px 2px 0px;">
                         <div class="number input-around col-lg-6 col-sm-6 col-xl-6"
@@ -102,13 +105,14 @@
                         <div class="kind input-around col-lg-6 col-sm-6 col-xl-6"
                              style="padding: 2px 0px 2px 2px;">
                             <input class="form-control required-field" type="text"
+                                   :class='errors[`_stats.${key}.name`] ? "error" : ""'
                                    x-model="stat.name"
                             />
                         </div>
                     </div>
                 </template>
             </div>
-            <div class="stats-set stats-goalkeeper" x-show="cardType === 'manager'" style='display: none'></div>
+            <div class="stats-set stats-goalkeeper" x-show="isManager()" style='display: none'></div>
         </div>
     </div>
 </div>

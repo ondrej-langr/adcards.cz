@@ -1,13 +1,12 @@
 <div class="card">
     {% for material in materials %}
-        <div
-                class="card-body" x-show='parseInt(materialId) === {{ material.id }}'
-                {% if (state.form.values.materialId != material.id) %}style='display: none'{% endif %}
+        <div class="card-body" x-show='_materialId === {{ material.id }}'
+             {% if (state.form.values.materialId != material.id) %}style='display: none'{% endif %}
         >
             {% for size in material.sizes %}
                 <div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
                     <input type="radio" value="{{ size.id }}" id="size-{{ size.id }}" name="size"
-                           x-model='sizeId' />
+                           x-model.number='_sizeId' />
                     <label for="size-{{ size.id }}">
                         <div class="label-image">
                             {% set currentImage = getImage(size.image, 65) %}

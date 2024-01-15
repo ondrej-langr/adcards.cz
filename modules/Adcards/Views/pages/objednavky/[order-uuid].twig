@@ -20,18 +20,22 @@
             </h3>
             <h1>{{ "Přehled objednávky"|t }}: <span class='text-brands-signature'>#{{ order.id }}</span></h1>
         </div>
-        <div class='order-underpage__content' x-data='orderPage({
-            order: JSON.parse(`{{ order|json_encode }}`),
-            initialPaymentDialogShown: {{ showPaymentDialog ? "true" : "false" }},
-            thankYouMessageShown: {{ showThankYou ? "true" : "false" }},
+        {% set orderPageProps = {
+            order,
+            initialPaymentDialogShown: showPaymentDialog ? true : false,
+            thankYouMessageShown: showThankYou ? true : false,
             payPal: {
-                clientId: "{{ payPal.clientId }}",
+                clientId: payPal.clientId,
                 routes: {
-                    create: "{{ url_for('paypal-create-order', { orderUuid: order._uuid }) }}",
-                    capture: "{{ url_for('paypal-capture-order', { orderUuid: order._uuid }) }}"
+                    create: url_for('paypal-create-order', { orderUuid: order._uuid }),
+                    capture: url_for('paypal-capture-order', { orderUuid: order._uuid })
                 }
             }
-         })'>
+        } %}
+        <script>
+        </script>
+        <div class='order-underpage__content'
+             x-data='orderPage(JSON.parse(`{{ orderPageProps|json_encode|replace({'\\n': '\\\n'}) }}`))'>
             <div>
                 <section>
                     <h2>{{ "Informace o objednávce"|t }}</h2>
@@ -179,12 +183,12 @@
         </div>
     </div>
     <script>
-      window.document.querySelector('.thank-you-page-title').scrollIntoView({
-        behavior: 'smooth',
-        block: 'center',
-        inline: 'center',
-      })
+        window.document.querySelector('.thank-you-page-title').scrollIntoView({
+            behavior: 'smooth',
+            block: 'center',
+            inline: 'center',
+        })
 
-      window.applyLazyLoad?.()
+        window.applyLazyLoad?.()
     </script>
 {% endblock %}

@@ -74,6 +74,10 @@ class CardController
         }
         //}
 
+        if (!empty($body["bonuses"])) {
+            $card->setBonuses($body['bonuses']);
+        }
+
         if (!$card->isValid()) {
             return $response->withStatus(400);
         }
