@@ -25,11 +25,14 @@
             </div>
 
             <button type="submit" class='flex-none' style='width: auto;margin-top: 0;height: 66px;'>
-                {% if cart.promoCode.isset %}
-                    Odebrat
-                {% else %}
-                    Přidat
-                {% endif %}
+                <span class='hx-hide-on-request'>
+                    {% if cart.promoCode.isset %}
+                        {{ "Odebrat"|t }}
+                    {% else %}
+                        {{ "Přidat"|t }}
+                    {% endif %}
+                </span>
+                <span class='hx-show-on-request'>{{ "Pracuji"|t }}</span>
             </button>
         </div>
     </div>

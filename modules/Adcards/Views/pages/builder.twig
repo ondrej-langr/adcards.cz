@@ -5,6 +5,36 @@
     <link rel="stylesheet" href="/css/pages/products.css">
 {% endblock %}
 
+ {% macro step(stepIndex, title, contents, hide = true) %}
+     <div class='builder__steps__step' x-show='getCurrentStep() === {{ stepIndex }}'
+          {% if (hide == true) %}style='display: none'{% endif %}>
+         <h3 class='text-center'>{{ title|t }}</h3>
+         {{ contents|raw }}
+     </div>
+ {% endmacro %}
+
+ {% macro slider(items, xShow) %}
+     <div class="builder-slider" {% if xShow %}x-show="{{ xShow }}" style='display:none;' {% endif %}>
+         {% for item in items %}
+             <a class="slide"
+                @click.prevent='{{ item.onClick }}'
+                {% if "$" in item.href %}:{% endif %}href='{{ item.href }}'>
+                 <div class='image-wrap'>
+                     {% set currentImage = getImage(item.image, 440) %}
+                     {% set placeholderImage = getImage(item.image, 20) %}
+                     <img alt='' src="{{ placeholderImage.src }}" data-src="{{ currentImage.src }}"
+                          width="{{ currentImage.width }}"
+                          height="{{ currentImage.height }}" loading='lazy'>
+                 </div>
+                 <h4>{{ item.name }}</h4>
+                 {% if item.description %}
+                     <p>{{ item.description }}</p>
+                 {% endif %}
+             </a>
+         {% endfor %}
+     </div>
+ {% endmacro %}
+
 {% block content %}
     {% set props = {
         materials,
@@ -20,83 +50,42 @@
             </template>
         </nav>
         <div class='builder__steps'>
-            {#            Material select #}
-            <div class='builder__steps__step' x-show='getCurrentStep() === 0'
-                 {% if (state.form.values.currentStep != 0) %}style='display: none'{% endif %}>
-                <h3 class='text-center'>{{ "Vyberte materiál"|t }}</h3>
-                <div class="keen-slider builder-slider">
-                    {% for material in materials %}
-                        <a class="keen-slider__slide"
-                           @click.prevent='setMaterial({{ material.id }}, true)'
-                           href='/karty/builder?materialId={{ material.id }}'>
-                            <div class='image-wrap'>
-                                {% set currentImage = getImage(material.image, 440) %}
-                                {% set placeholderImage = getImage(material.image, 20) %}
-                                <img alt='' src="{{ placeholderImage.src }}" data-src="{{ currentImage.src }}"
-                                     width="{{ currentImage.width }}"
-                                     height="{{ currentImage.height }}" loading='lazy'>
-                            </div>
-                            <h4>{{ material.name }}</h4>
-                            <p>{{ material.description }}</p>
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
+            {# Material select #}
+            {{ _self.step(0, "Vyberte materiál",
+                _self.slider(materials|map( material => {
+                    href: '/karty/builder?materialId=' ~ material.id,
+                    image: material.image,
+                    name: material.name,
+                    description: material.description,
+                    onClick: "setMaterial(" ~ material.id ~", true)"
+                })),
+                state.form.values.currentStep != 0
+            ) }}
 
-            {#            Sport select #}
-            <div class='builder__steps__step' x-show='getCurrentStep() === 1'
-                 {% if (state.form.values.currentStep != 1) %}style='display: none'{% endif %}
-            >
-                <h3 class='text-center'>{{ "Vyberte sport"|t }}</h3>
-                <div class="keen-slider builder-slider">
-                    {% for sport in sports %}
-                        <a class="keen-slider__slide"
-                           @click.prevent='setSport({{ sport.id }}, true)'
-                           :href='`/karty/builder?materialId=${_materialId}&sportId={{ sport.id }}`'>
-                            <div class='image-wrap'>
-                                {% set currentImage = getImage(sport.image, 440) %}
-                                {% set placeholderImage = getImage(sport.image, 20) %}
-                                <img alt='' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
-                                     width="{{ currentImage.width }}"
-                                     height="{{ currentImage.height }}" loading='lazy'>
-                            </div>
-                            <h4>{{ sport.name }}</h4>
-                            {% if sport.description %}
-                                <p>{{ sport.description }}</p>
-                            {% endif %}
-                        </a>
-                    {% endfor %}
-                </div>
-            </div>
+            {# Sport select #}
+            {{ _self.step(1, "Vyberte sport",
+                _self.slider(sports|map( sport => {
+                    href: '`/karty/builder?materialId=${_materialId}&sportId=' ~ sport.id ~ '`',
+                    image: sport.image,
+                    name: sport.name,
+                    description: sport.description,
+                    onClick: "setSport(" ~ sport.id ~", true)"
+                })),
+                state.form.values.currentStep != 1
+            ) }}
 
-            {#            Background select #}
-            <div class='builder__steps__step' x-show='getCurrentStep() === 2'
-                 {% if (state.form.values.currentStep != 2) %}style='display: none'{% endif %}
-            >
-                <h3 class='text-center'>{{ "Vyberte pozadí karty"|t }}</h3>
-                {% for sport in sports %}
-                    <div class="keen-slider builder-slider" style='display: none'
-                         x-show='_sportId === {{ sport.id }}'>
-                        {% for background in sport.backgrounds %}
-                            <a class="keen-slider__slide"
-                               @click.prevent='setBackground({{ background.id }}, true)'
-                               :href='`/karty/builder?materialId=${_materialId}&sportId=${_sportId}&backgroundId={{ background.id }}`'>
-                                <div class='image-wrap'>
-                                    {% set currentImage = getImage(background.image, 440) %}
-                                    {% set placeholderImage = getImage(background.image, 20) %}
-                                    <img alt='' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
-                                         width="{{ currentImage.width }}"
-                                         height="{{ currentImage.height }}" loading='lazy'>
-                                </div>
-                                <h4>{{ background.name }}</h4>
-                                {% if background.description %}
-                                    <p>{{ background.description }}</p>
-                                {% endif %}
-                            </a>
-                        {% endfor %}
-                    </div>
-                {% endfor %}
-            </div>
+            {# Background select #}
+            {{ _self.step(2, "Vyberte pozadí karty",
+                sports|map( sport => _self.slider(sport.backgrounds|map( background => {
+                    href: '`/karty/builder?materialId=${_materialId}&sportId=${_sportId}&backgroundId=' ~ background.id ~ '`',
+                    image: background.image,
+                    name: background.name,
+                    description: background.description,
+                    onClick: "setBackground(" ~ background.id ~", true)"
+                }), '_sportId === ' ~ sport.id))|join(''),
+                state.form.values.currentStep != 2
+            ) }}
+
 
             <div class='builder__steps__step'
                  x-show='getCurrentStep() === 3'

@@ -45,16 +45,14 @@
             width: 30px;
             height: 30px;
             opacity: 0;
-            scale: 0.5;
             transform: translateY(10px);
-            transition-duration: 150ms;
+            transition-duration: 200ms;
         }
     }
 
     & input[type="checkbox"]:checked ~ .small-checkbox {
         &::after {
             opacity: 1;
-            scale: 1;
             transform: translateY(0px);
         }
     }
@@ -92,8 +90,19 @@
     margin-top: 0;
 }
 
-.card-preview-around .stats.container p {
-    line-height: 2.3rem;
+.card-preview-around {
+    position: relative;
+    padding-bottom: 40px;
+
+    .stats.container p {
+        line-height: 2.3rem;
+    }
+
+    @media screen and (min-width: 768px) {
+        & {
+            padding-bottom: 130px;
+        }
+    }
 }
 
 .total-price {
@@ -147,7 +156,7 @@
 
 
 .builder__steps__step {
-    margin-bottom: 2rem;
+    margin-bottom: 4rem;
     overflow: hidden;
     padding-left: 0;
 
@@ -155,6 +164,7 @@
         font-size: 3rem;
         margin-bottom: 2.5rem;
         margin-top: 3.5rem;
+        padding: 0 15px;
     }
 
     @media screen and (min-width: 1500px) {
@@ -166,15 +176,17 @@
 
 .builder-slider {
     max-width: 1500px;
-    width: 100%;
     margin: auto;
     display: flex;
     overflow: auto;
+    width: 100vw;
+    padding-bottom: 2rem;
 
-    .keen-slider__slide {
+    .slide {
         text-align: center;
-        max-width: 90vw;
-        min-width: 90vw;
+        max-width: 85vw;
+        min-width: 85vw;
+        margin: auto;
 
         & h4 {
             font-size: 2.5rem !important;
@@ -229,6 +241,24 @@
             }
         }
 
+    }
+
+    &::-webkit-scrollbar {
+        -webkit-appearance: none;
+        width: 0.9em;
+        height: 0.9em;
+    }
+
+    &::-webkit-scrollbar-track {
+        background: rgba(206, 206, 206, 0.87);
+        border: 4px solid transparent;
+        background-clip: content-box;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        margin: 10px;
+        height: 2rem;
+        background-color: var(---colors-brand-signature);
     }
 }
 

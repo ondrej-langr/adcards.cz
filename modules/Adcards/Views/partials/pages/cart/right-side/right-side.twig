@@ -13,7 +13,13 @@
     <div>
         <button id='submit-form-button' type="submit" form='cart-form' :disabled='!isValid'
                 class='mb-3' x-ref='submitButton'>
-            <span x-text='paymentMethod === "paypal" ? "{{ 'Odeslat objednávku a zaplatit'|t }}" : "{{ 'Odeslat objednávku'|t }}"'>{{ 'Odeslat objednávku'|t }}</span>
+            <span class='hx-hide-on-request'
+                  x-text='paymentMethod === "paypal" ? "{{ 'Odeslat objednávku a zaplatit'|t }}" : "{{ 'Odeslat objednávku'|t }}"'>
+                {{ 'Odeslat objednávku'|t }}
+            </span>
+            <span class='hx-show-on-request'>
+                {{ 'Vytvářím objednávku'|t }}
+            </span>
         </button>
 
         <small x-show='!isValid' class='field-error' :class='{ "d-block": !isValid }'
@@ -29,17 +35,17 @@
 
     {% if state.focusOn is not null %}
         <script>
-          window.focusOnElement = document.querySelector("{{ state.focusOn|raw }}")
+            window.focusOnElement = document.querySelector("{{ state.focusOn|raw }}")
 
-          if (window.focusOnElement && 'focus' in window.focusOnElement) {
-            const element = window.focusOnElement
-            element.focus()
+            if (window.focusOnElement && 'focus' in window.focusOnElement) {
+                const element = window.focusOnElement
+                element.focus()
 
-            // place cursor at the end after refocus
-            const val = element.value
-            element.value = ''
-            element.value = val
-          }
+                // place cursor at the end after refocus
+                const val = element.value
+                element.value = ''
+                element.value = val
+            }
         </script>
     {% endif %}
 </div>

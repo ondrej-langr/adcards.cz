@@ -1,14 +1,13 @@
 import Alpine from 'alpinejs'
-import KeenSlider from 'keen-slider'
-import LazyLoad from 'vanilla-lazyload'
 import cartForm from './alpine-components/cartForm'
 import orderPage from './alpine-components/orderPage'
 import cardBuilder from './alpine-components/cardBuilder'
+import Cookies from 'js-cookie'
 
 import 'keen-slider/keen-slider.min.css'
 import 'cropperjs/dist/cropper.css'
 import 'htmx.org'
-import './lib/lazyload-images'
+import './lazyload-images'
 
 declare global {
     interface Window {
@@ -25,30 +24,12 @@ if (window.location.pathname.includes('/kosik')) {
     Alpine.data(cartForm.name, cartForm as any)
 } else if (window.location.pathname.includes('/karty/builder')) {
     Alpine.data(cardBuilder.name, cardBuilder)
-
-    if (window.document.querySelector('.builder-slider') !== null) {
-        for (const sliderElement of window.document.querySelectorAll('.builder-slider')) {
-            new KeenSlider(sliderElement as HTMLElement, {
-                loop: true,
-                slides: {
-                    perView: 'auto',
-                    spacing: 10,
-                    origin: 'center',
-                },
-                breakpoints: {
-                    '(min-width: 640px)': {
-                        loop: false,
-                        slides: {
-                            perView: 'auto',
-                            spacing: 20,
-                        },
-                    },
-                },
-            })
-
-        }
-    }
 }
+
+Alpine.store('cookies', {
+    set: Cookies.set,
+    get: Cookies.get,
+})
 
 Alpine.data(orderPage.name, orderPage as any)
 Alpine.start()

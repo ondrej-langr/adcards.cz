@@ -21,14 +21,11 @@ importers:
         specifier: ^1.6.1
         version: 1.6.1
       htmx.org:
-        specifier: ^1.9.8
-        version: 1.9.8
+        specifier: ^1.9.10
+        version: 1.9.10
       js-cookie:
         specifier: ^3.0.5
         version: 3.0.5
-      keen-slider:
-        specifier: ^6.8.6
-        version: 6.8.6
       lodash:
         specifier: ^4.17.21
         version: 4.17.21
@@ -63,6 +60,9 @@ importers:
       '@types/alpinejs':
         specifier: ^3.13.5
         version: 3.13.5
+      '@types/js-cookie':
+        specifier: ^3.0.6
+        version: 3.0.6
       '@types/lodash':
         specifier: ^4.14.202
         version: 4.14.202
@@ -3394,6 +3394,10 @@ packages:
       hoist-non-react-statics: 3.3.2
     dev: true
 
+  /@types/js-cookie@3.0.6:
+    resolution: {integrity: sha512-wkw9yd1kEXOPnvEeEV1Go1MmxtBJL0RR79aOTAApecWFVu7w0NNXNqhcWgvw2YgZDYadliXkl14pa3WXw5jlCQ==}
+    dev: true
+
   /@types/lodash@4.14.202:
     resolution: {integrity: sha512-OvlIYQK9tNneDlS0VN54LLd5uiPCBOp7gS5Z0f1mjoJYBrtStzgmJBxONW3U6OZqdtNzZPmn9BS/7WI7BFFcFQ==}
     dev: true
@@ -4914,8 +4918,8 @@ packages:
       entities: 4.5.0
     dev: true
 
-  /htmx.org@1.9.8:
-    resolution: {integrity: sha512-eH825QM6yJ1AeHTJgUxy3xnXnP/uXD56x52/VYnQ9CMw+o9H04ar/GY5PHuiZeelsqLK4wkviVdCel7u+3h4Fw==}
+  /htmx.org@1.9.10:
+    resolution: {integrity: sha512-UgchasltTCrTuU2DQLom3ohHrBvwr7OqpwyAVJ9VxtNBng4XKkVsqrv0Qr3srqvM9ZNI3f1MmvVQQqK7KW/bTA==}
     dev: false
 
   /http-proxy@1.18.1:
@@ -5248,10 +5252,6 @@ packages:
     optionalDependencies:
       graceful-fs: 4.2.11
     dev: true
-
-  /keen-slider@6.8.6:
-    resolution: {integrity: sha512-dcEQ7GDBpCjUQA8XZeWh3oBBLLmyn8aoeIQFGL/NTVkoEOsmlnXqA4QykUm/SncolAZYGsEk/PfUhLZ7mwMM2w==}
-    dev: false
 
   /kind-of@3.2.2:
     resolution: {integrity: sha512-NOW9QQXMoZGg/oqnVNoNTTIFEIid1627WCffUBJEdMxYApq7mNE7CpzucIPc+ZQg25Phej7IJSmX3hO+oblOtQ==}

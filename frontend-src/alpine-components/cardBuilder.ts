@@ -1,7 +1,6 @@
 import { AlpineComponent } from 'alpinejs'
 import Cropper from 'cropperjs'
-import { util, z } from 'zod'
-import Omit = util.Omit
+import { z } from 'zod'
 
 type CardBuilderProps = z.output<typeof cardBuilderPropsSchema>;
 type ComponentState = {
@@ -91,13 +90,14 @@ type MaterialSize = z.infer<typeof materialSizeSchema>
 type CardBackground = z.infer<typeof cardBackgroundSchema>
 type Sport = z.infer<typeof sportSchema>
 
+const bonusSchema = z.object({ name: z.string(), price: z.number() })
 const zodNumeric = z.number().or(z.string()).transform(Number)
 const materialSizeSchema = z.object({ id: zodNumeric, width: z.number(), height: z.number(), price: z.number() })
 const materialSchema = z.object({
     id: zodNumeric,
     bonuses: z.object({
-        data: z.array(z.object({ name: z.string(), price: z.number() })),
-    }),
+        data: z.array(bonusSchema),
+    }).nullable(),
     sizes: z.array(materialSizeSchema),
 })
 const cardBackgroundSchema = z.object({ id: zodNumeric, name: z.string(), imageSrc: z.string(), textColor: z.object({ value: z.string() }).partial() })
@@ -136,7 +136,7 @@ const cardBuilderPropsSchema = z.object({
     }),
 })
 
-const FILL_FIELD_MESSAGE = 'Vyplňte'
+const FILL_FIELD_MESSAGE = 'Toto políčko je povinné'
 const zodStringOptions = { required_error: FILL_FIELD_MESSAGE, invalid_type_error: FILL_FIELD_MESSAGE }
 
 const formValidationSchema = z.object({
@@ -380,16 +380,16 @@ export default function cardBuilder(rawProps: CardBuilderProps): AlpineComponent
         selectStep(_nextValue) {
             // Clamp step value so it does not overflow
             const nextValue = Math.min(3, Math.max(0, _nextValue))
-            console.log({ nextValue })
 
             if (nextValue > this._step.largestTaken) {
                 this._step.largestTaken = nextValue
             }
 
+            this.$dispatch('builder-slides-changed')
+
             this._step.current = nextValue
         },
         goNextStep() {
-            console.log('next step')
             this.selectStep(this.getCurrentStep() + 1)
         },
 
@@ -553,9 +553,11 @@ export default function cardBuilder(rawProps: CardBuilderProps): AlpineComponent
             let nextStepCount = 0
             const fieldsFromUrl = ['backgroundId', 'materialId', 'sportId']
             for (const fieldName of fieldsFromUrl) {
-                this[`_${fieldName}`] = searchParams.get(fieldName) ?? ''
+                const valueFromParam = searchParams.get(fieldName)
+                const parseResult = zodNumeric.nullable().safeParse(valueFromParam)
+                this[`_${fieldName}`] = parseResult.success ? parseResult.data : null
 
-                if (!!this[`_${fieldName}`]) {
+                if (this[`_${fieldName}`] !== null) {
                     nextStepCount++
                 }
             }

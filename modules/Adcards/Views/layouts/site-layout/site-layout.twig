@@ -91,12 +91,15 @@
 {% include '@modules:Adcards/layouts/site-layout/footer.twig' %}
 
 {% if getConfig().env.development is not same as(true) %}
-    <div class="cookies">
+    {% set complianceCookieName = 'adcardsCookiesCompliance' %}
+    <div class="cookies" x-data='{ isOpen: $store.cookies.get("{{ complianceCookieName }}") !== "true",  }'
+         style='display: none'
+         x-show='isOpen'>
         <div class="cookies-inner">
-            {{ 'K ukládání nastavení a správnému fungování využíváme soubory cookies. Používáním
-          webu s jejich používáním souhlasíte.'|t }}
+            {{ 'K ukládání nastavení a správnému fungování využíváme soubory cookies. Používáním webu s jejich používáním souhlasíte.'|t }}
         </div>
-        <a class="close-cookie-warning">
+        <a class="close-cookie-warning"
+           @click='$store.cookies.set("{{ complianceCookieName }}", "true", { expires: 120, path: "" }) && (isOpen = false)'>
             <span class="delete"></span>
         </a>
     </div>

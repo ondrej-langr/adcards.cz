@@ -1899,7 +1899,9 @@ a:focus {
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700 !important
+    font-weight: 700 !important;
+    background-position: center;
+    background-repeat: no-repeat;
 }
 
 .card-preview b {
@@ -2719,11 +2721,6 @@ h1 small {
 
 .alert-box span {
     font-size: 14px
-}
-
-.card-preview-around {
-    position: relative;
-    padding-bottom: 130px
 }
 
 .slick-next {

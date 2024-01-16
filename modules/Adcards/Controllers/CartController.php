@@ -338,11 +338,15 @@ class CartController
                 // Delete image
                 $cardInCart->setPlayerImage(null);
                 $cardInCart->setClubImage(null);
+                $materialName = $size['material']['name'];
+                $sizeWidth = $size['width'];
+                $sizeHeight = $size['height'];
 
                 $userEmailTemplatePayload['cards'][] = [
                     'title' => $createdCard->name,
-                    'subtitle' => '', // TODO
+                    'subtitle' => "<span class='uppercase'>$materialName (" . $sizeWidth . "x" . $sizeHeight . "cm)</span>", // TODO
                     'price' => "Cena: <b>$createdCard->final_price Kč</b>",
+                    'bonuses' => $cardPayload->bonuses['data'] ?? [],
                     'img' => [
                         "src" => $config->app->baseUrl . "/api/entry-types/files/items/$createdCard->background_id/raw?w=90"
                     ]
@@ -365,7 +369,7 @@ class CartController
                     'title' => $productInCartInfo['product']['name'] . " " . $productInCartInfo["count"] . "x",
                     'price' => "Cena: <b>" . $productInCartInfo['price']['total'] . " Kč</b>",
                     'img' => [
-                        'src' => $config->app->baseUrl . "/api/entry-types/files/items/$createdCard->background_id/raw?w=90"
+                        'src' => $config->app->baseUrl . "/api/entry-types/files/items/$productInCartId/raw?w=90"
                     ]
                 ];
             }
@@ -421,12 +425,12 @@ class CartController
         }
 
         try {
-            $promoCode = (new \PromoCodes())->query()->getOneById($promoCode['id']);
-
-            $promoCode->update([
-                'enabled' => $promoCode->wasCreatedForNewsletter ? false : true,
-                'usedTimes' => ($promoCode->usedTimes ?? 0) + 1
-            ]);
+            if ($promoCode) {
+                (new \PromoCodes())->query()->updateById($promoCode['id'], [
+                    'enabled' => !$promoCode->wasCreatedForNewsletter,
+                    'usedTimes' => ($promoCode->usedTimes ?? 0) + 1
+                ]);
+            }
         } catch (\Exception $error) {
             $this->container->get(Logger::class)->error("Failed to update promoCode", [
                 "error" => $error

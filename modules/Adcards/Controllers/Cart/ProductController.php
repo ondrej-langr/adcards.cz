@@ -71,6 +71,7 @@ class ProductController
             $cart->changeProductQuantity($productId, intval($body["quantity"]));
         }
 
+        $rendering = $this->container->get(RenderingService::class);
         $template = "@modules:Adcards/partials/pages/cart/right-side/right-side.twig";
         $resultPayload = [
             "state" => [
@@ -84,7 +85,16 @@ class ProductController
         ];
 
         $resultPayload = array_merge($resultPayload, $cart->stateToTemplateVariables());
-        $this->container->get(RenderingService::class)->render($response, $template, $resultPayload);
+        // Render main content first
+        $rendering
+            ->render($response, $template, $resultPayload);
+
+        // And render oob which is replaced on the page which ensures updated cart
+        $rendering
+            ->render($response, '@modules:Adcards/partials/mini-cart.twig', [
+                'cartSize' => $cart->getCount(),
+                'oob' => true
+            ]);
 
         return $response->withHeader("Cache-Control", "no-cache");
     }
