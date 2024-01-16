@@ -4,7 +4,6 @@ import orderPage from './alpine-components/orderPage'
 import cardBuilder from './alpine-components/cardBuilder'
 import Cookies from 'js-cookie'
 
-import 'keen-slider/keen-slider.min.css'
 import 'cropperjs/dist/cropper.css'
 import 'htmx.org'
 import './lazyload-images'
