@@ -1,0 +1,40 @@
+<!-- start @app/components/small-card.twig -->
+<div class='d-flex cart-overview__item'>
+    <div class='cart-overview__item-image'>
+        {% set currentImage = getImage(card.background.image, 100) %}
+        <img class='h-100 w-100 position-absolute' style='object-fit: contain' src="{{ currentImage.src }}"
+             width='{{ currentImage.width }}'
+             height='{{ currentImage.height }}' />
+    </div>
+    <div class="info w-100 position-relative">
+        <div class="name"><h4>{{ card.name }}</h4></div>
+        <div class="size"><span>{{ size.material.name }} ({{ size.width }}x{{ size.height }}cm)</span></div>
+        {% set totalPrice = size.price %}
+        {% if card.bonuses.data %}
+            {% set totalPrice = totalPrice + card.bonuses.data|reduce((carry,value) => carry + value.price) %}
+        {% endif %}
+        <div class="price"><span>Cena: <b>{{ totalPrice }} {{ "Kč"|t }}</b></span>
+        </div>
+        {% if card.bonuses.data %}
+            <div>
+                {{ "Včetně" }}:
+                {% for bonus in card.bonuses.data %}
+                    <span><span style='cursor:help;text-decoration: underline'
+                                title='{{ bonus.value }}'>{{ bonus.name }}</span> ({{ bonus.price }}
+                    Kč)</span>{% if loop.last == false %},{% endif %}
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if readOnly is not same as(true) %}
+            <button
+                    type='button'
+                    hx-delete='{{ url_for("removeCardByIndex") }}?i={{ index }}'
+                    hx-target="#cart-right-side"
+                    hx-swap='outerHTML'
+                    class='delete ignore-button-styles'
+                    hx-confirm='{{ "Opravdu vymazat?"|t }}'
+            ></button>
+        {% endif %}
+    </div>
+</div>
+<!-- end @app/components/small-card.twig -->

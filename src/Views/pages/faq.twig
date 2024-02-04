@@ -1,0 +1,31 @@
+{% extends '@app/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/css/faq.css">
+{% endblock %}
+
+{% block content %}
+    <div class="faq-around">
+        <div class="faq-inner">
+            <div class="headline">
+                <h1>FAQ</h1>
+            </div>
+            <div class="accordion">
+                {% for row in items %}
+                    <div class="accordion-item" x-data="{ opened: false }">
+                        <button id="accordion-button-{{ loop.index }}" @click='opened = !opened'
+                                :aria-expanded="String(opened)">
+                            <span class="accordion-title"><p>
+                                    {{ row.title }}
+                                </p></span>
+                            <span class="icon" aria-hidden="true"></span>
+                        </button>
+                        <div class="accordion-content">
+                            {{ row.body|raw }}
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

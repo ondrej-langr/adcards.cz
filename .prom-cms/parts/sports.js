@@ -3,38 +3,42 @@
  * @type {(typeof import('@prom-cms/schema').databaseConfigModelSchema)['_input']}
  */
 const sportsModel = {
-  admin: {},
-  icon: 'BallFootball',
-  sharable: false,
+  title: 'Sporty',
   tableName: 'sports',
+  admin: {
+    icon: 'BallFootball',
+  },
+  sharable: false,
   softDelete: false,
   ownable: false,
-  title: 'Sporty',
   draftable: false,
-  columns: {
-    'name': {
+  columns: [
+    {
+      'title': 'Název',
+      'type': 'string',
+      name: 'name',
       'required': true,
       'editable': true,
       'unique': true,
       'hide': false,
       'translations': true,
-      'type': 'string',
-      'title': 'Název',
       'admin': {
         'fieldType': 'heading',
       },
     },
-    'description': {
+    {
+      'title': 'Popisek',
+      'type': 'longText',
+      name: 'description',
       'required': false,
       'editable': true,
       'translations': true,
-      'type': 'longText',
-      'title': 'Popisek',
       'admin': {
         editor: { width: 6 },
       },
     },
-    'image': {
+    {
+      name: 'image',
       'required': true,
       'editable': true,
       'unique': false,
@@ -49,7 +53,7 @@ const sportsModel = {
         editor: { width: 6 },
       },
     },
-  },
+  ],
 }
 
 export default sportsModel

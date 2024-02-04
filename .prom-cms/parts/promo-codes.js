@@ -4,6 +4,10 @@
  */
 const promoCodesModel = {
   'title': 'Promo Kódy',
+  'tableName': 'promo_codes',
+  admin: {
+    'icon': 'ReceiptTax',
+  },
   'softDelete': false,
   'timestamp': true,
   'sorting': true,
@@ -11,11 +15,10 @@ const promoCodesModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': true,
-  'tableName': 'promo_codes',
   'intl': false,
-  'icon': 'ReceiptTax',
-  'columns': {
-    'code': {
+  'columns': [
+    {
+      name: 'code',
       'required': true,
       'editable': true,
       'unique': true,
@@ -27,7 +30,8 @@ const promoCodesModel = {
         editor: { width: 4 },
       },
     },
-    'amount': {
+    {
+      name: 'amount',
       'required': true,
       'editable': true,
       'unique': false,
@@ -39,7 +43,8 @@ const promoCodesModel = {
         editor: { width: 4 },
       },
     },
-    'enabled': {
+    {
+      name: 'enabled',
       'required': false,
       'editable': true,
       'unique': false,
@@ -52,7 +57,8 @@ const promoCodesModel = {
         editor: { width: 4 },
       },
     },
-    'usedTimes': {
+    {
+      name: 'usedTimes',
       'required': false,
       'editable': false,
       'unique': false,
@@ -65,7 +71,8 @@ const promoCodesModel = {
         editor: { width: 6 },
       },
     },
-    'wasCreatedForNewsletter': {
+    {
+      name: 'wasCreatedForNewsletter',
       'required': false,
       'editable': false,
       'unique': false,
@@ -79,7 +86,7 @@ const promoCodesModel = {
         editor: { width: 6 },
       },
     },
-  },
+  ],
 }
 
 export default promoCodesModel

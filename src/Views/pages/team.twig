@@ -1,0 +1,95 @@
+{% extends '@app/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/team.css">
+{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="/css/team.css">
+
+    <div class="header">
+        <div class="header-bg">
+            <div class="overlay">
+            </div>
+            <img src="/images/bg.jpg" class="img-bg">
+        </div>
+        <div class="header-content">
+            <div class="image">
+                <img src="/images/1084.png">
+            </div>
+            <div class="text">
+                <h1>Využij unikátní nabídky se slevou 30%!</h1>
+                <p>Zpestřete si v týmu Vaši fotbalovou sezónu vyhlašováním hráče měsíce!</p>
+                <a href="{{ url_for('builder') }}">
+                    <button>
+                        <span>Vytvořit vlastní kartu</span>
+                    </button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="calc-around">
+        <div class="calc-inner">
+            <div class="headline">
+                <h1>Jak to funguje?</h1>
+                <p>Odměňte nejlepší hráče ve vašem týmu unikátním dárkem a vytvořte si tak další motivaci k dobrým
+                    výkonům.
+                    Do hlasování můžete například zapojit Vaše fanoušky přes sociální sítě, nechat vybrat trenéra nebo
+                    si
+                    vymyslet vlastní formu vyhlašování.</p>
+
+                <div class="hr"></div>
+
+                <span class="bigger">Zkuste si <b>ve 3 krocích spočítat</b> na kolik by vás vyšla jedna<br>karta, když se
+                složí celá kabina!</span>
+            </div>
+            <div class="multistep-form">
+                <div class="input-around toggled" id="step1">
+                    <div class="custom-select">
+                        <select type="text" class="input value1 card-size" id="select-box">
+                            <option>Vyberte velikost karty</option>
+                            <option value="489">19x30cm / 489,- Kč</option>
+                            <option value="699">27x42cm / 699,- Kč</option>
+                            <option value="1049">37x59cm / 1049,- Kč</option>
+                            <option value="1924">53x84cm / 1924,- Kč</option>
+                        </select>
+                    </div>
+                    <span class="info-alert">Na všechny velikosti karet sleva 30%!</span>
+                    <button id="step1-btn">
+                        <span>Další krok</span>
+                    </button>
+                </div>
+
+                <div class="input-around" id="step2">
+                    <div class="custom-select">
+                        <select type="text" class="input value2">
+                            <option>Vyberte možnost dopravy</option>
+                            <option value="0">Osobní odběr - zdarma</option>
+                            <option value="130">DPD - 130Kč</option>
+                            <option value="80">Zásilkovna - 80kč</option>
+                        </select>
+                    </div>
+                    <button class="dark" id="stepback2-btn">
+                        <span>Zpět</span>
+                    </button>
+                    <button id="step2-btn">
+                        <span>Další krok</span>
+                    </button>
+                </div>
+                <div class="input-around" id="step3">
+                    <input type="text" class="input value3" placeholder="Počet hráčů">
+                    <button class="dark" id="stepback3-btn">
+                        <span>Zpět</span>
+                    </button>
+                    <button id="step3-btn">
+                        <span>Vypočítat cenu</span>
+                    </button>
+                </div>
+                <div class="result-around" id="step4">
+                    <input type="text" disabled="disabled" id="result" maxlength="4"> <span>Kč</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

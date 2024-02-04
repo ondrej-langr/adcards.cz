@@ -1,0 +1,113 @@
+<!-- start @app/partials/pages/cart/left-side/left-side.twig -->
+<div class="cart-left w50 w100-mob">
+    <h3>{{ "Kontaktní údaje"|t }}</h3>
+    <form
+            role="form"
+            id="cart-form"
+            hx-swap="outerHTML"
+            hx-target="#app-cart"
+            hx-select='#app-cart'
+            action="{{ url_for('finish-order') }}"
+            method="POST"
+            hx-post="{{ url_for('finish-order') }}"
+    >
+        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            {{ include("@app/components/input.twig", {
+                name: "firstname",
+                placeholder: 'Jméno'|t,
+                initialValue: state.form.values.firstname,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            {{ include("@app/components/input.twig", {
+                name: "lastname",
+                placeholder: 'Příjmení'|t,
+                initialValue: state.form.values.lastname,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            {{ include("@app/components/input.twig", {
+                name: "email",
+                placeholder: 'E-mail',
+                type: "email",
+                initialValue: state.form.values.email,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-6 col-lg-6 col-xl-6">
+            {{ include("@app/components/input.twig", {
+                name: "phone",
+                placeholder: 'Telefonní číslo'|t,
+                type: "tel",
+                initialValue: state.form.values.phone,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+            {{ include("@app/components/input.twig", {
+                name: "street",
+                placeholder: 'Ulice'|t,
+                initialValue: state.form.values.street,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+            {{ include("@app/components/input.twig", {
+                name: "houseNumber",
+                placeholder: 'Číslo popisné'|t,
+                initialValue: state.form.values.houseNumber,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-8 col-lg-8 col-xl-8">
+            {{ include("@app/components/input.twig", {
+                name: "city",
+                placeholder: 'Město'|t,
+                initialValue: state.form.values.city,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-4 col-lg-4 col-xl-4">
+            {{ include("@app/components/input.twig", {
+                name: "postalCode",
+                placeholder: 'PSČ'|t,
+                type: "number",
+                initialValue: state.form.values.postalCode,
+                required: true,
+                onChange: "doValidate()",
+                bindAlpine: true
+            }) }}
+        </div>
+        <div class="form-group col-12 col-sm-12 col-md-12 col-lg-12 col-xl-12">
+            <textarea name="note" class="form-control" rows="3"
+                      placeholder="{{ 'Poznámka k objednávce'|t }}"
+                      x-on:change='doValidate()'
+                      value='{{ state.form.values.note }}'
+                      x-model='note'>
+            </textarea>
+        </div>
+
+        {{ include("@app/partials/pages/cart/left-side/shipping-select.twig") }}
+        {{ include("@app/partials/pages/cart/left-side/payment-select.twig") }}
+    </form>
+    {% if state.form.errors is not empty %}
+        {{ include("@app/components/toast-alert.twig", { message: "Zkontrolujte si zadaná data a odešlete formulář znovu", isError: true }) }}
+    {% endif %}
+</div>
+<!-- end -->

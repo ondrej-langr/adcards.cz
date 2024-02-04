@@ -4,6 +4,10 @@
  */
 const cardMaterialModel = {
   'title': 'Materiál karet',
+  'tableName': 'card_material',
+  admin: {
+    icon: 'Cell',
+  },
   'softDelete': false,
   'timestamp': true,
   'sorting': true,
@@ -11,11 +15,10 @@ const cardMaterialModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': true,
-  'tableName': 'card_material',
   'intl': true,
-  'icon': 'Cell',
-  'columns': {
-    'name': {
+  'columns': [
+    {
+      name: 'name',
       'required': true,
       'editable': true,
       'unique': true,
@@ -27,7 +30,8 @@ const cardMaterialModel = {
         'fieldType': 'heading',
       },
     },
-    'description': {
+    {
+      name: 'description',
       'required': true,
       'editable': true,
       'translations': true,
@@ -39,7 +43,8 @@ const cardMaterialModel = {
         },
       },
     },
-    'image': {
+    {
+      name: 'image',
       'required': true,
       'editable': true,
       'unique': false,
@@ -56,27 +61,30 @@ const cardMaterialModel = {
         },
       },
     },
-    'bonuses': {
+    {
+      name: 'bonuses',
       'required': false,
       'translations': false,
       'type': 'json',
       'title': 'Bonusové informace za příplatek',
       'admin': {
         'fieldType': 'repeater',
-        'columns': {
-          'name': {
+        'columns': [
+          {
+            name: 'name',
             'required': true,
             'type': 'string',
           },
-          'price': {
+          {
+            name: 'price',
             'required': true,
             'type': 'number',
             title: 'Cena v Kč',
           },
-        },
+        ],
       },
     },
-  },
+  ],
 }
 
 export default cardMaterialModel

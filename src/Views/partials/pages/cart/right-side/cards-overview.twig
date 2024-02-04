@@ -1,0 +1,13 @@
+{% if cart.cards|length > 0 %}
+    <h3>{{ "Přehled objednávky - karty"|t }}</h3>
+
+    <div class="full-order cart-overview__items">
+        {% for itemId, item in cart.cards %}
+            {{ include("@app/components/small-card.twig", {
+                "card": item,
+                "size": item.size,
+                "index": loop.index0
+            }) }}
+        {% endfor %}
+    </div>
+{% endif %}

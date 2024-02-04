@@ -1,0 +1,17 @@
+<!-- start @app/components/add-product-to-cart.twig -->
+<form role="form"
+      class="add-to-cart"
+      hx-swap="outerHTML"
+      hx-target="#mini-cart"
+      action="{{ url_for('add-to-cart') }}"
+      hx-post="{{ url_for('add-to-cart') }}"
+      method="POST"
+>
+    <input class="d-none" name="product-id" value="{{ id }}" />
+    <input class="add-to-cart__value" name="quantity" type="number" min="1" step="1" value="1" />
+    <button type="submit">
+        <span class="hx-hide-on-request">{{ (addToCartMessage ?? 'Přidat do košíku') | t }}</span>
+        <span class="hx-show-on-request">{{ 'Přidávám...' | t }}</span>
+    </button>
+</form>
+<!-- end @app/components/add-product-to-cart.twig -->

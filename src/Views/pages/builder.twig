@@ -1,0 +1,101 @@
+{% extends '@app/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/builder.css">
+    <link rel="stylesheet" href="/css/pages/products.css">
+{% endblock %}
+
+ {% macro step(stepIndex, title, contents, hide = true) %}
+     <div class='builder__steps__step' x-show='getCurrentStep() === {{ stepIndex }}'
+          {% if (hide == true) %}style='display: none'{% endif %}>
+         <h3 class='text-center'>{{ title|t }}</h3>
+         {{ contents|raw }}
+     </div>
+ {% endmacro %}
+
+ {% macro slider(items, xShow) %}
+     <div x-data='cardSlider' @builder-slides-changed.window='create()' class="slider builder-slider"
+          {% if xShow %}x-show="{{ xShow }}"
+          style='display:none;' {% endif %}>
+         {% for item in items %}
+             <a class="slide"
+                @click.prevent='{{ item.onClick }}'
+                {% if item.selectedCondition %}:class="'selected': {{ item.selectedCondition }}"{% endif %}
+                {% if "$" in item.href %}:{% endif %}href='{{ item.href }}'>
+                 <div class='image-wrap'>
+                     {% set currentImage = getImage(item.image, 440) %}
+                     {% set placeholderImage = getImage(item.image, 20) %}
+                     <img alt='' src="{{ placeholderImage.src }}" data-src="{{ currentImage.src }}"
+                          width="{{ currentImage.width }}"
+                          height="{{ currentImage.height }}" loading='lazy'>
+                 </div>
+                 <h4>{{ item.name }}</h4>
+                 {% if item.description %}
+                     <p>{{ item.description }}</p>
+                 {% endif %}
+             </a>
+         {% endfor %}
+     </div>
+ {% endmacro %}
+
+{% block content %}
+    {% set props = {
+        materials,
+        sports,
+        state
+    } %}
+    <div id='builder-root' class='builder' x-data="cardBuilder(JSON.parse(`{{ props|json_encode }}`))">
+        <nav class='builder__steps-navigation align-items-center flex'>
+            <template x-for='i in 4'>
+                <button @click='selectStep(i-1)' :class='getCurrentStep() === i-1 ? "current" : ""' x-text='i'
+                        :disabled='getLargestTakenStep() < i-1'>
+                </button>
+            </template>
+        </nav>
+        <div class='builder__steps'>
+            {# Material select #}
+            {{ _self.step(0, "Vyberte materiál",
+                _self.slider(materials|map( material => {
+                    href: '/karty/builder?materialId=' ~ material.id,
+                    image: material.image,
+                    name: material.name,
+                    description: material.description,
+                    onClick: "setMaterial(" ~ material.id ~", true)"
+                })),
+                state.form.values.currentStep != 0
+            ) }}
+
+            {# Sport select #}
+            {{ _self.step(1, "Vyberte sport",
+                _self.slider(sports|map( sport => {
+                    href: '`/karty/builder?materialId=${_materialId}&sportId=' ~ sport.id ~ '`',
+                    image: sport.image,
+                    name: sport.name,
+                    description: sport.description,
+                    onClick: "setSport(" ~ sport.id ~", true)"
+                })),
+                state.form.values.currentStep != 1
+            ) }}
+
+            {# Background select #}
+            {{ _self.step(2, "Vyberte pozadí karty",
+                sports|map( sport => _self.slider(sport.backgrounds|map( background => {
+                    href: '`/karty/builder?materialId=${_materialId}&sportId=${_sportId}&backgroundId=' ~ background.id ~ '`',
+                    image: background.image,
+                    name: background.name,
+                    description: background.description,
+                    onClick: "setBackground(" ~ background.id ~", true)"
+                }), '_sportId === ' ~ sport.id))|join(''),
+                state.form.values.currentStep != 2
+            ) }}
+
+
+            <div class='builder__steps__step'
+                 x-show='getCurrentStep() === 3'
+                 {% if (state.form.values.currentStep != 3) %}style='display: none'{% endif %}
+            >
+                {{ include("@app/partials/pages/builder/form/form.twig") }}
+            </div>
+        </div>
+    </div>
+{% endblock %}

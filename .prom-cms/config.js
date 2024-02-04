@@ -16,24 +16,30 @@ import sportsModel from './parts/sports.js'
  */
 const config = {
   'project': {
-    'name': 'adcards',
-    'slug': 'adcards',
-    'url': 'http://localhost',
+    name: 'adcards',
+    slug: 'adcards',
+    url: 'http://localhost:3000',
   },
   database: {
-    models: {
-      'cardBackgrounds': cardBackgroundsModel,
-      'cardMaterial': cardMaterialModel,
-      'cardSizes': cardSizesModel,
-      'cards': cardsModel,
-      'countries': countriesModel,
-      'mainPageSlides': mainPageSlidesModel,
-      'newsletterSubscriptions': newsletterSubscriptionsModel,
-      'orders': ordersModel,
-      'products': productsModel,
-      'promoCodes': promoCodesModel,
-      'sports': sportsModel,
-    },
+    connections: [
+      {
+        name: 'default-connection',
+        uri: 'pdo-sqlite:///.database/application.sqlite',
+      },
+    ],
+    models: [
+      cardBackgroundsModel,
+      cardMaterialModel,
+      cardSizesModel,
+      cardsModel,
+      countriesModel,
+      mainPageSlidesModel,
+      newsletterSubscriptionsModel,
+      ordersModel,
+      productsModel,
+      promoCodesModel,
+      sportsModel,
+    ],
   },
 }
 

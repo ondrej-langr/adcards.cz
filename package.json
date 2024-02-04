@@ -4,41 +4,49 @@
   "description": "",
   "license": "MIT",
   "type": "module",
-  "workspaces": [
-    "modules/*"
-  ],
   "scripts": {
-    "build": "vite build --emptyOutDir && pnpm --filter @adcards/email-templates build",
+    "build": "pnpm run /^build:.*/",
+    "build:project": "vite build --emptyOutDir && pnpm --filter @adcards/email-templates build",
+    "build:email": "NODE_ENV=\"production\" email export --dir=src/email-templates --outDir=src/Views/email",
     "update:prom": "npx @prom-cms/cli project update --no-admin",
     "update:prom:all": "npx @prom-cms/cli project update",
-    "dev": "vite"
-  },
-  "devDependencies": {
-    "@paypal/paypal-js": "^7.1.1",
-    "@prettier/plugin-php": "^0.20.1",
-    "@prom-cms/admin": "^0.17.2",
-    "@prom-cms/api-client": "^0.10.0",
-    "@prom-cms/cli": "^0.21.6",
-    "@prom-cms/schema": "^0.5.0",
-    "@prom-cms/vite-plugin": "^0.7.1",
-    "@types/alpinejs": "^3.13.5",
-    "@types/lodash": "^4.14.202",
-    "prettier-plugin-twig-melody": "^0.4.6",
-    "tailwindcss": "^3.3.5",
-    "typescript": "^5.3.2",
-    "vite": "^4.5.0",
-    "@types/js-cookie": "^3.0.6",
-    "vite-plugin-live-reload": "^3.0.2"
+    "dev": "vite",
+    "dev:email": "email dev --dir=src/email-templates --port=3003"
   },
   "dependencies": {
+    "slick-carousel": "^1.8.1",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "alpinejs": "^3.13.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "cropperjs": "^1.6.1",
     "htmx.org": "^1.9.10",
     "js-cookie": "^3.0.5",
     "lodash": "^4.17.21",
     "vanilla-lazyload": "^17.8.5",
     "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "@paypal/paypal-js": "^7.1.1",
+    "@prettier/plugin-php": "^0.20.1",
+    "@prom-cms/api-client": "^0.11.1",
+    "@prom-cms/cli": "^0.22.12",
+    "@prom-cms/schema": "^0.6.2",
+    "@prom-cms/vite": "^0.2.0",
+    "@types/alpinejs": "^3.13.5",
+    "@types/lodash": "^4.14.202",
+    "prettier-plugin-twig-melody": "^0.4.6",
+    "tailwindcss": "^3.3.5",
+    "typescript": "^5.3.2",
+    "vite": "^5.0.12",
+    "@types/react": "^18.2.46",
+    "@types/node": "^18.15.3",
+    "@types/react-dom": "^18.2.18",
+    "react-email": "^1.10.0",
+    "@react-email/components": "^0.0.12",
+    "@types/js-cookie": "^3.0.6",
+    "@types/slick-carousel": "^1.6.40",
+    "vite-plugin-live-reload": "^3.0.2"
   }
 }

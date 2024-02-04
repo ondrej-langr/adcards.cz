@@ -1,0 +1,76 @@
+<!-- start @app/components/small-product.twig -->
+{% set rootId = "small-product-" ~ orderedProduct.product.id %}
+<div id='{{ rootId }}' class='d-flex small-product'>
+    {% if orderedProduct.product.images %}
+        <div class='small-product__image'>
+
+            {% set currentImage = getImage(orderedProduct.product.images[0], 200) %}
+            {% set placeholderImage = getImage(orderedProduct.product.images[0], 10) %}
+            <img class='h-100 w-100 position-absolute' src='{{ placeholderImage.src }}'
+                 data-src="{{ currentImage.src }}"
+                 width='{{ currentImage.width }}'
+                 height='{{ currentImage.height }}' loading='lazy' />
+        </div>
+    {% endif %}
+    {#    This will be replaced when user updates quantity #}
+    <form action='{{ url_for("updateProductInCart") }}'
+          method='POST'
+          hx-post='{{ url_for("updateProductInCart") }}'
+          hx-target='#cart-right-side'
+          hx-swap="outerHTML"
+          class='d-flex w-100 align-items-center ignore-form-styles position-relative'
+    >
+        <input name='product-id' value='{{ orderedProduct.product.id }}' class='d-none' />
+        <div class='w-100 info'>
+            <a class="name" href='{{ url_for("productUnderpage", { productId: orderedProduct.product.id }) }}'>
+                <h4>
+                    {{ orderedProduct.product.name }}
+                    {% if readOnly is same as(true) %}
+                        <span class='text-muted'>({{ orderedProduct.count }}x)</span>
+                    {% endif %}
+                </h4>
+            </a>
+            <div class="price">
+                {% if readOnly is not same as(true) %}
+                    <span>Cena: <b>{{ orderedProduct.price.total ?? orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
+                {% else %}
+                    <span>Cena za kus: <b>{{ orderedProduct.price.total ?? orderedProduct.product.price }} {{ "Kč"|t }}</b></span>
+                    <br />
+                    <span>Celkově: <b
+                                class='text-brands-signature'>{{ orderedProduct.product.price * orderedProduct.count }} {{ "Kč"|t }}</b></span>
+                {% endif %}
+            </div>
+        </div>
+
+        {% if asExtra %}
+            <button type="button"
+                    hx-post='{{ url_for('add-to-cart') }}?with-updated-cart'
+                    hx-vals='{"product-id": {{ orderedProduct.product.id }},"quantity": 1}'
+                    hx-target="#mini-cart">
+                <span class="hx-hide-on-request">{{ 'Přidat' | t }}</span>
+                <span class="hx-show-on-request">{{ 'Přidávám...' | t }}</span>
+            </button>
+        {% elseif readOnly is not same as(true) %}
+            <input class="small-product__quantity"
+                   type="number"
+                   min="1"
+                   step="1"
+                   name='quantity'
+                   value="{{ orderedProduct.count }}"
+                    {#               If it submits then it triggers form to send updates to server and get newest data #}
+                   @input.debounce.500ms="$event.target.form.requestSubmit();"
+                   x-data
+            />
+
+            <button
+                    type='button'
+                    hx-delete='{{ url_for("removeFromCart") }}?product-id={{ orderedProduct.product.id }}'
+                    hx-target="#cart-right-side"
+                    hx-swap='outerHTML'
+                    class='delete ignore-button-styles'
+                    hx-confirm='{{ "Opravdu vymazat?"|t }}'
+            ></button>
+        {% endif %}
+    </form>
+</div>
+<!-- end @app/components/small-product.twig -->

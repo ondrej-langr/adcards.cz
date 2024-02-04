@@ -1,0 +1,32 @@
+{% extends '@app/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/cart.css">
+    <link rel="stylesheet" href="/css/pages/order-underpage.css">
+{% endblock %}
+
+{% block content %}
+    <div class="cart-around" id="app-cart"
+         x-data='cartForm({
+            initialData: JSON.parse(`{{ { state }|json_encode }}`),
+            validationSchema: JSON.parse(`{{ validationSchema|replace({"\n": "", "\r": "", "\t": ""}) }}`),
+            shippingMethods: JSON.parse(`{{ shippingMethods|json_encode|replace({"\n": "", "\r": "", "\t": ""}) }}`),
+            errorMessagesForRequiredFields: JSON.parse(`{{ errorMessagesForRequiredFields|json_encode|replace({"\n": "", "\r": "", "\t": ""}) }}`),
+            cart: {
+                total: JSON.parse(`{{ cart.total|json_encode }}`)
+            }
+         })'>
+        <div class="cart-inner">
+            <div class="headline">
+                <h1>{{ 'Dokončení objednávky'|t }}</h1>
+            </div>
+
+            {% if cartSize == 0 %}
+                <h1 class="no-background">{{ 'Váš košík je prázdný...'|t }}</h1>
+            {% else %}
+                {{ include("@app/partials/pages/cart/left-side/left-side.twig") }}
+                {{ include("@app/partials/pages/cart/right-side/right-side.twig") }}
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

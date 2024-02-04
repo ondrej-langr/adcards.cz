@@ -4,6 +4,10 @@
  */
 const newsletterSubscriptionsModel = {
   'title': 'Odběry newsletteru',
+  'tableName': 'newsletter_subscriptions',
+  admin: {
+    icon: 'News',
+  },
   'softDelete': false,
   'timestamp': true,
   'sorting': false,
@@ -11,11 +15,10 @@ const newsletterSubscriptionsModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': false,
-  'tableName': 'newsletter_subscriptions',
   'intl': false,
-  'icon': 'News',
-  'columns': {
-    'email': {
+  'columns': [
+    {
+      name: 'email',
       'required': true,
       'editable': true,
       'unique': true,
@@ -24,7 +27,7 @@ const newsletterSubscriptionsModel = {
       'type': 'string',
       'title': 'Email',
     },
-  },
+  ],
 }
 
 export default newsletterSubscriptionsModel

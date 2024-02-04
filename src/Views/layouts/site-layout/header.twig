@@ -1,0 +1,120 @@
+<nav class="{{ isHome ? '' : 'dark' }}">
+    <div class="nav-upper {{ isHome ? '' : 'dark' }}">
+        <ul>
+            <li>
+                <a href="mailto:info@adcards.cz">
+                    <svg style="margin-right:5px;" xmlns="http://www.w3.org/2000/svg" x="0px" y="0px"
+                         width="20" height="20" viewBox="0 0 24 24" style=" fill:#ffffff;">
+                        <path
+                                d="M 4 4 C 3.07 4 2.2923125 4.6429063 2.0703125 5.5039062 L 12 11.726562 L 21.935547 5.5214844 C 21.719547 4.6504844 20.937 4 20 4 L 4 4 z M 2 7.734375 L 2 18 C 2 19.103 2.897 20 4 20 L 20 20 C 21.103 20 22 19.103 22 18 L 22 7.7558594 L 12 14 L 2 7.734375 z">
+                        </path>
+                    </svg>
+                    info@adcards.cz</a>
+            </li>
+            <li>
+                <a href="tel:+420775025295">
+                    <svg style="margin-right:5px;" xmlns="http://www.w3.org/2000/svg"
+                         x="0px" y="0px" width="20" height="20" viewBox="0 0 24 24"
+                         style=" fill:#000000;">
+                        <path
+                                d="M 8 2.398438 C 8.101563 2.398438 8.101563 2.398438 8.199219 2.5 C 8.300781 2.601563 8.601563 2.898438 8.601563 3.101563 C 8.601563 3.300781 8.601563 3.800781 8.699219 4.199219 C 8.898438 4.699219 9.101563 6 9.398438 6.699219 C 9.699219 7.398438 9.800781 7.800781 9.5 8.199219 C 9.199219 8.699219 7.300781 10.601563 7.300781 10.601563 C 7.300781 10.601563 7.800781 11.601563 8.398438 12.199219 C 8.898438 12.898438 9.699219 13.898438 10.699219 14.699219 C 11.699219 15.601563 12.800781 16.398438 13.898438 16.898438 C 15 15.800781 15.898438 14.898438 16.199219 14.699219 C 16.5 14.5 16.5 14.398438 17 14.601563 C 17.5 14.800781 18.199219 15.101563 19 15.199219 C 19.699219 15.300781 20.5 15.398438 21 15.5 C 21.5 15.601563 21.5 15.601563 21.601563 15.800781 C 21.800781 16 21.898438 16.300781 21.898438 16.398438 C 21.898438 16.5 21.898438 16.800781 21.898438 17.800781 C 21.898438 18.800781 21.898438 20.199219 21.898438 20.5 C 21.898438 20.800781 21.898438 20.800781 21.800781 21 C 21.699219 21.199219 21.601563 21.699219 21.601563 21.699219 C 21.601563 21.800781 21.101563 22 20.800781 22 C 20.5 22 19.398438 22 18.699219 21.898438 C 18 21.800781 16.101563 21.398438 15.398438 21.101563 C 14.699219 20.898438 12.398438 20.101563 9.601563 18 C 7 16 5.101563 13.300781 4 11.101563 C 2.898438 8.898438 2.300781 6.5 2.199219 5.300781 C 2 4.101563 2 3.601563 2 3.300781 C 2.101563 3 2.398438 2.699219 2.601563 2.601563 C 2.800781 2.5 3.101563 2.398438 3.398438 2.398438 C 3.699219 2.398438 4.5 2.398438 5.601563 2.398438 C 6.699219 2.398438 8 2.398438 8 2.398438 Z">
+                        </path>
+                    </svg>
+                    +420 775 025 295</a>
+            </li>
+        </ul>
+        <ul>
+            <a target="_blank" href="{% include('@app/layouts/site-layout/facebook-url.twig') %}">
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="20"
+                         height="20" viewBox="0 0 24 24" style=" fill:#ffffff;">
+                        <path
+                                d="M12,0C5.373,0,0,5.373,0,12c0,6.016,4.432,10.984,10.206,11.852V15.18H7.237v-3.154h2.969V9.927c0-3.475,1.693-5,4.581-5 c1.383,0,2.115,0.103,2.461,0.149v2.753h-1.97c-1.226,0-1.654,1.163-1.654,2.473v1.724h3.593L16.73,15.18h-3.106v8.697 C19.481,23.083,24,18.075,24,12C24,5.373,18.627,0,12,0z">
+                        </path>
+                    </svg>
+                </li>
+            </a>
+            <a target="_blank" href="{% include('@app/layouts/site-layout/instagram-url.twig') %}">
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" x="0px" y="0px" width="26"
+                         height="26" viewBox="0 0 32 32" style=" fill:#ffffff;">
+                        <path
+                                d="M 11.46875 5 C 7.917969 5 5 7.914063 5 11.46875 L 5 20.53125 C 5 24.082031 7.914063 27 11.46875 27 L 20.53125 27 C 24.082031 27 27 24.085938 27 20.53125 L 27 11.46875 C 27 7.917969 24.085938 5 20.53125 5 Z M 11.46875 7 L 20.53125 7 C 23.003906 7 25 8.996094 25 11.46875 L 25 20.53125 C 25 23.003906 23.003906 25 20.53125 25 L 11.46875 25 C 8.996094 25 7 23.003906 7 20.53125 L 7 11.46875 C 7 8.996094 8.996094 7 11.46875 7 Z M 21.90625 9.1875 C 21.402344 9.1875 21 9.589844 21 10.09375 C 21 10.597656 21.402344 11 21.90625 11 C 22.410156 11 22.8125 10.597656 22.8125 10.09375 C 22.8125 9.589844 22.410156 9.1875 21.90625 9.1875 Z M 16 10 C 12.699219 10 10 12.699219 10 16 C 10 19.300781 12.699219 22 16 22 C 19.300781 22 22 19.300781 22 16 C 22 12.699219 19.300781 10 16 10 Z M 16 12 C 18.222656 12 20 13.777344 20 16 C 20 18.222656 18.222656 20 16 20 C 13.777344 20 12 18.222656 12 16 C 12 13.777344 13.777344 12 16 12 Z">
+                        </path>
+                    </svg>
+                </li>
+            </a>
+        </ul>
+    </div>
+    <div class="nav-inner">
+        <a href="/" class="logo" id="logo"><img src="/images/logo_AD.png"></a>
+        <!-- <div class="mob-items">
+                <div class="mob-cartForm">
+                    <a href="#"><i class="fa-shopping-cartForm fas"></i><span>{{ cartCount }}</span></a>
+                </div>
+                <div class="mob-menu" id="mob-menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </div> -->
+        <div class="menu-around">
+            <ul class="menu">
+                <a href="{{ url_for('products') }}">
+                    <li>
+                        {{ 'Produkty' | t }}
+                    </li>
+                </a>
+                <a href="{{ url_for('faq') }}">
+                    <li>
+                        FAQ
+                    </li>
+                </a>
+                <a href="{{ url_for('contact') }}">
+                    <li>
+                        {{ 'Kontakt' | t }}
+                    </li>
+                </a>
+            </ul>
+            <div class="dropdown-language-around" x-data='{ opened: false }' @mouseenter='opened = true'
+                 @mouseleave='opened = false'>
+                <div class="dropdown language-btn">
+                    <img src="/images/flags/{{ getCurrentLanguage() }}.svg" width="14" height="15"
+                         alt="{{ getCurrentLanguage() }} vlajka">
+                    {{ getCurrentLanguage() }}
+                </div>
+                <div class="dropdown-language-content" :class="{ 'toggled': opened }">
+                    {#                    We create special array that has keys as languages and value as empty string. This will be later used to clear url #}
+                    {% set languagesAsReplacer = {} %}
+                    {% set defaultLanguage = getConfig().i18n.default %}
+                    {% for language in getConfig().i18n.languages %}
+                        {% set languageWithSlash = language ~ "/" %}
+                        {% set languagesAsReplacer = languagesAsReplacer|merge({
+                            (languageWithSlash): ""
+                        }) %}
+                    {% endfor %}
+
+                    {% for language in getConfig().i18n.languages %}
+                        {% set finalUrl = current_url()|replace(languagesAsReplacer) %}
+                        {% if language != defaultLanguage %}
+                            {% set finalUrl = '/' ~ language ~ finalUrl %}
+                        {% endif %}
+
+                        <a href="{{ finalUrl }}">
+                            <img alt='{{ language }} vlajka' src="/images/flags/{{ language }}.svg">
+                            {{ (language) | upper }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            {% include('@app/partials/mini-cart.twig') %}
+
+            <a href="{{ url_for('builder') }}">
+                <div class="create-btn">
+                    <p>{{ 'Vytvořit kartu' | t }}</p>
+                </div>
+            </a>
+        </div>
+    </div>
+</nav>

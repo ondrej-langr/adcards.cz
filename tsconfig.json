@@ -9,7 +9,12 @@
     "experimentalDecorators": true,
     "sourceMap": true,
     "target": "ESNext",
-    "lib": ["dom", "dom.iterable", "esnext", "es6"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext",
+      "es6"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -26,6 +31,12 @@
     "allowSyntheticDefaultImports": true,
     "outDir": "public/bundle"
   },
-  "include": ["./frontend-src"],
-  "exclude": ["node_modules", "public"]
+  "include": [
+    "./src/frontend-src",
+    "./src/email-templates"
+  ],
+  "exclude": [
+    "node_modules",
+    "public"
+  ]
 }

@@ -1,9 +1,13 @@
 /**
  *
- * @type {(typeof import('@prom-cms/schema').databaseConfigModelSchema)['_input']}
+ * @type {(typeof import('@prom-cms/schema').DatabaseConfigModel)}
  */
 const cardBackgroundsModel = {
   'title': 'Pozadí karet',
+  'tableName': 'card_backgrounds',
+  admin: {
+    'icon': 'BoxMultiple1',
+  },
   'softDelete': false,
   'timestamp': true,
   'sorting': true,
@@ -11,11 +15,10 @@ const cardBackgroundsModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': true,
-  'tableName': 'card_backgrounds',
   'intl': true,
-  'icon': 'BoxMultiple1',
-  'columns': {
-    'name': {
+  'columns': [
+    {
+      name: 'name',
       'required': true,
       'editable': true,
       'unique': true,
@@ -27,7 +30,8 @@ const cardBackgroundsModel = {
         'fieldType': 'heading',
       },
     },
-    'image': {
+    {
+      name: 'image',
       'required': true,
       'editable': true,
       'unique': false,
@@ -41,7 +45,8 @@ const cardBackgroundsModel = {
         'fieldType': 'big-image',
       },
     },
-    'textColor': {
+    {
+      name: 'textColor',
       'required': true,
       'editable': true,
       'unique': false,
@@ -51,16 +56,17 @@ const cardBackgroundsModel = {
       'title': 'Barva textu',
       admin: { fieldType: 'color' },
     },
-    'sport_id': {
+    {
+      name: 'sport_id',
+      'type': 'relationship',
       'required': true,
       'translations': false,
-      'type': 'relationship',
       'multiple': false,
-      'targetModel': 'sports',
+      'targetModelTableName': 'sports',
       'labelConstructor': '{{name}}',
       'title': 'Sport ',
     },
-  },
+  ],
 }
 
 export default cardBackgroundsModel

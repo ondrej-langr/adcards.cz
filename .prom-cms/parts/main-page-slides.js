@@ -4,16 +4,18 @@
  */
 const mainPageSlidesModel = {
   'title': 'Položky slideru na hlavní stránce',
+  'tableName': 'main_page_slides',
+  admin: {
+    'icon': 'Slideshow',
+  },
   'softDelete': false,
   'sorting': true,
   'sharable': false,
-
   'draftable': false,
-  'tableName': 'main_page_slides',
   'intl': true,
-  'icon': 'Slideshow',
-  'columns': {
-    'title': {
+  'columns': [
+    {
+      name: 'title',
       'required': true,
       'editable': true,
       'unique': true,
@@ -25,7 +27,8 @@ const mainPageSlidesModel = {
         'fieldType': 'heading',
       },
     },
-    'subTitle': {
+    {
+      name: 'subTitle',
       'required': false,
       'editable': true,
       'hide': false,
@@ -33,7 +36,8 @@ const mainPageSlidesModel = {
       'type': 'string',
       'title': 'Subtitulek',
     },
-    'buttonUrl': {
+    {
+      name: 'buttonUrl',
       'required': false,
       'hide': false,
       'translations': true,
@@ -46,7 +50,8 @@ const mainPageSlidesModel = {
         },
       },
     },
-    'image': {
+    {
+      name: 'image',
       'required': true,
       'editable': true,
       'unique': false,
@@ -63,7 +68,7 @@ const mainPageSlidesModel = {
         },
       },
     },
-  },
+  ],
 }
 
 export default mainPageSlidesModel

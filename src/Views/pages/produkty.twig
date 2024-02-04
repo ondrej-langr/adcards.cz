@@ -1,0 +1,18 @@
+{% extends '@app/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/products.css">
+{% endblock %}
+
+{% block content %}
+    <div class="shop">
+        <h2>{{ "Obchod"|t }}</h2>
+        <div class="shop-content">
+            {% for product in products %}
+                {{ include("@app/components/product.twig", product) }}
+            {% else %}
+                Zatím žádné produkty...
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

@@ -1,41 +1,45 @@
-const relationFields = {
-  'background_id': {
+const relationFields = [
+  {
+    name: 'background_id',
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
-    'targetModel': 'cardBackgrounds',
+    'targetModelTableName': 'cardBackgrounds',
     'labelConstructor': '{{name}}',
     'title': 'Pozadí karty',
   },
-  'country_id': {
+  {
+    name: 'country_id',
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
-    'targetModel': 'countries',
+    'targetModelTableName': 'countries',
     'labelConstructor': '{{name}}',
     'title': 'Země',
   },
-  'size_id': {
+  {
+    name: 'size_id',
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
-    'targetModel': 'cardSizes',
+    'targetModelTableName': 'cardSizes',
     'labelConstructor': '{{width}}x{{height}}cm',
     'title': 'Velikost',
   },
-  'order_id': {
+  {
+    name: 'order_id',
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
-    'targetModel': 'orders',
+    'targetModelTableName': 'orders',
     'labelConstructor': '#{{id}} ({{total_cost}} {{currency}})',
     'title': 'Objednávka',
   },
-}
+]
 
 /**
  *
@@ -43,6 +47,10 @@ const relationFields = {
  */
 const cardsModel = {
   'title': 'Objednané karty',
+  'tableName': 'cards',
+  admin: {
+    icon: 'Id',
+  },
   'softDelete': false,
   'timestamp': true,
   'sorting': true,
@@ -50,11 +58,10 @@ const cardsModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': false,
-  'tableName': 'cards',
   'intl': false,
-  'icon': 'Id',
-  'columns': {
-    'player_image': {
+  'columns': [
+    {
+      name: 'player_image',
       'required': false,
       'translations': false,
       'multiple': false,
@@ -66,7 +73,8 @@ const cardsModel = {
         editor: { width: 6 },
       },
     },
-    'club_image_id': {
+    {
+      name: 'club_image_id',
       'required': false,
       'translations': false,
       'multiple': false,
@@ -78,7 +86,8 @@ const cardsModel = {
         editor: { width: 6 },
       },
     },
-    'name': {
+    {
+      name: 'name',
       'required': true,
       'editable': true,
       'unique': false,
@@ -87,7 +96,8 @@ const cardsModel = {
       'type': 'string',
       'title': 'Název',
     },
-    'rating': {
+    {
+      name: 'rating',
       'required': false,
       'editable': true,
       'unique': false,
@@ -96,7 +106,8 @@ const cardsModel = {
       'type': 'number',
       'title': 'Hodnocení',
     },
-    'stats': {
+    {
+      name: 'stats',
       'required': false,
       'translations': false,
       'type': 'json',
@@ -104,28 +115,39 @@ const cardsModel = {
       readonly: true,
       'admin': {
         'fieldType': 'repeater',
-        'columns': {
-          'name': {
+        'columns': [
+          {
+            name: 'name',
             'required': true,
             'type': 'string',
             readonly: true,
           },
-          'value': {
+          {
+            name: 'value',
             'required': true,
             'type': 'string',
             readonly: true,
           },
-        },
+        ],
       },
     },
-    'card_type': {
+    {
+      name: 'card_type',
       'required': true,
       'translations': false,
       'type': 'enum',
-      'enum': ['goalKeeper', 'player', 'manager'],
+      'enum': {
+        name: 'CardType',
+        values: {
+          GOAL_KEEPER: 'goalKeeper',
+          PLAYER: 'player',
+          MANAGER: 'manager',
+        },
+      },
       'title': 'Typ karty',
     },
-    'final_price': {
+    {
+      name: 'final_price',
       'required': true,
       'editable': false,
       'unique': false,
@@ -135,19 +157,27 @@ const cardsModel = {
       'title': 'Cena',
       readonly: true,
     },
-    'currency': {
+    {
+      name: 'currency',
       'required': true,
       'editable': false,
       'unique': false,
       'hide': false,
       'translations': false,
       'type': 'enum',
-      'enum': ['CZK', 'EUR'],
+      'enum': {
+        name: 'Currency',
+        values: {
+          CZK: 'CZK',
+          EUR: 'EUR',
+        },
+      },
       'title': 'Měna',
       readonly: true,
     },
     ...relationFields,
-    'bonuses': {
+    {
+      name: 'bonuses',
       'required': false,
       'translations': false,
       'type': 'json',
@@ -155,28 +185,31 @@ const cardsModel = {
       readonly: true,
       'admin': {
         'fieldType': 'repeater',
-        'columns': {
-          'name': {
+        'columns': [
+          {
+            name: 'name',
             'required': true,
             'type': 'string',
             readonly: true,
           },
-          'value': {
+          {
+            name: 'value',
             'required': true,
             'type': 'string',
             title: 'Popisek',
             readonly: true,
           },
-          'price': {
+          {
+            name: 'price',
             'required': true,
             'type': 'number',
             title: 'Cena v Kč',
             readonly: true,
           },
-        },
+        ],
       },
     },
-  },
+  ],
 }
 
 export default cardsModel

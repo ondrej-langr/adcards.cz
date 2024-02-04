@@ -4,6 +4,10 @@
  */
 const countriesModel = {
   'title': 'Země',
+  'tableName': 'countries',
+  admin: {
+    icon: 'World',
+  },
   'softDelete': false,
   'timestamp': false,
   'sorting': true,
@@ -11,11 +15,10 @@ const countriesModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': false,
-  'tableName': 'countries',
   'intl': false,
-  'icon': 'World',
-  'columns': {
-    'name': {
+  'columns': [
+    {
+      name: 'name',
       'required': true,
       'editable': true,
       'unique': true,
@@ -29,7 +32,8 @@ const countriesModel = {
         },
       },
     },
-    'flag': {
+    {
+      name: 'flag',
       'required': true,
       'editable': true,
       'unique': false,
@@ -45,7 +49,7 @@ const countriesModel = {
         },
       },
     },
-  },
+  ],
 }
 
 export default countriesModel

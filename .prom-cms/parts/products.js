@@ -4,6 +4,10 @@
  */
 const productsModel = {
   'title': 'Produkty',
+  'tableName': 'products',
+  admin: {
+    'icon': 'BadgeTm',
+  },
   'softDelete': false,
   'timestamp': true,
   'sorting': true,
@@ -11,11 +15,10 @@ const productsModel = {
   'draftable': true,
   'ignoreSeeding': false,
   'ownable': true,
-  'tableName': 'products',
   'intl': true,
-  'icon': 'BadgeTm',
-  'columns': {
-    'name': {
+  'columns': [
+    {
+      name: 'name',
       'required': true,
       'editable': true,
       'unique': true,
@@ -28,7 +31,8 @@ const productsModel = {
         editor: { width: 6 },
       },
     },
-    'price': {
+    {
+      name: 'price',
       'required': true,
       'editable': true,
       'unique': false,
@@ -40,7 +44,8 @@ const productsModel = {
         editor: { width: 6 },
       },
     },
-    'images': {
+    {
+      name: 'images',
       'required': true,
       'editable': true,
       'unique': false,
@@ -54,7 +59,8 @@ const productsModel = {
         'fieldType': 'big-image',
       },
     },
-    'description': {
+    {
+      name: 'description',
       'required': false,
       'editable': true,
       'unique': false,
@@ -63,7 +69,8 @@ const productsModel = {
       'type': 'longText',
       'title': 'Popisek',
     },
-    'is_bonus': {
+    {
+      name: 'is_bonus',
       'required': false,
       'translations': false,
       'type': 'boolean',
@@ -73,7 +80,7 @@ const productsModel = {
         editor: { placement: 'aside' },
       },
     },
-  },
+  ],
 }
 
 export default productsModel

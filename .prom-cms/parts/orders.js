@@ -1,21 +1,21 @@
 /**
  *
- * @type {['vytvořeno', 'nezaplaceno', 'nepotvrzeno', 'potvrzeno', 'zrušeno', 'dokončeno']}
+ * @type {const}
  */
-export const orderStatuses = [
+export const orderStatuses = {
   // This is for newly created order (which may need to be paid)
-  'vytvořeno',
+  CREATED: 'vytvořeno',
   // This is for when user selected payment by gateway (such as paypal)
-  'nezaplaceno',
+  UNPAID: 'nezaplaceno',
   // This is for when user has paid the order (or has chosen the bank transfer)
-  'nepotvrzeno',
+  NOT_VERIFIED: 'nepotvrzeno',
   // This is for when admin changes this manually and accepts the order
-  'potvrzeno',
+  VERIFIED: 'potvrzeno',
   // This is for when user cancels order
-  'zrušeno',
+  ABANDONED: 'zrušeno',
   // This is for when the order is finished
-  'dokončeno',
-]
+  FINISHED: 'dokončeno',
+}
 
 /**
  *
@@ -23,6 +23,10 @@ export const orderStatuses = [
  */
 const ordersModel = {
   'title': 'Objednávky',
+  'tableName': 'orders',
+  admin: {
+    'icon': 'BuildingStore',
+  },
   'softDelete': false,
   'timestamp': true,
   'sorting': true,
@@ -30,11 +34,10 @@ const ordersModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': false,
-  'tableName': 'orders',
   'intl': false,
-  'icon': 'BuildingStore',
-  'columns': {
-    '_uuid': {
+  'columns': [
+    {
+      name: '_uuid',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -45,7 +48,8 @@ const ordersModel = {
       },
     },
 
-    'firstName': {
+    {
+      name: 'firstName',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -54,7 +58,8 @@ const ordersModel = {
         editor: { width: 6 },
       },
     },
-    'lastName': {
+    {
+      name: 'lastName',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -63,7 +68,8 @@ const ordersModel = {
         editor: { width: 6 },
       },
     },
-    'email': {
+    {
+      name: 'email',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -72,7 +78,8 @@ const ordersModel = {
         editor: { width: 6 },
       },
     },
-    'phone': {
+    {
+      name: 'phone',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -81,13 +88,15 @@ const ordersModel = {
         editor: { width: 6 },
       },
     },
-    'street': {
+    {
+      name: 'street',
       'required': true,
       'translations': false,
       'type': 'string',
       'title': 'Ulice',
     },
-    'building_number': {
+    {
+      name: 'building_number',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -96,7 +105,8 @@ const ordersModel = {
         editor: { width: 4 },
       },
     },
-    'city': {
+    {
+      name: 'city',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -105,7 +115,8 @@ const ordersModel = {
         editor: { width: 4 },
       },
     },
-    'postal_code': {
+    {
+      name: 'postal_code',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -114,13 +125,15 @@ const ordersModel = {
         editor: { width: 4 },
       },
     },
-    'note': {
+    {
+      name: 'note',
       'required': false,
       'translations': false,
       'type': 'longText',
       'title': 'Note',
     },
-    'shipping_method': {
+    {
+      name: 'shipping_method',
       'required': true,
       readonly: true,
       'translations': false,
@@ -130,7 +143,8 @@ const ordersModel = {
         editor: { width: 8 },
       },
     },
-    'shipping_rate': {
+    {
+      name: 'shipping_rate',
       'required': true,
       readonly: true,
       'translations': false,
@@ -140,7 +154,8 @@ const ordersModel = {
         editor: { width: 4 },
       },
     },
-    'payment_method': {
+    {
+      name: 'payment_method',
       'editable': false,
       'required': true,
       'translations': false,
@@ -151,11 +166,15 @@ const ordersModel = {
       },
     },
 
-    'status': {
+    {
+      name: 'status',
       'required': true,
       'translations': false,
       'type': 'enum',
-      'enum': orderStatuses,
+      'enum': {
+        name: 'OrderState',
+        values: orderStatuses,
+      },
       'title': 'Stav',
       admin: {
         editor: {
@@ -163,7 +182,8 @@ const ordersModel = {
         },
       },
     },
-    'total_cost': {
+    {
+      name: 'total_cost',
       'type': 'number',
       'title': 'Celková částka',
       'required': true,
@@ -175,7 +195,8 @@ const ordersModel = {
         },
       },
     },
-    'paypal_transaction_id': {
+    {
+      name: 'paypal_transaction_id',
       'type': 'string',
       'required': false,
       'translations': false,
@@ -187,55 +208,61 @@ const ordersModel = {
         },
       },
     },
-    'cards': {
-      'required': false,
-      'translations': false,
-      'type': 'json',
-      'title': 'Karty',
-      readonly: true,
-      'admin': {
-        'fieldType': 'repeater',
-        'columns': {
-          'card_id': {
-            'required': true,
-            'type': 'relationship',
-            'multiple': false,
-            'targetModel': 'cards',
-            'labelConstructor': '{{name}} - {{size_id}} - {{final_price}}Kč',
-            readonly: true,
-          },
-        },
-      },
-    },
+    // {
+    //   name: 'cards',
+    //   'required': false,
+    //   'translations': false,
+    //   'type': 'json',
+    //   'title': 'Karty',
+    //   readonly: true,
+    //   'admin': {
+    //     'fieldType': 'repeater',
+    //     'columns': [
+    //       {
+    //         name: 'card_id',
+    //         'required': true,
+    //         'type': 'relationship',
+    //         'multiple': false,
+    //         'targetModel': 'cards',
+    //         'labelConstructor': '{{name}} - {{size_id}} - {{final_price}}Kč',
+    //         readonly: true,
+    //       },
+    //     ],
+    //   },
+    // },
 
-    'products': {
-      'required': false,
-      'translations': false,
-      'type': 'json',
-      'title': 'Produkty',
-      readonly: true,
-      'admin': {
-        'fieldType': 'repeater',
-        'columns': {
-          'product_id': {
-            'required': true,
-            'translations': false,
-            'type': 'relationship',
-            'targetModel': 'products',
-            'labelConstructor': '{{name}} ({{id}})',
-            'title': 'Produkt',
-          },
-          'count': {
-            'required': true,
-            'translations': false,
-            'type': 'number',
-            'title': 'Počet',
-          },
-        },
-      },
-    },
+    // {
+    //   name: 'products',
+    //   'required': false,
+    //   'translations': false,
+    //   'type': 'json',
+    //   'title': 'Produkty',
+    //   readonly: true,
+    //   'admin': {
+    //     'fieldType': 'repeater',
+    //     'columns': [
+    //       {
+    //         name: 'product_id',
+    //         'required': true,
+    //         'translations': false,
+    //         'type': 'relationship',
+    //         'targetModel': 'products',
+    //         'labelConstructor': '{{name}} ({{id}})',
+    //         'title': 'Produkt',
+    //       },
+    //       {
+    //         name: 'count',
+    //         'required': true,
+    //         'translations': false,
+    //         'type': 'number',
+    //         'title': 'Počet',
+    //       },
+    //     ],
+    //   },
+    // },
 
-    'promo_code_value': {
+    {
+      'name': 'promo_code_value',
       'required': false,
       'translations': false,
       'type': 'string',
@@ -248,7 +275,8 @@ const ordersModel = {
         },
       },
     },
-    'promo_code_amount': {
+    {
+      'name': 'promo_code_amount',
       'required': false,
       'translations': false,
       'type': 'number',
@@ -262,17 +290,24 @@ const ordersModel = {
       },
     },
     // TODO Add paypal transaction id here for better clarity
-    'currency': {
+    {
+      'name': 'currency',
       'required': true,
       'editable': false,
       'unique': false,
       'translations': false,
       'type': 'enum',
-      'enum': ['CZK', 'EUR'],
+      enum: {
+        name: 'Currency',
+        values: {
+          'CZK': 'CZK',
+          'EUR': 'EUR',
+        },
+      },
       readonly: true,
       'title': 'Měna',
     },
-  },
+  ],
 }
 
 export default ordersModel

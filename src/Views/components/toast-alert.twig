@@ -1,0 +1,11 @@
+<!-- start @app/components/toast-alert.twig -->
+{% set id = 'toast-message-' ~ random() %}
+<div id='{{ id }}' class="alert {{ isError ? "danger" : "success" }}">
+    {{ message|t }}
+    <script>
+      setTimeout(() => {
+        window.document.getElementById("{{ id }}")?.remove()
+      }, 4000)
+    </script>
+</div>
+<!-- end @app/components/toast-alert.twig -->

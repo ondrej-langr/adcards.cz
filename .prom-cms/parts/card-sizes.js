@@ -4,6 +4,10 @@
  */
 const cardSizesModel = {
   'title': 'Velikost karet',
+  'tableName': 'card_sizes',
+  admin: {
+    icon: 'Dimensions',
+  },
   'softDelete': false,
   'timestamp': false,
   'sorting': true,
@@ -11,23 +15,24 @@ const cardSizesModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': true,
-  'tableName': 'card_sizes',
   'intl': true,
-  'icon': 'Dimensions',
-  'columns': {
-    'width': {
+  'columns': [
+    {
+      name: 'width',
       'required': true,
       'translations': false,
       'type': 'number',
       'title': 'Šířka (cm)',
     },
-    'height': {
+    {
+      name: 'height',
       'required': true,
       'translations': false,
       'type': 'number',
       'title': 'Výška (cm)',
     },
-    'price': {
+    {
+      name: 'price',
       'required': true,
       'editable': true,
       'unique': false,
@@ -36,16 +41,18 @@ const cardSizesModel = {
       'type': 'number',
       'title': 'Cena',
     },
-    'material_id': {
+    {
+      name: 'material_id',
       'required': true,
       'translations': false,
       'type': 'relationship',
       'multiple': false,
-      'targetModel': 'cardMaterial',
+      'targetModelTableName': 'cardMaterial',
       'labelConstructor': '{{name}}',
       'title': 'Materiál ',
     },
-    'image': {
+    {
+      name: 'image',
       'required': true,
       'translations': false,
       'multiple': false,
@@ -56,7 +63,7 @@ const cardSizesModel = {
         'fieldType': 'small-image',
       },
     },
-  },
+  ],
 }
 
 export default cardSizesModel

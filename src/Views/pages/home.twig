@@ -1,0 +1,60 @@
+{% extends '@app/layouts/site-layout/site-layout.twig' %}
+
+{% block head %}
+    <link rel="stylesheet" href="/css/pages/main-page.css">
+{% endblock %}
+
+{% block content %}
+    {% include('@app/partials/pages/home/slider.twig') %}
+    {% include('@app/partials/pages/home/material-select.twig') %}
+
+    <div class="video-section">
+        <div class="video-inner">
+            <div class="video col-xl-6">
+                <div class="video-hide"><img class="lazyload" loading="lazy" data-src="/images/embed.png"></div>
+                <iframe loading="lazy" class="video-show" id="video"
+                        src="https://www.youtube.com/embed/F7osmGj1v9A?mute=1" frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowfullscreen></iframe>
+                <span id="play-video" class="video-play-button"> <span></span> </span>
+            </div>
+            <div class="video-text col-xl-6">
+                <h2>{{ 'Jak to funguje?'|t }}</h2>
+                <p>{{ 'Podívej se na naše krátké video, ve kterém zjistíš, jak jednoduchá je tvorba vlastní FUT karty. Celý proces zvládneš doslova během pár minut. Na tobě je pouze vyplnit všechny informace v našem builderu. Po odeslání a zaplacení objednávky začíná naše práce. Profesionální grafické studio kartu upraví a samozřejmě před jejím vytištěním ti pošleme návrh ke schválení. Pokud se vzhledem budeš spokojen, posíláme hned do výroby a ještě rychleji do tvých rukou! Zaměřujeme se na kvalitu a ta je tvořena detaily. Tak pojď se do toho pustit a vytvoř si vlastní fotbalovou kartu!'|t }}
+                </p> <a href="{{ url_for('builder') }}">
+                    <button>{{ 'Vytvořit vlastní kartu'|t }}</button>
+                </a>
+            </div>
+        </div>
+    </div>
+    <div class="why-around">
+        <div class="why-content">
+            <div class="why-text">
+                <div class="why-headline">
+                    <h2>{{ 'Proč vi vybrat nás?'|t }}</h2>
+                    <div class="hr"></div>
+                </div>
+                <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                    <h3>{{ 'Unikátní fotbalový dárek'|t }}</h3>
+                    <p>{{ 'Vytvoř si vlastní jedinečnou fotbalovou kartu, kterou nebude mít nikdo jiný kromě tebe. Pochlub se s ní pověšením na zeď, ať ji tvoji kamarádi mohou obdivovat při každé návštěvě.'|t }}
+                    </p>
+                </div>
+                <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                    <h3>{{ 'Kvalitní výroba je základ'|t }}</h3>
+                    <p>{{ 'Všechny karty jsou přímo tištěny na PVC desky. Díky tomu je zaručena jejich maximální životnost. 5 milimetrová šířka karty zase zaručuje vysokou odolnost jak při dopravě, tak i při manipulaci po doručení.'|t }}
+                    </p>
+                </div>
+                <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                    <h3>{{ 'Grafické zpracování'|t }}</h3>
+                    <p>{{ 'Všechny přijaté objednávky upravuje naše profesionální grafické studio s maximální pečlivostí. Každé kartě věnujeme tu největší pozornost.'|t }}
+                    </p>
+                </div>
+                <div class="why-box col-12 col-sm-6 col-md-6 col-lg-3 col-xl-3">
+                    <h3>{{ 'Úchytka na zeď'|t }}</h3>
+                    <p>{{ 'Doplň svoji objednávku o naši úchytku na zeď. Díky ní si můžeš kartu vystavit na zeď a zároveň ji kdykoliv sundat a pochlubit se s ní v ruce.'|t }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
