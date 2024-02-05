@@ -19,6 +19,11 @@ const config = {
     name: 'adcards',
     slug: 'adcards',
     url: 'http://localhost:3000',
+    languages: [
+      'cz',
+      'de',
+      'sk',
+    ],
   },
   database: {
     connections: [

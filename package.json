@@ -34,6 +34,7 @@
     "@prom-cms/cli": "^0.22.12",
     "@prom-cms/schema": "^0.6.2",
     "@prom-cms/vite": "^0.2.0",
+    "@vitejs/plugin-react": "^4.2.1",
     "@types/alpinejs": "^3.13.5",
     "@types/lodash": "^4.14.202",
     "prettier-plugin-twig-melody": "^0.4.6",
@@ -47,6 +48,8 @@
     "@react-email/components": "^0.0.12",
     "@types/js-cookie": "^3.0.6",
     "@types/slick-carousel": "^1.6.40",
-    "vite-plugin-live-reload": "^3.0.2"
+    "vite-tsconfig-paths": "^4.3.1",
+    "vite-plugin-live-reload": "^3.0.2",
+    "vitest": "^1.2.2"
   }
 }

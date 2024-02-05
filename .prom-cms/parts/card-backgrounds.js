@@ -57,7 +57,7 @@ const cardBackgroundsModel = {
       admin: { fieldType: 'color' },
     },
     {
-      name: 'sport_id',
+      name: 'sport',
       'type': 'relationship',
       'required': true,
       'translations': false,

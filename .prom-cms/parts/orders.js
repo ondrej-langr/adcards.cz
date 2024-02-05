@@ -96,7 +96,7 @@ const ordersModel = {
       'title': 'Ulice',
     },
     {
-      name: 'building_number',
+      name: 'buildingNumber',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -116,7 +116,7 @@ const ordersModel = {
       },
     },
     {
-      name: 'postal_code',
+      name: 'postalCode',
       'required': true,
       'translations': false,
       'type': 'string',
@@ -133,7 +133,7 @@ const ordersModel = {
       'title': 'Note',
     },
     {
-      name: 'shipping_method',
+      name: 'shippingMethod',
       'required': true,
       readonly: true,
       'translations': false,
@@ -144,7 +144,7 @@ const ordersModel = {
       },
     },
     {
-      name: 'shipping_rate',
+      name: 'shippingRate',
       'required': true,
       readonly: true,
       'translations': false,
@@ -155,7 +155,7 @@ const ordersModel = {
       },
     },
     {
-      name: 'payment_method',
+      name: 'paymentMethod',
       'editable': false,
       'required': true,
       'translations': false,
@@ -183,7 +183,7 @@ const ordersModel = {
       },
     },
     {
-      name: 'total_cost',
+      name: 'totalCost',
       'type': 'number',
       'title': 'Celková částka',
       'required': true,
@@ -196,7 +196,7 @@ const ordersModel = {
       },
     },
     {
-      name: 'paypal_transaction_id',
+      name: 'paypalTransactionId',
       'type': 'string',
       'required': false,
       'translations': false,
@@ -208,61 +208,62 @@ const ordersModel = {
         },
       },
     },
-    // {
-    //   name: 'cards',
-    //   'required': false,
-    //   'translations': false,
-    //   'type': 'json',
-    //   'title': 'Karty',
-    //   readonly: true,
-    //   'admin': {
-    //     'fieldType': 'repeater',
-    //     'columns': [
-    //       {
-    //         name: 'card_id',
-    //         'required': true,
-    //         'type': 'relationship',
-    //         'multiple': false,
-    //         'targetModel': 'cards',
-    //         'labelConstructor': '{{name}} - {{size_id}} - {{final_price}}Kč',
-    //         readonly: true,
-    //       },
-    //     ],
-    //   },
-    // },
-
-    // {
-    //   name: 'products',
-    //   'required': false,
-    //   'translations': false,
-    //   'type': 'json',
-    //   'title': 'Produkty',
-    //   readonly: true,
-    //   'admin': {
-    //     'fieldType': 'repeater',
-    //     'columns': [
-    //       {
-    //         name: 'product_id',
-    //         'required': true,
-    //         'translations': false,
-    //         'type': 'relationship',
-    //         'targetModel': 'products',
-    //         'labelConstructor': '{{name}} ({{id}})',
-    //         'title': 'Produkt',
-    //       },
-    //       {
-    //         name: 'count',
-    //         'required': true,
-    //         'translations': false,
-    //         'type': 'number',
-    //         'title': 'Počet',
-    //       },
-    //     ],
-    //   },
-    // },
+    // TODO: this should be relationship
+    {
+      name: 'cards',
+      'required': false,
+      'translations': false,
+      'type': 'json',
+      'title': 'Karty',
+      readonly: true,
+      'admin': {
+        'fieldType': 'repeater',
+        'columns': [
+          {
+            name: 'card',
+            'required': true,
+            'type': 'relationship',
+            'multiple': false,
+            'targetModelTableName': 'cards',
+            'labelConstructor': '{{name}} - {{sizeId}} - {{finalPrice}}Kč',
+            readonly: true,
+          },
+        ],
+      },
+    },
 
     {
-      'name': 'promo_code_value',
+      name: 'products',
+      'required': false,
+      'translations': false,
+      'type': 'json',
+      'title': 'Produkty',
+      readonly: true,
+      'admin': {
+        'fieldType': 'repeater',
+        'columns': [
+          {
+            name: 'product',
+            'required': true,
+            'translations': false,
+            'type': 'relationship',
+            'targetModelTableName': 'products',
+            'labelConstructor': '{{name}} ({{id}})',
+            'title': 'Produkt',
+          },
+          {
+            name: 'count',
+            'required': true,
+            'translations': false,
+            'type': 'number',
+            'title': 'Počet',
+          },
+        ],
+      },
+    },
+
+    {
+      'name': 'promoCodeValue',
       'required': false,
       'translations': false,
       'type': 'string',
@@ -276,7 +277,7 @@ const ordersModel = {
       },
     },
     {
-      'name': 'promo_code_amount',
+      'name': 'promoCodeAmount',
       'required': false,
       'translations': false,
       'type': 'number',

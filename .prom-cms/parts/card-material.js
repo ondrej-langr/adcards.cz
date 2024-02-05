@@ -26,6 +26,7 @@ const cardMaterialModel = {
       'translations': true,
       'type': 'string',
       'title': 'Název',
+      localized: true,
       'admin': {
         'fieldType': 'heading',
       },
@@ -35,6 +36,7 @@ const cardMaterialModel = {
       'required': true,
       'editable': true,
       'translations': true,
+      localized: true,
       'type': 'longText',
       'title': 'Popisek',
       admin: {

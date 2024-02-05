@@ -1,16 +1,16 @@
 const relationFields = [
   {
-    name: 'background_id',
+    name: 'background',
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
-    'targetModelTableName': 'cardBackgrounds',
+    'targetModelTableName': 'card_backgrounds',
     'labelConstructor': '{{name}}',
     'title': 'Pozadí karty',
   },
   {
-    name: 'country_id',
+    name: 'country',
     'required': true,
     'translations': false,
     'type': 'relationship',
@@ -20,23 +20,23 @@ const relationFields = [
     'title': 'Země',
   },
   {
-    name: 'size_id',
+    name: 'size',
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
-    'targetModelTableName': 'cardSizes',
+    'targetModelTableName': 'card_sizes',
     'labelConstructor': '{{width}}x{{height}}cm',
     'title': 'Velikost',
   },
   {
-    name: 'order_id',
+    name: 'forOrder',
     'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
     'targetModelTableName': 'orders',
-    'labelConstructor': '#{{id}} ({{total_cost}} {{currency}})',
+    'labelConstructor': '#{{id}} ({{totalCost}} {{currency}})',
     'title': 'Objednávka',
   },
 ]
@@ -61,7 +61,7 @@ const cardsModel = {
   'intl': false,
   'columns': [
     {
-      name: 'player_image',
+      name: 'playerImage',
       'required': false,
       'translations': false,
       'multiple': false,
@@ -74,7 +74,7 @@ const cardsModel = {
       },
     },
     {
-      name: 'club_image_id',
+      name: 'clubImage',
       'required': false,
       'translations': false,
       'multiple': false,
@@ -132,7 +132,7 @@ const cardsModel = {
       },
     },
     {
-      name: 'card_type',
+      name: 'cardType',
       'required': true,
       'translations': false,
       'type': 'enum',
@@ -147,7 +147,7 @@ const cardsModel = {
       'title': 'Typ karty',
     },
     {
-      name: 'final_price',
+      name: 'finalPrice',
       'required': true,
       'editable': false,
       'unique': false,

@@ -32,7 +32,7 @@
     "outDir": "public/bundle"
   },
   "include": [
-    "./src/frontend-src",
+    "./src/frontend",
     "./src/email-templates"
   ],
   "exclude": [

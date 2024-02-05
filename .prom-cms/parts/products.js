@@ -70,7 +70,7 @@ const productsModel = {
       'title': 'Popisek',
     },
     {
-      name: 'is_bonus',
+      name: 'isBonus',
       'required': false,
       'translations': false,
       'type': 'boolean',
