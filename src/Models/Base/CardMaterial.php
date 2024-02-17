@@ -29,7 +29,7 @@ class CardMaterial extends Entity
   #[ORM\Column(name: 'description', nullable: false, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Popisek', type: 'longText', editable: false, hide: false, localized: true)]
   protected ?string $description;
   
-  #[ORM\Column(name: 'image_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $image;
   
   #[ORM\Column(name: 'bonuses', nullable: true, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Bonusové informace za příplatek', type: 'json', editable: false, hide: false, localized: false)]

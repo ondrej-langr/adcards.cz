@@ -22,7 +22,7 @@ class Sports extends Entity
   #[ORM\Column(name: 'description', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Popisek', type: 'longText', editable: false, hide: false, localized: false)]
   protected ?string $description;
   
-  #[ORM\Column(name: 'image_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $image;
   
   function __construct()

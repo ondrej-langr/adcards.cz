@@ -18,10 +18,10 @@ class Cards extends Entity
   use \PromCMS\Core\Database\Models\Trait\Ordable;
   use \PromCMS\Core\Database\Models\Trait\NumericId;
   
-  #[ORM\Column(name: 'playerimage_id', nullable: true, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Obrázek hráče', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'playerimage_id', nullable: true, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek hráče', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $playerImage;
   
-  #[ORM\Column(name: 'clubimage_id', nullable: true, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Obrázek klubu', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'clubimage_id', nullable: true, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek klubu', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $clubImage;
   
   #[ORM\Column(name: 'name', nullable: false, unique: false, type: 'string'), PROM\PromModelColumn(title: 'Název', type: 'string', editable: false, hide: false, localized: false)]
@@ -42,16 +42,16 @@ class Cards extends Entity
   #[PROM\PromModelColumn(title: 'Měna', type: 'enum', editable: true, hide: false, localized: false)]
   protected ?Currency $currency;
   
-  #[ORM\Column(name: 'background_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Pozadí karty', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardBackgrounds::class), ORM\JoinColumn(name: 'background_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Pozadí karty', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\CardBackgrounds $background;
   
-  #[ORM\Column(name: 'country_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Země', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Countries::class), ORM\JoinColumn(name: 'country_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Země', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Countries $country;
   
-  #[ORM\Column(name: 'size_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Velikost', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardSizes::class), ORM\JoinColumn(name: 'size_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Velikost', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\CardSizes $size;
   
-  #[ORM\Column(name: 'fororder_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Orders::class), ORM\JoinColumn(name: 'fororder_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Orders $forOrder;
   
   #[PROM\PromModelColumn(title: 'Bonusové informace za příplatek', type: 'json', editable: true, hide: false, localized: false)]

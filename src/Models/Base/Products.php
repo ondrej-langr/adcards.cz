@@ -26,8 +26,11 @@ class Products extends Entity
   
   #[ORM\Column(name: 'price', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Cena', type: 'number', editable: false, hide: false, localized: false)]
   protected ?int $price;
+  /**
+  * @var ArrayCollection<int, PromCMS\Core\Database\Models\File>
+  */
   
-  #[ORM\Column(name: 'images_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Obrázky', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToMany(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'images_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázky', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\Doctrine\Common\Collections\Collection $images;
   
   #[ORM\Column(name: 'description', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Popisek', type: 'longText', editable: false, hide: false, localized: false)]

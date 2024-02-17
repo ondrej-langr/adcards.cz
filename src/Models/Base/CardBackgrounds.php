@@ -22,13 +22,13 @@ class CardBackgrounds extends Entity
   #[ORM\Column(name: 'name', nullable: false, unique: true, type: 'string'), PROM\PromModelColumn(title: 'Název', type: 'string', editable: false, hide: false, localized: false)]
   protected ?string $name;
   
-  #[ORM\Column(name: 'image_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $image;
   
   #[ORM\Column(name: 'textcolor', nullable: false, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Barva textu', type: 'json', editable: false, hide: false, localized: false)]
   protected ?array $textColor;
   
-  #[ORM\Column(name: 'sport_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Sport ', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Sports::class), ORM\JoinColumn(name: 'sport_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Sport ', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Sports $sport;
   
   function __construct()

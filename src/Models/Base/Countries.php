@@ -20,7 +20,7 @@ class Countries extends Entity
   #[ORM\Column(name: 'name', nullable: false, unique: true, type: 'string'), PROM\PromModelColumn(title: 'Název', type: 'string', editable: false, hide: false, localized: false)]
   protected ?string $name;
   
-  #[ORM\Column(name: 'flag_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Vlajka', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'flag_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Vlajka', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $flag;
   
   function __construct()

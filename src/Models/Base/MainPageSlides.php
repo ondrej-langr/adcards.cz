@@ -27,7 +27,7 @@ class MainPageSlides extends Entity
   #[ORM\Column(name: 'buttonurl', nullable: true, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Tlačítko', type: 'json', editable: false, hide: false, localized: false)]
   protected ?array $buttonUrl;
   
-  #[ORM\Column(name: 'image_id', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $image;
   
   function __construct()

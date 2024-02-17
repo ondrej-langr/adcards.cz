@@ -2,6 +2,12 @@
 // Here is your basic controller file
 namespace PromCMS\App\Controllers;
 
+use Doctrine\ORM\Query;
+use PromCMS\App\Models\CardMaterial;
+use PromCMS\App\Models\CardSizes;
+use PromCMS\App\Models\MainPageSlides;
+use PromCMS\Core\Database\EntityManager;
+use PromCMS\Core\Database\Query\TranslationWalker;
 use PromCMS\Core\Http\Routing\AsRedirectRoute;
 use PromCMS\Core\Http\Routing\AsRoute;
 use PromCMS\Core\Services\RenderingService;
@@ -14,27 +20,41 @@ class MainController
     function mainpage(
         ServerRequestInterface $request,
         ResponseInterface      $response,
-        RenderingService       $rendering
+        RenderingService       $rendering,
+        EntityManager          $em
     ): ResponseInterface
     {
         $currentLanguage = $request->getAttribute('lang');
+        $cardMaterials = $em->createQueryBuilder()
+            ->from(CardMaterial::class, 's')
+            ->select('s')
+            ->getQuery()
+            ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+            ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
+            ->getArrayResult();
 
-        $cardMaterialService = new EntryTypeService(new CardMaterial(), $currentLanguage);
-        $cardSizesService = new EntryTypeService(new \PromCMS\App\Models\CardSizes(), $currentLanguage);
-        $sliderItemsService = new EntryTypeService(new MainPageSlides(), $currentLanguage);
+        foreach ($cardMaterials as $material) {
+            // check empty material in templates and mark it somehow for registered user?
+        }
 
-        $cardSizes = $cardSizesService->getMany([], 1, 999)["data"];
+        $sliderItemsQuery = $em->createQueryBuilder()
+            ->from(MainPageSlides::class, 'c')
+            ->select('c')
+            ->addOrderBy('c.order', 'DESC')
+            ->addOrderBy('c.id', 'DESC')
+            ->getQuery()
+            ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+            ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
+            ->getArrayResult();
+
+        echo count($sliderItemsQuery);
 
         return $rendering->render($response, '@app/pages/home.twig', [
             "cards" => [
-                "materials" => $cardMaterialService->getMany(
-                    ["id", "IN", array_unique(array_map(fn($item) => $item["material_id"], $cardSizes))],
-                    1,
-                    999
-                )["data"],
+                "materials" => $cardMaterials,
             ],
             "slider" => [
-                "items" => $sliderItemsService->getMany([], 1, 999, ["order" => "desc", "id" => "desc"])["data"]
+                "items" => $sliderItemsQuery
             ],
         ]);
     }
