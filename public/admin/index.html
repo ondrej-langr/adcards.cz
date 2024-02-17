@@ -13,15 +13,24 @@
       rel="stylesheet" 
     />
     <title>PromCMS</title>
-    <script type="module" crossorigin src="/admin/assets/index-lKkbEZXj.js"></script>
-    <link rel="stylesheet" crossorigin href="/admin/assets/index-T29r42OC.css">
+    <script type="module" crossorigin src="/admin/assets/index-UkeQhmow.js"></script>
+    <link rel="stylesheet" crossorigin href="/admin/assets/index-yvcI-6Ca.css">
   </head>
-  <body>
-    <div id="prom_cms_root">
+  <body class="dark:bg-black dark:text-white bg-[var(--body-background)]" style="--body-background: #b3cbe54d;">
+    <div class=" top-0 left-0 w-full h-full flip opacity-30" style="transform: rotateY(.5turn);position: absolute;">
+      <svg class="absolute inset-0 -z-10 h-full w-full stroke-gray-200 [mask-image:radial-gradient(100%_100%_at_top_right,white,transparent)]" aria-hidden="true">
+        <defs>
+          <pattern id="0787a7c5-978c-4f66-83c7-11c213f99cb7" width="200" height="200" x="50%" y="-1" patternUnits="userSpaceOnUse">
+            <path d="M.5 200V.5H200" fill="none"></path>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" stroke-width="0" fill="url(#0787a7c5-978c-4f66-83c7-11c213f99cb7)"></rect>
+      </svg>
+    </div>
+    <div id="prom_cms_root" class="relative z-10">
       <style>body{margin:0}.prom-cms-loader{align-items:center;background-color:#eff6ff;display:flex;height:100vh;justify-content:center;width:100vw}.prom-cms-loader>div{position:relative}@keyframes infiniteLoader{0%{left:-20%;width:50%}to{left:120%;width:20%}0%,to{transform:translateX(-50%)}}.prom-cms-loader__text{display:block;margin-bottom:.6rem;text-align:center}.prom-cms-loader__spinner{background-color:#fff;border-radius:9999px;display:block;height:.7rem;min-width:300px;overflow:hidden;position:relative}.prom-cms-loader__spinner:after{animation:infiniteLoader 1.5s ease-out infinite;background-color:#60a5fa;border-radius:9999px;content:"";display:block;height:100%;position:absolute;top:0}</style>
       <div class="prom-cms-loader">
         <div>
-          <span class="prom-cms-loader__text">Booting up...</span>
           <span class="prom-cms-loader__spinner" />
         </div>
       </div>
