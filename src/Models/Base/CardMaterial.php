@@ -35,6 +35,12 @@ class CardMaterial extends Entity
   #[ORM\Column(name: 'bonuses', nullable: true, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Bonusové informace za příplatek', type: 'json', editable: false, hide: false, localized: false)]
   protected ?array $bonuses;
   /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\CardSizes>
+  */
+  
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\CardSizes::class, mappedBy: 'material'), PROM\PromModelColumn(title: 'Přiřazené velikosti', type: 'relationship', editable: false, hide: false, localized: false)]
+  protected ?\Doctrine\Common\Collections\Collection $cardSizes;
+  /**
   * @var ArrayCollection<int, \PromCMS\App\Models\CardMaterialTranslation>
   */
   
@@ -43,12 +49,14 @@ class CardMaterial extends Entity
   
   function __construct()
   {
+    $this->cardSizes = new ArrayCollection();
     $this->translations = new ArrayCollection();
   }
   
   #[ORM\PostLoad]
   function __prom__initCollections()
   {
+    $this->cardSizes ??= new ArrayCollection();
     $this->translations ??= new ArrayCollection();
   }
   /**
@@ -110,6 +118,17 @@ class CardMaterial extends Entity
   function setBonuses(?array $bonuses): static
   {
     $this->bonuses = $bonuses;
+    return $this;
+  }
+  
+  function getCardSizes(): ?\Doctrine\Common\Collections\Collection
+  {
+    return $this->cardSizes;
+  }
+  
+  function setCardSizes(?\Doctrine\Common\Collections\Collection $cardSizes): static
+  {
+    $this->cardSizes = $cardSizes;
     return $this;
   }
 }

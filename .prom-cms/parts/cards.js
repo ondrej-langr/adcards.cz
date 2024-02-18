@@ -38,6 +38,7 @@ const relationFields = [
     'targetModelTableName': 'orders',
     'labelConstructor': '#{{id}} ({{totalCost}} {{currency}})',
     'title': 'Objednávka',
+    'inversedBy': 'cards',
   },
 ]
 

@@ -9,6 +9,7 @@ namespace PromCMS\App\Models\Base;
 
 use Doctrine\ORM\Mapping as ORM;
 use PromCMS\Core\Database\Models\Mapping as PROM;
+use Doctrine\Common\Collections\ArrayCollection;
 use PromCMS\Core\Database\Models\Abstract\Entity;
 
 #[ORM\MappedSuperclass]
@@ -65,12 +66,18 @@ class Orders extends Entity
   
   #[PROM\PromModelColumn(title: 'ID PayPal transakce', type: 'string', editable: true, hide: false, localized: false)]
   protected ?string $paypalTransactionId;
+  /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\Cards>
+  */
   
-  #[PROM\PromModelColumn(title: 'Karty', type: 'json', editable: true, hide: false, localized: false)]
-  protected ?array $cards;
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\Cards::class, mappedBy: 'forOrder'), PROM\PromModelColumn(title: 'Karty', type: 'relationship', editable: true, hide: false, localized: false)]
+  protected ?\Doctrine\Common\Collections\Collection $cards;
+  /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\OrderedProducts>
+  */
   
-  #[PROM\PromModelColumn(title: 'Produkty', type: 'json', editable: true, hide: false, localized: false)]
-  protected ?array $products;
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\OrderedProducts::class, mappedBy: 'forOrder'), PROM\PromModelColumn(title: 'Produkty', type: 'relationship', editable: true, hide: false, localized: false)]
+  protected ?\Doctrine\Common\Collections\Collection $products;
   
   #[PROM\PromModelColumn(title: 'Slevový kód - název', type: 'string', editable: true, hide: false, localized: false)]
   protected ?string $promoCodeValue;
@@ -83,11 +90,15 @@ class Orders extends Entity
   
   function __construct()
   {
+    $this->cards = new ArrayCollection();
+    $this->products = new ArrayCollection();
   }
   
   #[ORM\PostLoad]
   function __prom__initCollections()
   {
+    $this->cards ??= new ArrayCollection();
+    $this->products ??= new ArrayCollection();
   }
   
   function get_uuid(): string
@@ -266,23 +277,23 @@ class Orders extends Entity
     return $this;
   }
   
-  function getCards(): ?array
+  function getCards(): ?\Doctrine\Common\Collections\Collection
   {
     return $this->cards;
   }
   
-  function setCards(?array $cards): static
+  function setCards(?\Doctrine\Common\Collections\Collection $cards): static
   {
     $this->cards = $cards;
     return $this;
   }
   
-  function getProducts(): ?array
+  function getProducts(): ?\Doctrine\Common\Collections\Collection
   {
     return $this->products;
   }
   
-  function setProducts(?array $products): static
+  function setProducts(?\Doctrine\Common\Collections\Collection $products): static
   {
     $this->products = $products;
     return $this;

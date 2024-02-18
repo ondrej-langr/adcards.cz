@@ -62,9 +62,11 @@ const cardBackgroundsModel = {
       'required': true,
       'translations': false,
       'multiple': false,
+      foreignKey: 'id',
       'targetModelTableName': 'sports',
       'labelConstructor': '{{name}}',
-      'title': 'Sport ',
+      'title': 'Sport',
+      'inversedBy': 'cardBackgrounds',
     },
   ],
 }

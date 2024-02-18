@@ -51,7 +51,7 @@ class Cards extends Entity
   #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardSizes::class), ORM\JoinColumn(name: 'size_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Velikost', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\CardSizes $size;
   
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Orders::class), ORM\JoinColumn(name: 'fororder_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Orders::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'fororder_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Orders $forOrder;
   
   #[PROM\PromModelColumn(title: 'Bonusové informace za příplatek', type: 'json', editable: true, hide: false, localized: false)]

@@ -53,6 +53,23 @@ const sportsModel = {
         editor: { width: 6 },
       },
     },
+    {
+      name: 'cardBackgrounds',
+      'required': false,
+      'editable': false,
+      'unique': false,
+      'hide': false,
+      'translations': false,
+      'multiple': true,
+      'type': 'relationship',
+      'title': 'Přiřazené pozadí',
+      'admin': {
+        editor: { width: 12 },
+      },
+      'labelConstructor': '({{id}})',
+      targetModelTableName: 'card_backgrounds',
+      'mappedBy': 'sport',
+    },
   ],
 }
 

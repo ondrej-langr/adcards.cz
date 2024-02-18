@@ -208,58 +208,30 @@ const ordersModel = {
         },
       },
     },
-    // TODO: this should be relationship
     {
       name: 'cards',
       'required': false,
       'translations': false,
-      'type': 'json',
+      'type': 'relationship',
       'title': 'Karty',
       readonly: true,
-      'admin': {
-        'fieldType': 'repeater',
-        'columns': [
-          {
-            name: 'card',
-            'required': true,
-            'type': 'relationship',
-            'multiple': false,
-            'targetModelTableName': 'cards',
-            'labelConstructor': '{{name}} - {{sizeId}} - {{finalPrice}}Kč',
-            readonly: true,
-          },
-        ],
-      },
+      'labelConstructor': '{{name}} - {{sizeId}} - {{finalPrice}}Kč',
+      'targetModelTableName': 'cards',
+      multiple: true,
+      'mappedBy': 'forOrder',
     },
 
     {
       name: 'products',
       'required': false,
       'translations': false,
-      'type': 'json',
+      'type': 'relationship',
       'title': 'Produkty',
+      multiple: true,
       readonly: true,
-      'admin': {
-        'fieldType': 'repeater',
-        'columns': [
-          {
-            name: 'product',
-            'required': true,
-            'translations': false,
-            'type': 'relationship',
-            'targetModelTableName': 'products',
-            'labelConstructor': '{{name}} ({{id}})',
-            'title': 'Produkt',
-          },
-          {
-            name: 'count',
-            'required': true,
-            'translations': false,
-            'type': 'number',
-            'title': 'Počet',
-          },
-        ],
-      },
+      'labelConstructor': '{{id}} č',
+      targetModelTableName: 'ordered_products',
+      'mappedBy': 'forOrder',
     },
 
     {

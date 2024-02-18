@@ -28,7 +28,7 @@ class CardBackgrounds extends Entity
   #[ORM\Column(name: 'textcolor', nullable: false, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Barva textu', type: 'json', editable: false, hide: false, localized: false)]
   protected ?array $textColor;
   
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Sports::class), ORM\JoinColumn(name: 'sport_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Sport ', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Sports::class, inversedBy: 'cardBackgrounds'), ORM\JoinColumn(name: 'sport_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Sport', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Sports $sport;
   
   function __construct()

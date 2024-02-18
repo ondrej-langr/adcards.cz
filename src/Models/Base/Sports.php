@@ -9,6 +9,7 @@ namespace PromCMS\App\Models\Base;
 
 use Doctrine\ORM\Mapping as ORM;
 use PromCMS\Core\Database\Models\Mapping as PROM;
+use Doctrine\Common\Collections\ArrayCollection;
 use PromCMS\Core\Database\Models\Abstract\Entity;
 
 #[ORM\MappedSuperclass]
@@ -24,14 +25,22 @@ class Sports extends Entity
   
   #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $image;
+  /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\CardBackgrounds>
+  */
+  
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\CardBackgrounds::class, mappedBy: 'sport'), PROM\PromModelColumn(title: 'Přiřazené pozadí', type: 'relationship', editable: false, hide: false, localized: false)]
+  protected ?\Doctrine\Common\Collections\Collection $cardBackgrounds;
   
   function __construct()
   {
+    $this->cardBackgrounds = new ArrayCollection();
   }
   
   #[ORM\PostLoad]
   function __prom__initCollections()
   {
+    $this->cardBackgrounds ??= new ArrayCollection();
   }
   
   function getName(): string
@@ -64,6 +73,17 @@ class Sports extends Entity
   function setImage(\PromCMS\Core\Database\Models\File $image): static
   {
     $this->image = $image;
+    return $this;
+  }
+  
+  function getCardBackgrounds(): ?\Doctrine\Common\Collections\Collection
+  {
+    return $this->cardBackgrounds;
+  }
+  
+  function setCardBackgrounds(?\Doctrine\Common\Collections\Collection $cardBackgrounds): static
+  {
+    $this->cardBackgrounds = $cardBackgrounds;
     return $this;
   }
 }

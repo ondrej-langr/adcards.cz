@@ -46,10 +46,11 @@ const cardSizesModel = {
       'required': true,
       'translations': false,
       'type': 'relationship',
+      'inversedBy': 'cardSizes',
       'multiple': false,
       'targetModelTableName': 'card_material',
       'labelConstructor': '{{name}}',
-      'title': 'Materiál ',
+      'title': 'Materiál',
     },
     {
       name: 'image',

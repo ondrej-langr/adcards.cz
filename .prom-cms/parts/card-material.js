@@ -86,6 +86,23 @@ const cardMaterialModel = {
         ],
       },
     },
+    {
+      name: 'cardSizes',
+      'required': false,
+      'editable': false,
+      'unique': false,
+      'hide': false,
+      'translations': false,
+      'multiple': true,
+      'type': 'relationship',
+      'title': 'Přiřazené velikosti',
+      targetModelTableName: 'card_sizes',
+      'labelConstructor': '{{id}}',
+      'admin': {
+        editor: { width: 12 },
+      },
+      'mappedBy': 'material',
+    },
   ],
 }
 

@@ -27,7 +27,7 @@ class CardSizes extends Entity
   #[ORM\Column(name: 'price', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Cena', type: 'number', editable: false, hide: false, localized: false)]
   protected ?int $price;
   
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardMaterial::class), ORM\JoinColumn(name: 'material_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Materiál ', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\CardMaterial::class, inversedBy: 'cardSizes'), ORM\JoinColumn(name: 'material_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Materiál', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\CardMaterial $material;
   
   #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Náhledový obrázek', type: 'file', editable: false, hide: false, localized: false)]
