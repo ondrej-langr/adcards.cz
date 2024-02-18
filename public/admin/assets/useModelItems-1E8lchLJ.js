@@ -1,1 +1,0 @@
-import{r,e as p,aJ as M}from"./index-UkeQhmow.js";const y=(e,t,c)=>{const n=r.useCallback(()=>p.entries.for(e).getMany(t).then(({data:a})=>a),[e,t]),s=r.useMemo(()=>[e,t],[e,t]),u=M(s,n,c);return r.useMemo(()=>({...u,key:s}),[s,u])};export{y as u};
