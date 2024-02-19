@@ -31,7 +31,7 @@ class MainController
             ->getQuery()
             ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
             ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
-            ->getArrayResult();
+            ->getResult();
 
         foreach ($cardMaterials as $material) {
             // check empty material in templates and mark it somehow for registered user?
@@ -45,9 +45,7 @@ class MainController
             ->getQuery()
             ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
             ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
-            ->getArrayResult();
-
-        echo count($sliderItemsQuery);
+            ->getResult();
 
         return $rendering->render($response, '@app/pages/home.twig', [
             "cards" => [

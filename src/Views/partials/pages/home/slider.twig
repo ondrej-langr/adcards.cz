@@ -5,7 +5,7 @@
             {% for slide in slider.items %}
                 <div class="slide {% if loop.index == 1 %}active{% endif %}" id="slide-{{ loop.index0 }}"
                      :class='{ "active": activeIndex === {{ loop.index0 }} }'>
-                    {% set currentImage = getImage(slide.image, 1420) %}
+                    {% set currentImage = getImage(slide.image.getId(), 1420) %}
                     <img src="{{ currentImage.src }}" width="{{ currentImage.width }}"
                          height="{{ currentImage.height }}"
                          alt="Obrázek">

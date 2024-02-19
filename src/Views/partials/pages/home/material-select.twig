@@ -3,8 +3,8 @@
     <div class="material-content">
         {% for material in cards.materials %}
             <div class="col-12 col-lg-6 col-md-6 col-sm-6 col-xl-6 material-box mt-4">
-                {% set currentImage = getImage(material.image, 440) %}
-                {% set placeholderImage = getImage(material.image, 10) %}
+                {% set currentImage = getImage(material.image.getId(), 440) %}
+                {% set placeholderImage = getImage(material.image.getId(), 10) %}
                 <img loading='lazy' src='{{ placeholderImage.src }}' data-src="{{ currentImage.src }}"
                      width="{{ currentImage.width }}" height="{{ currentImage.height }}">
                 <h2>{{ material.name }}</h2>
