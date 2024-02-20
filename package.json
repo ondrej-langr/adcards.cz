@@ -33,7 +33,7 @@
     "@paypal/paypal-js": "^7.1.1",
     "@prettier/plugin-php": "^0.20.1",
     "@prom-cms/api-client": "^0.13.0",
-    "@prom-cms/cli": "^0.22.14",
+    "@prom-cms/cli": "^0.22.15",
     "@prom-cms/schema": "^0.7.0",
     "@prom-cms/vite": "^0.2.1",
     "@react-email/components": "^0.0.12",

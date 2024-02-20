@@ -23,6 +23,11 @@ const cardSizesModel = {
       'translations': false,
       'type': 'number',
       'title': 'Šířka (cm)',
+      admin: {
+        editor: {
+          width: 6,
+        },
+      },
     },
     {
       name: 'height',
@@ -30,6 +35,11 @@ const cardSizesModel = {
       'translations': false,
       'type': 'number',
       'title': 'Výška (cm)',
+      admin: {
+        editor: {
+          width: 6,
+        },
+      },
     },
     {
       name: 'price',

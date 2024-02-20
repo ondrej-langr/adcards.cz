@@ -1,0 +1,1 @@
+import{r,e as p,ay as y}from"./index-LnQetCf-.js";const o=(e,t,c)=>{const n=r.useCallback(()=>p.entries.for(e).getMany(t).then(({data:a})=>a),[e,t]),s=r.useMemo(()=>[e,t],[e,t]),u=y(s,n,c);return r.useMemo(()=>({...u,key:s}),[s,u])};export{o as u};

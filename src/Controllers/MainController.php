@@ -25,7 +25,7 @@ class MainController
     ): ResponseInterface
     {
         $currentLanguage = $request->getAttribute('lang');
-        $cardMaterials = $em->createQueryBuilder()
+        $cardMaterialsUnfiltered = $em->createQueryBuilder()
             ->from(CardMaterial::class, 's')
             ->select('s')
             ->getQuery()
@@ -33,8 +33,12 @@ class MainController
             ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
             ->getResult();
 
-        foreach ($cardMaterials as $material) {
-            // check empty material in templates and mark it somehow for registered user?
+        $cardMaterials = [];
+
+        foreach ($cardMaterialsUnfiltered as $material) {
+            if ($material->getCardSizes()->count()) {
+                $cardMaterials[] = $material;
+            }
         }
 
         $sliderItemsQuery = $em->createQueryBuilder()

@@ -97,7 +97,7 @@ const cardMaterialModel = {
       'type': 'relationship',
       'title': 'Přiřazené velikosti',
       targetModelTableName: 'card_sizes',
-      'labelConstructor': '{{id}}',
+      'labelConstructor': '{{ width }}x{{ height }}cm {{price}}Kč',
       'admin': {
         editor: { width: 12 },
       },

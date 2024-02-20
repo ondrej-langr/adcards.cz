@@ -263,23 +263,23 @@ const ordersModel = {
       },
     },
     // TODO Add paypal transaction id here for better clarity
-    {
-      'name': 'currency',
-      'required': true,
-      'editable': false,
-      'unique': false,
-      'translations': false,
-      'type': 'enum',
-      enum: {
-        name: 'Currency',
-        values: {
-          'CZK': 'CZK',
-          'EUR': 'EUR',
-        },
-      },
-      readonly: true,
-      'title': 'Měna',
-    },
+    // {
+    //   'name': 'currency',
+    //   'required': true,
+    //   'editable': false,
+    //   'unique': false,
+    //   'translations': false,
+    //   'type': 'enum',
+    //   enum: {
+    //     name: 'Currency',
+    //     values: {
+    //       'CZK': 'CZK',
+    //       'EUR': 'EUR',
+    //     },
+    //   },
+    //   readonly: true,
+    //   'title': 'Měna',
+    // },
   ],
 }
 

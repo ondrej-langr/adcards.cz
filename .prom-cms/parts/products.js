@@ -27,7 +27,6 @@ const productsModel = {
       'type': 'string',
       'title': 'Název',
       'admin': {
-        'fieldType': 'heading',
         editor: { width: 6 },
       },
     },
@@ -62,19 +61,20 @@ const productsModel = {
     {
       name: 'description',
       'required': false,
-      'editable': true,
-      'unique': false,
       'hide': false,
       'translations': true,
       'type': 'longText',
       'title': 'Popisek',
+      admin: {
+        fieldType: 'wysiwyg',
+      },
     },
     {
       name: 'isBonus',
       'required': false,
       'translations': false,
       'type': 'boolean',
-      'default': false,
+      'defaultValue': false,
       'title': 'Zvýhodněný produkt ke kartám',
       'admin': {
         editor: { placement: 'aside' },

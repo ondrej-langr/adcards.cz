@@ -2866,12 +2866,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PromCMS/Core.git",
-                "reference": "3d0433d3f07c967e0fe8cb8df2da3cbd3f53dd55"
+                "reference": "081a04fad2f198fc4902413dd86d194cfda192ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PromCMS/Core/zipball/3d0433d3f07c967e0fe8cb8df2da3cbd3f53dd55",
-                "reference": "3d0433d3f07c967e0fe8cb8df2da3cbd3f53dd55",
+                "url": "https://api.github.com/repos/PromCMS/Core/zipball/081a04fad2f198fc4902413dd86d194cfda192ea",
+                "reference": "081a04fad2f198fc4902413dd86d194cfda192ea",
                 "shasum": ""
             },
             "require": {
@@ -2931,9 +2931,9 @@
             "description": "Core for PromCMS",
             "support": {
                 "issues": "https://github.com/PromCMS/Core/issues",
-                "source": "https://github.com/PromCMS/Core/tree/develop"
+                "source": "https://github.com/PromCMS/Core/tree/v1.2.57-develop.0"
             },
-            "time": "2024-02-19T00:06:30+00:00"
+            "time": "2024-02-19T22:57:13+00:00"
         },
         {
             "name": "psr/cache",

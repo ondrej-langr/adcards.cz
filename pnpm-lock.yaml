@@ -61,8 +61,8 @@ importers:
         specifier: ^0.13.0
         version: 0.13.0(axios@0.27.2)(react@18.2.0)
       '@prom-cms/cli':
-        specifier: ^0.22.14
-        version: 0.22.14(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5)
+        specifier: ^0.22.15
+        version: 0.22.15(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5)
       '@prom-cms/schema':
         specifier: ^0.7.0
         version: 0.7.0(react@18.2.0)
@@ -2433,8 +2433,8 @@ packages:
       prettier: 3.2.5
     dev: true
 
-  /@prom-cms/admin@0.20.0(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5):
-    resolution: {integrity: sha512-ZzW9g32joHnyNgvPzdyQVyQDhTCaqjOKBtWQsJTqgroyvnk/50RT+e/g7mova5oLnj3soU23vk475x3kVeZyTg==}
+  /@prom-cms/admin@0.20.1(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5):
+    resolution: {integrity: sha512-3JFOhRUNHVhyaZru+1Ntgqirhpr0OO+mjZk+HyXYcZTQaVVFqg71/YMgO5BYJsewX4/fvat6JjdwvERoCQcO7g==}
     dependencies:
       '@emotion/react': 11.11.1(@types/react@18.2.46)(react@18.2.0)
       '@headlessui/react': 1.6.6(react-dom@18.2.0)(react@18.2.0)
@@ -2511,12 +2511,12 @@ packages:
       - react
     dev: true
 
-  /@prom-cms/cli@0.22.14(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5):
-    resolution: {integrity: sha512-B2VT2okSGgwI9dsnNZdJYEgygNDpmjESe2K+2EWq3LgaAK3c9al7B2rZhjw5JgtDxunfuVeTsf3FD5BNcJecig==}
+  /@prom-cms/cli@0.22.15(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5):
+    resolution: {integrity: sha512-JkUkNFaoqSAqacxYZitd83Dq05dYlquHxEFIBeNVnywxvLp9bSRAkOLsYPkJz3nHHHboueZAmReSK3iu+def0Q==}
     hasBin: true
     dependencies:
       '@faker-js/faker': 7.6.0
-      '@prom-cms/admin': 0.20.0(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5)
+      '@prom-cms/admin': 0.20.1(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5)
       '@prom-cms/prettier-config': 0.1.1(prettier@3.2.5)
       '@prom-cms/schema': 0.7.0(react@18.2.0)
       chalk: 5.3.0

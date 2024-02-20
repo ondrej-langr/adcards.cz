@@ -85,9 +85,6 @@ class Orders extends Entity
   #[PROM\PromModelColumn(title: 'Slevový kód - hodnota', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $promoCodeAmount;
   
-  #[PROM\PromModelColumn(title: 'Měna', type: 'enum', editable: true, hide: false, localized: false)]
-  protected ?Currency $currency;
-  
   function __construct()
   {
     $this->cards = new ArrayCollection();
@@ -318,17 +315,6 @@ class Orders extends Entity
   function setPromoCodeAmount(?int $promoCodeAmount): static
   {
     $this->promoCodeAmount = $promoCodeAmount;
-    return $this;
-  }
-  
-  function getCurrency(): Currency
-  {
-    return $this->currency;
-  }
-  
-  function setCurrency(Currency $currency): static
-  {
-    $this->currency = $currency;
     return $this;
   }
 }
