@@ -155,7 +155,8 @@ const cardsModel = {
       'hide': false,
       'translations': false,
       'type': 'number',
-      'title': 'Cena',
+      'title': 'Finální cena',
+      suffix: ' Kč',
       readonly: true,
     },
     {

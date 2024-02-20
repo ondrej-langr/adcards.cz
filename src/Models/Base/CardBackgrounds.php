@@ -22,14 +22,14 @@ class CardBackgrounds extends Entity
   #[ORM\Column(name: 'name', nullable: false, unique: true, type: 'string'), PROM\PromModelColumn(title: 'Název', type: 'string', editable: false, hide: false, localized: false)]
   protected ?string $name;
   
-  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
-  protected ?\PromCMS\Core\Database\Models\File $image;
-  
   #[ORM\Column(name: 'textcolor', nullable: false, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Barva textu', type: 'json', editable: false, hide: false, localized: false)]
   protected ?array $textColor;
   
   #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Sports::class, inversedBy: 'cardBackgrounds'), ORM\JoinColumn(name: 'sport_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Sport', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Sports $sport;
+  
+  #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázek', type: 'file', editable: false, hide: false, localized: false)]
+  protected ?\PromCMS\Core\Database\Models\File $image;
   
   function __construct()
   {
@@ -48,17 +48,6 @@ class CardBackgrounds extends Entity
   function setName(string $name): static
   {
     $this->name = $name;
-    return $this;
-  }
-  
-  function getImage(): \PromCMS\Core\Database\Models\File
-  {
-    return $this->image;
-  }
-  
-  function setImage(\PromCMS\Core\Database\Models\File $image): static
-  {
-    $this->image = $image;
     return $this;
   }
   
@@ -81,6 +70,17 @@ class CardBackgrounds extends Entity
   function setSport(\PromCMS\App\Models\Sports $sport): static
   {
     $this->sport = $sport;
+    return $this;
+  }
+  
+  function getImage(): \PromCMS\Core\Database\Models\File
+  {
+    return $this->image;
+  }
+  
+  function setImage(\PromCMS\Core\Database\Models\File $image): static
+  {
+    $this->image = $image;
     return $this;
   }
 }

@@ -31,21 +31,6 @@ const cardBackgroundsModel = {
       },
     },
     {
-      name: 'image',
-      'required': true,
-      'editable': true,
-      'unique': false,
-      'hide': false,
-      'translations': false,
-      'multiple': false,
-      'type': 'file',
-      'title': 'Obrázek',
-      'typeFilter': 'image',
-      'admin': {
-        'fieldType': 'big-image',
-      },
-    },
-    {
       name: 'textColor',
       'required': true,
       'editable': true,
@@ -67,6 +52,21 @@ const cardBackgroundsModel = {
       'labelConstructor': '{{name}}',
       'title': 'Sport',
       'inversedBy': 'cardBackgrounds',
+    },
+    {
+      name: 'image',
+      'required': true,
+      'editable': true,
+      'unique': false,
+      'hide': false,
+      'translations': false,
+      'multiple': false,
+      'type': 'file',
+      'title': 'Obrázek',
+      'typeFilter': 'image',
+      'admin': {
+        'fieldType': 'big-image',
+      },
     },
   ],
 }

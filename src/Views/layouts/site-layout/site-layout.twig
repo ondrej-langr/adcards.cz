@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport"
           content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <base href="{{ getConfig().app.url }}" />
+    <base href="{{ getProjectConfig().url }}" />
 
     {# Info #}
     <title>
@@ -49,7 +49,7 @@
     <script>
       window.application ??= {}
     </script>
-    {% if getConfig().env.development is not same as(true) %}
+    {% if getAppEnvironment().development is not same as(true) %}
         {% include("@app/layouts/site-layout/tracking.twig") %}
 
         {# Cookies banner #}
@@ -90,7 +90,7 @@
 
 {% include '@app/layouts/site-layout/footer.twig' %}
 
-{% if getConfig().env.development is not same as(true) %}
+{% if getAppEnvironment().development is not same as(true) %}
     {% set complianceCookieName = 'adcardsCookiesCompliance' %}
     <div class="cookies" x-data='{ isOpen: $store.cookies.get("{{ complianceCookieName }}") !== "true",  }'
          style='display: none'

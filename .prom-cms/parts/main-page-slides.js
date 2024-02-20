@@ -45,9 +45,6 @@ const mainPageSlidesModel = {
       'title': 'Tlačítko',
       admin: {
         fieldType: 'linkButton',
-        editor: {
-          width: 6,
-        },
       },
     },
     {
@@ -63,9 +60,6 @@ const mainPageSlidesModel = {
       'typeFilter': 'image',
       'admin': {
         'fieldType': 'big-image',
-        editor: {
-          width: 6,
-        },
       },
     },
   ],

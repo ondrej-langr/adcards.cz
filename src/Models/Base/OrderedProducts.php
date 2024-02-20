@@ -16,7 +16,7 @@ class OrderedProducts extends Entity
 {
   use \PromCMS\Core\Database\Models\Trait\NumericId;
   
-  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Orders::class, inversedBy: 'products'), ORM\JoinColumn(name: 'fororder_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Produkt', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Orders::class, inversedBy: 'products'), ORM\JoinColumn(name: 'fororder_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Orders $forOrder;
   
   #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Products::class), ORM\JoinColumn(name: 'product_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Produkt', type: 'relationship', editable: false, hide: false, localized: false)]

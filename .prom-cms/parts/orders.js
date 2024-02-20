@@ -150,6 +150,7 @@ const ordersModel = {
       'translations': false,
       'type': 'number',
       'title': 'Cena za dopravu',
+      suffix: ' Kč',
       'admin': {
         editor: { width: 4 },
       },
@@ -189,6 +190,7 @@ const ordersModel = {
       'required': true,
       'translations': false,
       readonly: true,
+      suffix: ' Kč',
       admin: {
         editor: {
           placement: 'aside',
@@ -255,6 +257,7 @@ const ordersModel = {
       'type': 'number',
       'title': 'Slevový kód - hodnota',
       readonly: true,
+      suffix: ' Kč',
       admin: {
         editor: {
           width: 6,

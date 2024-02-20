@@ -23,6 +23,7 @@ const cardSizesModel = {
       'translations': false,
       'type': 'number',
       'title': 'Šířka (cm)',
+      suffix: ' cm',
       admin: {
         editor: {
           width: 6,
@@ -35,6 +36,7 @@ const cardSizesModel = {
       'translations': false,
       'type': 'number',
       'title': 'Výška (cm)',
+      suffix: ' cm',
       admin: {
         editor: {
           width: 6,
@@ -50,6 +52,7 @@ const cardSizesModel = {
       'translations': true,
       'type': 'number',
       'title': 'Cena',
+      suffix: ' Kč',
     },
     {
       name: 'material',

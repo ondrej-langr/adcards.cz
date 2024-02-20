@@ -36,7 +36,7 @@ class Cards extends Entity
   #[ORM\Column(name: 'cardtype', nullable: false, unique: false, type: 'string', enumType: CardType::class), PROM\PromModelColumn(title: 'Typ karty', type: 'enum', editable: false, hide: false, localized: false)]
   protected ?CardType $cardType;
   
-  #[PROM\PromModelColumn(title: 'Cena', type: 'number', editable: true, hide: false, localized: false)]
+  #[PROM\PromModelColumn(title: 'Finální cena', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $finalPrice;
   
   #[PROM\PromModelColumn(title: 'Měna', type: 'enum', editable: true, hide: false, localized: false)]

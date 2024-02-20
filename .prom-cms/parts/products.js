@@ -20,10 +20,8 @@ const productsModel = {
     {
       name: 'name',
       'required': true,
-      'editable': true,
       'unique': true,
-      'hide': false,
-      'translations': true,
+      localized: true,
       'type': 'string',
       'title': 'Název',
       'admin': {
@@ -36,9 +34,9 @@ const productsModel = {
       'editable': true,
       'unique': false,
       'hide': false,
-      'translations': true,
       'type': 'number',
       'title': 'Cena',
+      suffix: ' Kč',
       'admin': {
         editor: { width: 6 },
       },
@@ -49,7 +47,6 @@ const productsModel = {
       'editable': true,
       'unique': false,
       'hide': false,
-      'translations': false,
       'multiple': true,
       'type': 'file',
       'title': 'Obrázky',
@@ -62,7 +59,7 @@ const productsModel = {
       name: 'description',
       'required': false,
       'hide': false,
-      'translations': true,
+      localized: true,
       'type': 'longText',
       'title': 'Popisek',
       admin: {
@@ -72,7 +69,6 @@ const productsModel = {
     {
       name: 'isBonus',
       'required': false,
-      'translations': false,
       'type': 'boolean',
       'defaultValue': false,
       'title': 'Zvýhodněný produkt ke kartám',

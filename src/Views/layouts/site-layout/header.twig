@@ -86,15 +86,15 @@
                 <div class="dropdown-language-content" :class="{ 'toggled': opened }">
                     {#                    We create special array that has keys as languages and value as empty string. This will be later used to clear url #}
                     {% set languagesAsReplacer = {} %}
-                    {% set defaultLanguage = getConfig().i18n.default %}
-                    {% for language in getConfig().i18n.languages %}
+                    {% set defaultLanguage = getProjectConfig().getDefaultLanguage() %}
+                    {% for language in getProjectConfig().languages %}
                         {% set languageWithSlash = language ~ "/" %}
                         {% set languagesAsReplacer = languagesAsReplacer|merge({
                             (languageWithSlash): ""
                         }) %}
                     {% endfor %}
 
-                    {% for language in getConfig().i18n.languages %}
+                    {% for language in getProjectConfig().languages %}
                         {% set finalUrl = current_url()|replace(languagesAsReplacer) %}
                         {% if language != defaultLanguage %}
                             {% set finalUrl = '/' ~ language ~ finalUrl %}

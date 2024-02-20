@@ -39,6 +39,7 @@ const promoCodesModel = {
       'translations': false,
       'type': 'number',
       'title': 'Hodnota slevy (%)',
+      suffix: ' %',
       admin: {
         editor: { width: 4 },
       },
@@ -67,6 +68,7 @@ const promoCodesModel = {
       'type': 'number',
       'title': 'Počet použití',
       readonly: true,
+      suffix: ' x',
       admin: {
         editor: { width: 6 },
       },

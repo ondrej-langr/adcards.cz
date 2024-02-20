@@ -19,9 +19,12 @@ class Products extends Entity
   use \PromCMS\Core\Database\Models\Trait\Ordable;
   use \PromCMS\Core\Database\Models\Trait\Ownable;
   use \PromCMS\Core\Database\Models\Trait\Draftable;
+  use \PromCMS\Core\Database\Models\Trait\Localized {
+    getTranslations as protected getTranslationsOriginal;
+  }
   use \PromCMS\Core\Database\Models\Trait\NumericId;
   
-  #[ORM\Column(name: 'name', nullable: false, unique: true, type: 'string'), PROM\PromModelColumn(title: 'Název', type: 'string', editable: false, hide: false, localized: false)]
+  #[ORM\Column(name: 'name', nullable: false, unique: true, type: 'string'), PROM\PromModelColumn(title: 'Název', type: 'string', editable: false, hide: false, localized: true)]
   protected ?string $name;
   
   #[ORM\Column(name: 'price', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Cena', type: 'number', editable: false, hide: false, localized: false)]
@@ -33,21 +36,46 @@ class Products extends Entity
   #[ORM\ManyToMany(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'images_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázky', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\Doctrine\Common\Collections\Collection $images;
   
-  #[ORM\Column(name: 'description', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Popisek', type: 'longText', editable: false, hide: false, localized: false)]
+  #[ORM\Column(name: 'description', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Popisek', type: 'longText', editable: false, hide: false, localized: true)]
   protected ?string $description;
   
   #[ORM\Column(name: 'isbonus', nullable: true, unique: false, type: 'boolean'), PROM\PromModelColumn(title: 'Zvýhodněný produkt ke kartám', type: 'boolean', editable: false, hide: false, localized: false)]
   protected ?bool $isBonus;
+  /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\ProductsTranslation>
+  */
+  
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\ProductsTranslation::class, mappedBy: 'object', cascade: ['persist', 'remove'])]
+  protected $translations;
   
   function __construct()
   {
     $this->images = new ArrayCollection();
+    $this->translations = new ArrayCollection();
   }
   
   #[ORM\PostLoad]
   function __prom__initCollections()
   {
     $this->images ??= new ArrayCollection();
+    $this->translations ??= new ArrayCollection();
+  }
+  /**
+  * @return ArrayCollection<string, \PromCMS\App\Models\ProductsTranslation>
+  */
+  
+  function getTranslations(): ArrayCollection
+  {
+    return $this->getTranslationsOriginal();
+  }
+  
+  function addTranslation(\PromCMS\App\Models\ProductsTranslation $translation): static
+  {
+    if (!$this->translations->contains($translation)) {
+      $translation->setObject($this);
+      $this->translations->set($translation->getLocale(), $translation);
+    }
+    return $this;
   }
   
   function getName(): string

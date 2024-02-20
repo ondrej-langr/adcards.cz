@@ -9,7 +9,7 @@
         <h2>{{ "Obchod"|t }}</h2>
         <div class="shop-content">
             {% for product in products %}
-                {{ include("@app/components/product.twig", product) }}
+                {{ include("@app/components/product.twig", product.toArray()) }}
             {% else %}
                 Zatím žádné produkty...
             {% endfor %}

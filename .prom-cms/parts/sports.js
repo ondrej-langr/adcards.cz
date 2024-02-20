@@ -66,7 +66,7 @@ const sportsModel = {
       'admin': {
         editor: { width: 12 },
       },
-      'labelConstructor': '({{id}})',
+      'labelConstructor': '{{name}} - {{sport.name}}',
       targetModelTableName: 'card_backgrounds',
       'mappedBy': 'sport',
     },
