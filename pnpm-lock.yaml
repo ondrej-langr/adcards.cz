@@ -58,17 +58,17 @@ importers:
         specifier: ^0.20.1
         version: 0.20.1(prettier@3.2.5)
       '@prom-cms/api-client':
-        specifier: ^0.13.0
-        version: 0.13.0(axios@0.27.2)(react@18.2.0)
+        specifier: ^0.14.0
+        version: 0.14.0(axios@0.27.2)(react@18.2.0)
       '@prom-cms/cli':
-        specifier: ^0.22.15
-        version: 0.22.15(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5)
+        specifier: ^0.22.16
+        version: 0.22.16(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5)
       '@prom-cms/schema':
-        specifier: ^0.7.0
-        version: 0.7.0(react@18.2.0)
+        specifier: ^0.8.0
+        version: 0.8.0(react@18.2.0)
       '@prom-cms/vite':
-        specifier: ^0.2.1
-        version: 0.2.1(axios@0.27.2)(vite@5.0.12)
+        specifier: ^0.3.0
+        version: 0.3.0(axios@0.27.2)(vite@5.0.12)
       '@react-email/components':
         specifier: ^0.0.12
         version: 0.0.12(@types/react@18.2.46)(react@18.2.0)
@@ -2433,8 +2433,8 @@ packages:
       prettier: 3.2.5
     dev: true
 
-  /@prom-cms/admin@0.20.1(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5):
-    resolution: {integrity: sha512-3JFOhRUNHVhyaZru+1Ntgqirhpr0OO+mjZk+HyXYcZTQaVVFqg71/YMgO5BYJsewX4/fvat6JjdwvERoCQcO7g==}
+  /@prom-cms/admin@0.20.2(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5):
+    resolution: {integrity: sha512-HzLsy2jhIUMwI9RB/xXXgWPIWjQdvkWaHx6uXzyYa1BOgDhQeK5TDPNEgGXeT1U4RoSHQr+O9a/jN12HvI6NNQ==}
     dependencies:
       '@emotion/react': 11.11.1(@types/react@18.2.46)(react@18.2.0)
       '@headlessui/react': 1.6.6(react-dom@18.2.0)(react@18.2.0)
@@ -2443,8 +2443,8 @@ packages:
       '@mantine/hooks': 7.5.3(react@18.2.0)
       '@mantine/notifications': 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.0
-      '@prom-cms/api-client': 0.13.0(axios@0.27.2)(react@18.2.0)
-      '@prom-cms/schema': 0.7.0(react@18.2.0)
+      '@prom-cms/api-client': 0.14.0(axios@0.27.2)(react@18.2.0)
+      '@prom-cms/schema': 0.8.0(react@18.2.0)
       '@svgr/webpack': 6.5.1
       '@tailwindcss/typography': 0.5.10(tailwindcss@3.3.5)
       '@tanstack/react-query': 4.2.3(react-dom@18.2.0)(react@18.2.0)
@@ -2500,25 +2500,25 @@ packages:
       - tailwindcss
     dev: true
 
-  /@prom-cms/api-client@0.13.0(axios@0.27.2)(react@18.2.0):
-    resolution: {integrity: sha512-j/Ai+L2G6OY3x+fPLjOxOw5HQa/OEIPFqWXtyhq5gp9l4Sn0H4/VUzFclInaCoGkryDTPWVdNUqAP8ZmwZsfgw==}
+  /@prom-cms/api-client@0.14.0(axios@0.27.2)(react@18.2.0):
+    resolution: {integrity: sha512-p1uYZWDr+NUUwIpiK6ugKGNQG0bj/rBR8GGtED2N74T/O8+Qf5Eg7HIHzqmrPGj8JMWRU/2PM2WUyWvxUNOkTQ==}
     peerDependencies:
       axios: ^0.27
     dependencies:
-      '@prom-cms/schema': 0.7.0(react@18.2.0)
+      '@prom-cms/schema': 0.8.0(react@18.2.0)
       axios: 0.27.2
     transitivePeerDependencies:
       - react
     dev: true
 
-  /@prom-cms/cli@0.22.15(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5):
-    resolution: {integrity: sha512-JkUkNFaoqSAqacxYZitd83Dq05dYlquHxEFIBeNVnywxvLp9bSRAkOLsYPkJz3nHHHboueZAmReSK3iu+def0Q==}
+  /@prom-cms/cli@0.22.16(@types/node@18.19.4)(@types/react@18.2.46)(postcss@8.4.32)(react@18.2.0)(tailwindcss@3.3.5):
+    resolution: {integrity: sha512-RcibfXT8EBpwKcGBx7SOewX+IJZTncIfjlFuepd1ZzYSU9ndD+MjUDwPXV5yQNzSTYvaamRl/9TaDLniKUVM8w==}
     hasBin: true
     dependencies:
       '@faker-js/faker': 7.6.0
-      '@prom-cms/admin': 0.20.1(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5)
+      '@prom-cms/admin': 0.20.2(@types/react@18.2.46)(postcss@8.4.32)(tailwindcss@3.3.5)
       '@prom-cms/prettier-config': 0.1.1(prettier@3.2.5)
-      '@prom-cms/schema': 0.7.0(react@18.2.0)
+      '@prom-cms/schema': 0.8.0(react@18.2.0)
       chalk: 5.3.0
       commander: 11.1.0
       dayjs: 1.11.10
@@ -2565,8 +2565,8 @@ packages:
       - supports-color
     dev: true
 
-  /@prom-cms/schema@0.7.0(react@18.2.0):
-    resolution: {integrity: sha512-fqRQFu49MoCpZUSFFYnZThkEXT6dc7KAaY3uyNesLm8L4kHoCNIw7btszFBTpnHf8PU5dWs+kTxMtkJaZ5KXng==}
+  /@prom-cms/schema@0.8.0(react@18.2.0):
+    resolution: {integrity: sha512-MC7T89kfPnXXAOt2dQA9iP7RoRSdXoPD23U5Zh0zr2xQ3S4n0Ho7vg/tEVWyLlvvYDu/MFIkJyunALuAjfKZYg==}
     dependencies:
       lodash: 4.17.21
       slugify: 1.6.6
@@ -2576,8 +2576,8 @@ packages:
       - react
     dev: true
 
-  /@prom-cms/vite@0.2.1(axios@0.27.2)(vite@5.0.12):
-    resolution: {integrity: sha512-5dmiB6+8APvhk5FoshSu0XtwbyUj8UOHmt4+3v1yGd6LgpET+o0rus+ECp2IKWljPyPfeBxkErJDmFrWr6I7RQ==}
+  /@prom-cms/vite@0.3.0(axios@0.27.2)(vite@5.0.12):
+    resolution: {integrity: sha512-d1AASpmbC6+IrpqaJJlv5NKGipivnjvRdh6r+ZLfMso6QeHPg5dwlv6HeznE9T8C3lJvpzfu+hZhrFaMDrbBWA==}
     peerDependencies:
       axios: ^0.27
       vite: ^4 || ^5
