@@ -2228,16 +2228,16 @@
         },
         {
             "name": "nikic/php-parser",
-            "version": "v5.0.0",
+            "version": "v5.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/nikic/PHP-Parser.git",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc"
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
-                "reference": "4a21235f7e56e713259a6f76bf4b5ea08502b9dc",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/2218c2252c874a4624ab2f613d86ac32d227bc69",
+                "reference": "2218c2252c874a4624ab2f613d86ac32d227bc69",
                 "shasum": ""
             },
             "require": {
@@ -2280,9 +2280,9 @@
             ],
             "support": {
                 "issues": "https://github.com/nikic/PHP-Parser/issues",
-                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.0"
+                "source": "https://github.com/nikic/PHP-Parser/tree/v5.0.1"
             },
-            "time": "2024-01-07T17:17:35+00:00"
+            "time": "2024-02-21T19:24:10+00:00"
         },
         {
             "name": "opis/json-schema",
@@ -2866,12 +2866,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PromCMS/Core.git",
-                "reference": "772e3703adc52876bdb04e67324f2c1248a42fc8"
+                "reference": "deb69b6d255da20737da6aedc6158ee6a62bc0d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PromCMS/Core/zipball/772e3703adc52876bdb04e67324f2c1248a42fc8",
-                "reference": "772e3703adc52876bdb04e67324f2c1248a42fc8",
+                "url": "https://api.github.com/repos/PromCMS/Core/zipball/deb69b6d255da20737da6aedc6158ee6a62bc0d0",
+                "reference": "deb69b6d255da20737da6aedc6158ee6a62bc0d0",
                 "shasum": ""
             },
             "require": {
@@ -2931,9 +2931,9 @@
             "description": "Core for PromCMS",
             "support": {
                 "issues": "https://github.com/PromCMS/Core/issues",
-                "source": "https://github.com/PromCMS/Core/tree/v1.2.57-develop.2"
+                "source": "https://github.com/PromCMS/Core/tree/v1.2.58-develop.0"
             },
-            "time": "2024-02-20T20:27:03+00:00"
+            "time": "2024-02-21T06:33:45+00:00"
         },
         {
             "name": "psr/cache",
