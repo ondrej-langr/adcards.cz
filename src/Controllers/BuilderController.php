@@ -3,9 +3,17 @@
 namespace PromCMS\App\Controllers;
 
 use DI\Container;
+use Doctrine\ORM\Query;
 use PromCMS\App\CardType;
 use PromCMS\App\CartCard;
+use PromCMS\App\Models\CardMaterial;
+use PromCMS\App\Models\Countries;
+use PromCMS\App\Models\MainPageSlides;
+use PromCMS\App\Models\Sports;
 use PromCMS\Core\Config;
+use PromCMS\Core\Database\EntityManager;
+use PromCMS\Core\Database\Paginate;
+use PromCMS\Core\Database\Query\TranslationWalker;
 use PromCMS\Core\Http\Routing\AsRoute;
 use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\LocalizationService;
@@ -41,9 +49,8 @@ class BuilderController
     }
 
     #[AsRoute('GET', '/zeme/vyhledavani', 'searchCountries')]
-    public function searchCountries(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function searchCountries(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em): ResponseInterface
     {
-        $countriesService = new EntryTypeService(new \PromCMS\App\Models\Countries());
         $querySearch = array_merge(["limit" => "15", "page" => "1"], $request->getQueryParams());
         $limit = intval($querySearch["limit"]);
         $page = intval($querySearch["page"]);
@@ -53,76 +60,87 @@ class BuilderController
             "isSearch" => true
         ];
 
-        $payload["countries"] = $countriesService->getMany(
-            $query ? [function ($item) use ($query) {
-                return !!preg_match("/$query/i", mb_strtolower($item["name"]));
-            }] : [],
-            $page,
-            $limit
-        )["data"];
+        $payload["countries"] = Paginate::fromQuery($em->createQueryBuilder(Countries::class, 'c')
+            ->where('c.name = :query')
+            ->setParameter(':query', "%$query%")
+            ->getQuery())->execute($page, $limit)->getItems();
 
         return $this->container->get(RenderingService::class)->render($response, '@app/partials/pages/builder/form/countries-list.twig', $payload);
     }
 
     #[AsRoute('GET', '/karty/builder', 'builder')]
-    public function get(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function get(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em): ResponseInterface
     {
         $requestLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
-        $config = $this->container->get(Config::class);
         $payload = [];
 
         // Materials
-        $payload['materials'] = (new \PromCMS\App\Models\CardMaterial())->query()->setLanguage($requestLanguage)
-            ->join(function ($material) use ($requestLanguage, &$payload) {
-                $sizes = (new \PromCMS\App\Models\CardSizes())->query()->setLanguage($requestLanguage)
-                    ->where(["material_id", "=", $material["id"]])
-                    ->getMany();
+        $unfilteredMaterials = $em->createQueryBuilder()
+            ->from(CardMaterial::class, 'm')
+            ->select('m')
+            ->getQuery()
+            ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+            ->setHint(TranslationWalker::HINT_LOCALE, $requestLanguage)
+            ->getResult();
+
+        $materialIds = [];
+
+        $payload['materials'] = [];
+        $payload['sizes'] = [];
+
+        /**
+         * @type $material CardMaterial
+         */
+        foreach ($unfilteredMaterials as $material) {
+            if (count($sizes = $material->getCardSizes())) {
+                $payload['materials'][] = $material;
+                $materialIds[$material->getId()] = $material->getId();
 
                 foreach ($sizes as $size) {
-                    $payload['sizes'][$size['id']] = $size;
+                    if (!isset($payload['sizes'][$size->getId()])) {
+                        $payload['sizes'][$size->getId()] = $size;
+                    }
                 }
+            }
+        }
 
-                return $sizes;
-            }, "sizes")
-            ->select(['sizes'])
-            ->getMany();
-
-        $payload['materials'] = array_values(array_filter($payload['materials'], fn($material) => count($material['sizes'] ?? [])));
         $payload['sizes'] = array_values($payload['sizes']);
         $payload['backgrounds'] = [];
 
         // Countries
-        $payload['countries'] = \PromCMS\App\Models\Countries::setLanguage($requestLanguage)
-            ->limit(8)
-            ->getMany();
+        $payload['countries'] = $em->createQueryBuilder()
+            ->from(Countries::class, 'c')
+            ->select('c')
+            ->setMaxResults(8)
+            ->getQuery()
+            ->getResult();
 
         // Sports and their backgrounds
+        $unfilteredSports = $em->createQueryBuilder()
+            ->from(Sports::class, 's')
+            ->select('s')
+            ->getQuery()
+            ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+            ->setHint(TranslationWalker::HINT_LOCALE, $requestLanguage)
+            ->getResult();
+
+        $payload['sports'] = [];
+        $sportIds = [];
         $backgroundIds = [];
-        $payload['sports'] = (new \PromCMS\App\Models\Sports())->query()->setLanguage($requestLanguage)
-            ->join(function ($sport) use ($requestLanguage, &$payload, $config, &$backgroundIds) {
-                $backgrounds = (new \PromCMS\App\Models\CardBackgrounds)
-                    ->query()
-                    ->setLanguage($requestLanguage)
-                    ->where(["sport_id", "=", $sport["id"]])
-                    ->getMany();
+        foreach ($unfilteredSports as $sport) {
+            $cardBackgroundsForSport = $sport->getCardBackgrounds();
 
-                foreach ($backgrounds as &$background) {
-                    $imageId = $background['image'];
-                    $background['imageSrc'] = $config->app->baseUrl . "/api/entry-types/files/items/$imageId/raw?w=400";
+            if (!count($cardBackgroundsForSport)) {
+                continue;
+            }
 
-                    $backgroundIds[] = $background['id'];
-                    $payload['backgrounds'][$background['id']] = $background;
-                }
+            foreach ($cardBackgroundsForSport as $bg) {
+                $backgroundIds[$bg->getId()] = $bg->getId();
+            }
 
-                return array_values($backgrounds);
-            }, "backgrounds")
-            ->select(['backgrounds'])
-            ->getMany();
-        $backgroundIds = array_unique($backgroundIds);
-
-        // Sports without a background is not a valid sport to select
-        $payload['sports'] = array_values(array_filter($payload['sports'], fn($sport) => count($sport['backgrounds']) > 0));
-        $payload['backgrounds'] = array_values($payload['backgrounds']);
+            $sportIds[$sport->getId()] = $sport->getId();
+            $payload['sports'][] = $sport;
+        }
 
         $values = [
             "cardType" => CardType::PLAYER,
@@ -133,8 +151,6 @@ class BuilderController
 
         $queryParams = $request->getQueryParams();
         $values["currentStep"] = 0;
-        $sportIds = array_column($payload["sports"], "id");
-        $materialIds = array_column($payload["materials"], "id");
 
         // Check if preselected params are valid
         if (isset($queryParams["materialId"]) && in_array(trim($queryParams["materialId"]), $materialIds)) {
@@ -142,7 +158,7 @@ class BuilderController
 
             $foundSizeIndex = array_search(intval($values["materialId"]), array_column($payload["sizes"], "material_id"));
 
-            $values["sizeId"] = (string)$payload["sizes"][$foundSizeIndex]["id"];
+            $values["sizeId"] = $payload["sizes"][$foundSizeIndex]->getId();
             $values["currentStep"] += 1;
         }
 

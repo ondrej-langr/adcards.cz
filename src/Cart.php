@@ -3,6 +3,13 @@
 namespace PromCMS\App;
 
 use DI\Container;
+use Doctrine\ORM\Query;
+use PromCMS\App\Models\CardSizes;
+use PromCMS\App\Models\MainPageSlides;
+use PromCMS\App\Models\Products;
+use PromCMS\App\Models\PromoCodes;
+use PromCMS\Core\Database\EntityManager;
+use PromCMS\Core\Database\Query\TranslationWalker;
 use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\LocalizationService;
@@ -61,10 +68,17 @@ class Cart
 
     public function setPromoCode(string $promoCodeAsCode): bool
     {
-        $promoCodeService = new \PromCMS\Core\Services\EntryTypeService(new Models\PromoCodes());
-
         try {
-            $promoCode = $promoCodeService->getOne(["code", "=", $promoCodeAsCode]);
+            $promoCode = $this->container
+                ->get(EntityManager::class)
+                ->getRepository(PromoCodes::class)
+                ->findOneBy([
+                    'code' => $promoCodeAsCode
+                ]);
+
+            if (!$promoCode) {
+                throw new EntityNotFoundException();
+            }
         } catch (\Exception $error) {
             if ($error instanceof EntityNotFoundException) {
                 return false;
@@ -105,9 +119,16 @@ class Cart
         }
 
         try {
-            $promoCodeFromDatabase = (new EntryTypeService(new Models\PromoCodes()))->getOne([
-                "id", "=", $this->state[CartItemTypes::PROMO_CODE->value]["id"]
-            ]);
+            $promoCode = $this->container
+                ->get(EntityManager::class)
+                ->getRepository(PromoCodes::class)
+                ->find($this->state[CartItemTypes::PROMO_CODE->value]["id"]);
+
+            if (!$promoCode) {
+                throw new EntityNotFoundException();
+            }
+
+            $promoCodeFromDatabase = $promoCode->toArray();
         } catch (\Exception $error) {
             // If promo code was not found(or any other error) then we remove it
             $this->deletePromoCode();
@@ -116,12 +137,13 @@ class Cart
         }
 
 
-        return $promoCodeFromDatabase->getData();
+        return $promoCodeFromDatabase;
     }
 
     public function appendProduct($productId, $addQuantity = 1): void
     {
         $cartItemTypeProducts = CartItemTypes::PRODUCTS->value;
+        $productId = intval($productId);
 
         if (!isset($this->state[$cartItemTypeProducts])) {
             $this->state[$cartItemTypeProducts] = [];
@@ -136,6 +158,8 @@ class Cart
 
     public function changeProductQuantity($productId, int $toQuantity): void
     {
+        $productId = intval($productId);
+
         if (!isset($this->state[CartItemTypes::PRODUCTS->value])) {
             return;
         }
@@ -149,6 +173,8 @@ class Cart
 
     public function removeProduct($productId): void
     {
+        $productId = intval($productId);
+
         if (!isset($this->state[CartItemTypes::PRODUCTS->value])) {
             return;
         }
@@ -230,27 +256,39 @@ class Cart
         $result = [];
         $productsFromCart = $this->state[CartItemTypes::PRODUCTS->value];
         $hasCards = !empty($this->state[CartItemTypes::CARDS->value]);
+        $currentLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
+        $em = $this->container->get(EntityManager::class);
 
-        $productsFromDatabase = (new Models\Products())
-            ->query()
-            ->setLanguage($this->container->get(LocalizationService::class)->getCurrentLanguage())
-            ->where(["id", "IN", array_keys($productsFromCart)])
-            ->getMany();
+        $productsFromDatabase = $em->createQueryBuilder()
+            ->from(Products::class, 'p')
+            ->select('p')
+            ->addOrderBy('p.order', 'DESC')
+            ->addOrderBy('p.id', 'DESC')
+            ->where($em->getExpressionBuilder()->in('p.id', ':ids'))
+            ->setParameter(':ids', array_keys($productsFromCart))
+            ->getQuery()
+            ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+            ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
+            ->getResult();
 
+        /**
+         * @type $product Products
+         */
         foreach ($productsFromDatabase as $product) {
-            if (!$hasCards && $product["is_bonus"]) {
-                $this->removeProduct($product["id"]);
+            // We want to remove bonuses if user does not have any cards - user is not eligible
+            if (!$hasCards && $product->getIsBonus()) {
+                $this->removeProduct($product->getId());
 
                 continue;
             }
 
-            $productInfoFromCart = $productsFromCart[$product["id"]];
-            $result[$product["id"]] = array_merge($productInfoFromCart, [
+            $productInfoFromCart = $productsFromCart[$product->getId()];
+            $result[$product->getId()] = array_merge($productInfoFromCart, [
                 // count -> but that is already from state
                 "product" => $product,
                 "count" => $productInfoFromCart["count"],
                 "price" => [
-                    "total" => $product["price"] * $productInfoFromCart["count"]
+                    "total" => $product->getPrice() * $productInfoFromCart["count"]
                 ]
             ]);
         }
@@ -262,6 +300,7 @@ class Cart
     {
         $total = 0;
         $currentLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
+        $em = $this->container->get(EntityManager::class);
 
         foreach ($this->getProducts() as $productFromCartInfo) {
             $total += $productFromCartInfo["price"]["total"];
@@ -270,15 +309,28 @@ class Cart
         foreach ($this->getCards() as $card) {
             $total += $card->getPrice();
 
-            $size = (new Models\CardSizes())->query()->setLanguage($currentLanguage)->join(function ($size) use ($currentLanguage) {
-                return (new Models\CardMaterial())->query()->setLanguage($currentLanguage)->getOneById(intval($size['material_id']))->getData();
-            }, "material")->select(['material'])->getOneById($card->getSizeId())->getData();
-            $materialBonuses = $size['material']['bonuses']['data'];
-            $cardBonuses = $card->getBonuses();
+            /**
+             * @type $size CardSizes
+             */
+            $size = $em->createQueryBuilder()
+                ->from(CardSizes::class, 's')
+                ->select('s')
+                ->where($em->getExpressionBuilder()->eq('s.id', ':id'))
+                ->setParameter(':id', $card->getSizeId())
+                ->getQuery()
+                ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+                ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
+                ->getSingleResult();
 
-            foreach ($materialBonuses as $item) {
-                if (!empty($cardBonuses[$item['name']])) {
-                    $total += $item['price'];
+            $bonuses = $size->getMaterial()->getBonuses();
+            if ($bonuses && count($bonuses)) {
+                $materialBonuses = $bonuses['data'] ?? [];
+                $cardBonuses = $card->getBonuses();
+
+                foreach ($materialBonuses as $item) {
+                    if (!empty($cardBonuses[$item['name']])) {
+                        $total += $item['price'];
+                    }
                 }
             }
         }
@@ -298,15 +350,23 @@ class Cart
             return [];
         }
 
-        return (new Models\Products())
-            ->query()
-            ->setLanguage($this->container->get(LocalizationService::class)->getCurrentLanguage())
-            ->where([
-                ["is_bonus", "=", true],
-                ["id", "NOT IN", array_keys($this->state[CartItemTypes::PRODUCTS->value])]
-            ])
-            ->limit(3)
-            ->getMany();
+        $em = $this->container->get(EntityManager::class);
+        $exp = $em->getExpressionBuilder();
+
+        return $em->createQueryBuilder()
+            ->from(Products::class, 'p')
+            ->where(
+                $exp->andX([
+                    $exp->eq('p.isBonus', ':isBonus'),
+                    $exp->notIn('p.id', ':ids'),
+                ]))
+            ->setParameter(':isBonus', true)
+            ->setParameter(':ids', array_keys($this->state[CartItemTypes::PRODUCTS->value]))
+            ->setMaxResults(3)
+            ->getQuery()
+            ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+            ->setHint(TranslationWalker::HINT_LOCALE, $this->container->get(LocalizationService::class)->getCurrentLanguage())
+            ->getResult();
     }
 
     public function stateToTemplateVariables()
@@ -315,45 +375,49 @@ class Cart
         $productsFromCart = $this->getProducts();
         $promoCode = $this->getPromoCode();
         $totalWithoutPromo = $this->getTotal(false);
+        $em = $this->container->get(EntityManager::class);
 
         return [
             "cart" => [
                 "size" => $this->getCount(),
-                "cards" => array_map(function (CartCard $item) use ($currentLanguage) {
+                "cards" => array_map(function (CartCard $item) use ($currentLanguage, $em) {
                     $result = $item->asArray();
 
-                    $result["background"] = (new Models\CardBackgrounds())
-                        ->query()
-                        ->setLanguage($currentLanguage)
-                        ->getOneById(intval($result["background_id"]))
-                        ->getData();
+                    $result["background"] = $em->createQueryBuilder()
+                        ->from(Products::class, 'p')
+                        ->where($em->getExpressionBuilder()->eq('p.id', ':id'))
+                        ->setParameter(':id', intval($result["background_id"]))
+                        ->getQuery()
+                        ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+                        ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
+                        ->getSingleResult();
 
-                    $result['size'] = (new Models\CardSizes())
-                        ->query()
-                        ->setLanguage($currentLanguage)
-                        ->where(["id", "=", intval($result["size_id"])])
-                        ->join(function ($size) use ($currentLanguage) {
-                            return (new Models\CardMaterial())->query()
-                                ->setLanguage($currentLanguage)
-                                ->getOneById(intval($size["material_id"]))
-                                ->getData();
-                        }, 'material')
-                        ->select(['material'])
-                        ->getOne()
-                        ->getData();
+                    $result["size"] = $em->createQueryBuilder()
+                        ->from(CardSizes::class, 's')
+                        ->where($em->getExpressionBuilder()->eq('s.id', ':id'))
+                        ->setParameter(':id', intval($result["size_id"]))
+                        ->getQuery()
+                        ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+                        ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
+                        ->getSingleResult();
 
-                    $materialBonuses = $result['size']['material']['bonuses']['data'] ?? [];
 
                     $newBonuses = [];
-                    foreach ($materialBonuses as $materialBonus) {
-                        if (!empty($result['bonuses'][$materialBonus['name']])) {
-                            $newBonuses[] = [
-                                'name' => $materialBonus['name'],
-                                'value' => $result['bonuses'][$materialBonus['name']],
-                                'price' => $materialBonus['price']
-                            ];
+                    $bonuses = $result['size']->getMaterial()->getBonuses();
+                    if ($bonuses && count($bonuses)) {
+                        $materialBonuses = $bonuses['data'] ?? [];
+
+                        foreach ($materialBonuses as $materialBonus) {
+                            if (!empty($result['bonuses'][$materialBonus['name']])) {
+                                $newBonuses[] = [
+                                    'name' => $materialBonus['name'],
+                                    'value' => $result['bonuses'][$materialBonus['name']],
+                                    'price' => $materialBonus['price']
+                                ];
+                            }
                         }
                     }
+
                     $result['bonuses'] = [
                         'data' => $newBonuses
                     ];

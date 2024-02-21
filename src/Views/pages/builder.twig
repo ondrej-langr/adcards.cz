@@ -40,8 +40,25 @@
 
 {% block content %}
     {% set props = {
-        materials,
-        sports,
+        materials: materials|map( material => {
+            id: material.getId(),
+            sizes: material.getCardSizes()|map( size => {
+                id: size.getId(),
+                width: size.getWidth(),
+                height: size.getHeight(),
+                price: size.getPrice()
+            }),
+            bonuses: material.getBonuses()
+        } ),
+        sports: sports|map( sport => {
+            id: sport.getId(),
+            backgrounds: sport.getCardBackgrounds()|map( background => {
+                id: background.getId(),
+                name:  background.getName(),
+                imageSrc: "/api/library/files/items/" ~ background.getImage().getId() ~ "?w=350&q=90",
+                textColor: background.getColor()
+            })
+        }),
         state
     } %}
     <div id='builder-root' class='builder' x-data="cardBuilder(JSON.parse(`{{ props|json_encode }}`))">
@@ -56,11 +73,11 @@
             {# Material select #}
             {{ _self.step(0, "Vyberte materiál",
                 _self.slider(materials|map( material => {
-                    href: '/karty/builder?materialId=' ~ material.id,
-                    image: material.image,
-                    name: material.name,
-                    description: material.description,
-                    onClick: "setMaterial(" ~ material.id ~", true)"
+                    href: '/karty/builder?materialId=' ~ material.getId(),
+                    image: material.getImage().id,
+                    name: material.getName(),
+                    description: material.getDescription(),
+                    onClick: "setMaterial(" ~ material.getId() ~", true)"
                 })),
                 state.form.values.currentStep != 0
             ) }}
@@ -68,24 +85,24 @@
             {# Sport select #}
             {{ _self.step(1, "Vyberte sport",
                 _self.slider(sports|map( sport => {
-                    href: '`/karty/builder?materialId=${_materialId}&sportId=' ~ sport.id ~ '`',
-                    image: sport.image,
-                    name: sport.name,
-                    description: sport.description,
-                    onClick: "setSport(" ~ sport.id ~", true)"
+                    href: '`/karty/builder?materialId=${_materialId}&sportId=' ~ sport.getId() ~ '`',
+                    image: sport.getImage(),
+                    name: sport.getName(),
+                    description: sport.getDescription(),
+                    onClick: "setSport(" ~ sport.getId() ~", true)"
                 })),
                 state.form.values.currentStep != 1
             ) }}
 
             {# Background select #}
             {{ _self.step(2, "Vyberte pozadí karty",
-                sports|map( sport => _self.slider(sport.backgrounds|map( background => {
-                    href: '`/karty/builder?materialId=${_materialId}&sportId=${_sportId}&backgroundId=' ~ background.id ~ '`',
-                    image: background.image,
-                    name: background.name,
-                    description: background.description,
-                    onClick: "setBackground(" ~ background.id ~", true)"
-                }), '_sportId === ' ~ sport.id))|join(''),
+                sports|map( sport => _self.slider(sport.getCardBackgrounds()|map( background => {
+                    href: '`/karty/builder?materialId=${_materialId}&sportId=${_sportId}&backgroundId=' ~ background.getId() ~ '`',
+                    image: background.getImage(),
+                    name: background.getName(),
+                    description: background.getDescription(),
+                    onClick: "setBackground(" ~ background.getId() ~", true)"
+                }), '_sportId === ' ~ sport.getId()))|join(''),
                 state.form.values.currentStep != 2
             ) }}
 

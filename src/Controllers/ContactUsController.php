@@ -20,11 +20,9 @@ class ContactUsController
     }
 
     #[AsApiRoute('POST', '/contact-us/send', 'contactUsMessage')]
-    public function doSend(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function doSend(ServerRequestInterface $request, ResponseInterface $response, Mailer $emailService, RenderingService $renderingService): ResponseInterface
     {
         $body = $request->getParsedBody();
-        $emailService = $this->container->get(Mailer::class);
-        $renderingService = $this->container->get(RenderingService::class);
         $success = false;
 
         if (!isset($body["email"]) || !isset($body["name"]) || !isset($body["message"])) {

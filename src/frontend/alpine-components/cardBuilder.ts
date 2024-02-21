@@ -96,7 +96,13 @@ const materialSizeSchema = z.object({ id: zodNumeric, width: z.number(), height:
 const materialSchema = z.object({
   id: zodNumeric,
   bonuses: z.object({
-    data: z.array(bonusSchema),
+    data: z.array(bonusSchema.partial()).transform((value) => {
+      if (!value) {
+        return value
+      }
+
+      return value.filter((value) => !!value.name && value.price !== undefined)
+    }),
   }).nullable(),
   sizes: z.array(materialSizeSchema),
 })
@@ -104,7 +110,7 @@ const cardBackgroundSchema = z.object({
   id: zodNumeric,
   name: z.string(),
   imageSrc: z.string(),
-  textColor: z.object({ value: z.string() }).partial(),
+  textColor: z.object({ value: z.string() }).partial().nullable(),
 })
 const sportSchema = z.object({
   id: zodNumeric,
@@ -495,6 +501,11 @@ export default function cardBuilder(rawProps: CardBuilderProps): AlpineComponent
       const specifiedBonuses = this.getMaterial()?.bonuses?.data
       if (specifiedBonuses) {
         for (const bonus of specifiedBonuses) {
+          if (!bonus.name || bonus.price == undefined) {
+            continue
+          }
+
+
           if (bonus.name in this.bonuses) {
             totalPrice += bonus.price
           }

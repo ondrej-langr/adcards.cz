@@ -27,7 +27,7 @@ class ProductController
         $body = $request->getParsedBody();
 
         if (!isset($body["product-id"])) {
-            $response->withStatus(401);
+            return $response->withStatus(401);
         }
 
         $cart->appendProduct($body["product-id"], $body["quantity"] ?? 1);

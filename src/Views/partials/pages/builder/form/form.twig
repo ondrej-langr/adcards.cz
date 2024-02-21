@@ -1,7 +1,7 @@
 <!-- start @app/partials/pages/builder/form/form.twig -->
 <section class="container">
     <div class="row">
-        {{ include("@mapp/partials/pages/builder/form/card-preview.twig") }}
+        {{ include("@app/partials/pages/builder/form/card-preview.twig") }}
         <div class="col card-info">
             <div class="card">
                 <div class="card-body">
@@ -59,7 +59,7 @@
                                :value="stat.value" />
                     </template>
 
-                    <template x-if='getMaterial()?.bonuses'>
+                    <template x-if='getMaterial()?.bonuses?.length'>
                         <div>
                             <hr />
                             <h4 class='mt-4'>

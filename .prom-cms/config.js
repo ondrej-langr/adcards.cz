@@ -30,7 +30,7 @@ const config = {
     connections: [
       {
         name: 'default-connection',
-        uri: 'pdo-sqlite:///.database/application.sqlite',
+        uri: `pdo-sqlite:////' . __DIR__ . '/../../.database/application.sqlite`,
       },
     ],
     models: [

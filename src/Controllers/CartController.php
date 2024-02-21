@@ -66,13 +66,11 @@ class CartController
     }
 
     #[AsRoute('GET', '/kosik', 'cart')]
-    public function get(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function get(ServerRequestInterface $request, ResponseInterface $response, RenderingService $rendering): ResponseInterface
     {
         $cart = $this->container->get(Cart::class);
 
-        return $this
-            ->container
-            ->get(RenderingService::class)
+        return $rendering
             ->render(
                 $response,
                 '@app/pages/kosik.twig',

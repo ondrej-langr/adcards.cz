@@ -3,14 +3,15 @@
 namespace PromCMS\App\Controllers;
 
 use DI\Container;
-use Monolog\Logger;
 use PromCMS\App\Cart;
-use PromCMS\App\OrderStatus;
+use PromCMS\App\Models\Base\OrderState;
+use PromCMS\App\Models\Orders;
 use PromCMS\App\PayPal;
+use PromCMS\Core\Database\EntityManager;
+use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Http\Routing\AsApiRoute;
 use PromCMS\Core\Http\Routing\AsRoute;
-use PromCMS\Core\Services\EntryTypeService;
-use PromCMS\Core\Services\LocalizationService;
+use PromCMS\Core\Logger;
 use PromCMS\Core\Services\RenderingService;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -18,25 +19,27 @@ use Psr\Http\Message\ServerRequestInterface;
 class OrdersController
 {
     private Container $container;
-    private Logger $logger;
 
     public function __construct(Container $container)
     {
         $this->container = $container;
-        $this->logger = $this->container->get(Logger::class);
     }
 
     #[AsApiRoute('GET', '/objednavky/{orderUuid}/pay/paypal/create', 'paypal-create-order')]
-    public function payPalCreatePayment_API(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
+    public function payPalCreatePayment_API(ServerRequestInterface $request, ResponseInterface $response, $orderUuid, Logger $logger, EntityManager $em): ResponseInterface
     {
-        $orderUuid = $args["orderUuid"];
-
         try {
-            $order = (new EntryTypeService(new \PromCMS\App\Models\Orders()))->getOne(["_uuid", "=", $orderUuid]);
+            $order = $em->getRepository(Orders::class)->find([
+                '_uuid' => $orderUuid
+            ]);
 
-            if ($order->payment_method !== "paypal") {
+            if (!$order) {
+                throw new EntityNotFoundException();
+            }
+
+            if ($order->getPaymentMethod() !== "paypal") {
                 throw new \Exception("Order cannot be paid with paypal, because it has different payment method selected");
-            } else if ($order->status !== OrderStatus::UNPAID) {
+            } else if ($order->getStatus() !== OrderState::UNPAID) {
                 throw new \Exception("Order is paid");
             }
         } catch (\Exception $exception) {
@@ -44,24 +47,24 @@ class OrdersController
         }
 
         $payload = [
-            "total" => $order->total_cost,
-            "currency" => $order->currency
+            "total" => $order->getTotalCost(),
+            "currency" => 'CZK'
         ];
 
         try {
-            $this->logger->info("Paypal create order", [
+            $logger->info("Paypal create order", [
                 "payload" => $payload
             ]);
 
             $payPalResponse = PayPal::createOrder($payload["total"], $payload["currency"]);
             $orderId = $payPalResponse->response->id;
 
-            $this->logger->info("Paypal successfully created order '$orderId'", [
+            $logger->info("Paypal successfully created order '$orderId'", [
                 "payload" => $payload,
                 "response" => (array)$payPalResponse
             ]);
         } catch (\Exception $error) {
-            $this->logger->error("Paypal create order failed", [
+            $logger->error("Paypal create order failed", [
                 "error" => $error,
                 "payload" => $payload
             ]);
@@ -75,20 +78,22 @@ class OrdersController
     }
 
     #[AsApiRoute('GET', '/objednavky/{orderUuid}/pay/paypal/capture', 'paypal-capture-order')]
-    public function payPalCapturePayment_API(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
+    public function payPalCapturePayment_API(ServerRequestInterface $request, ResponseInterface $response, Logger $logger, EntityManager $em, $orderUuid): ResponseInterface
     {
-        $orderUuid = $args["orderUuid"];
         $payPalOrderId = $request->getQueryParams()["order_id"];
-        $this->logger->info("before anything");
 
         try {
-            $order = (new EntryTypeService(new \PromCMS\App\Models\Orders()))->getOne(["_uuid", "=", $orderUuid]);
+            $order = $em->getRepository(Orders::class)->find([
+                '_uuid' => $orderUuid
+            ]);
 
-            if ($order->payment_method !== "paypal") {
-                $this->logger->info("order no paypal");
+            if (!$order) {
+                throw new EntityNotFoundException();
+            }
+
+            if ($order->getPaymentMethod() !== "paypal") {
                 throw new \Exception("Order cannot be paid with paypal, because it has different payment method selected");
-            } else if ($order->status !== OrderStatus::UNPAID) {
-                $this->logger->info("order paid");
+            } else if ($order->getStatus() !== OrderState::UNPAID) {
                 throw new \Exception("Order is paid");
             }
         } catch (\Exception $exception) {
@@ -108,7 +113,7 @@ class OrdersController
             $orderState = $paypalOrderResponse->response;
 
             if ($orderState->status === "COMPLETED") {
-                $this->logger->info("Paypal order $payPalOrderId: order was previously completed, returning previous state", [
+                $logger->info("Paypal order $payPalOrderId: order was previously completed, returning previous state", [
                     "state" => $orderState,
                     "paypalResponse" => $paypalOrderResponse
                 ]);
@@ -118,7 +123,7 @@ class OrdersController
                 $orderState = null;
             }
         } catch (\Exception $error) {
-            $this->logger->warning("Paypal order $payPalOrderId: failed to check if order was completed already", [
+            $logger->warning("Paypal order $payPalOrderId: failed to check if order was completed already", [
                 "error" => $error,
                 "paypalResponse" => $paypalOrderResponse
             ]);
@@ -130,7 +135,7 @@ class OrdersController
                 $paypalOrderResponse = PayPal::captureOrder($payPalOrderId);
                 $orderState = $paypalOrderResponse->response;
             } catch (\Exception $error) {
-                $this->logger->error("Paypal order $payPalOrderId: order payment capture failed (500)", [
+                $logger->error("Paypal order $payPalOrderId: order payment capture failed (500)", [
                     "error" => $error,
                     "paypalResponse" => $paypalOrderResponse
                 ]);
@@ -146,18 +151,18 @@ class OrdersController
             $payPalTransactionId = $payPalTransaction->id;
 
             // Make notice to database
-            $order->update([
-                "status" => OrderStatus::PENDING,
-                "paypal_transaction_id" => $payPalTransactionId
-            ]);
+            $order->setStatus(OrderState::NOT_VERIFIED);
+            $order->setPaypalTransactionId($payPalTransactionId);
+
+            $em->flush();
 
             // Log this
-            $this->logger->info("Paypal order $payPalOrderId: successfully captured payment", [
+            $logger->info("Paypal order $payPalOrderId: successfully captured payment", [
                 "paypalResponse" => $paypalOrderResponse,
                 "paypalTransactionId" => $payPalTransactionId
             ]);
         } else {
-            $this->logger->error("Paypal order $payPalOrderId: order payment capture failed,  most likely because of no purchase units", [
+            $logger->error("Paypal order $payPalOrderId: order payment capture failed,  most likely because of no purchase units", [
                 "paypalResponse" => $paypalOrderResponse
             ]);
         }
@@ -168,15 +173,22 @@ class OrdersController
     }
 
     #[AsRoute('GET', '/objednavky/{orderUuid}', 'orderPage')]
-    public function getOne(ServerRequestInterface $request, ResponseInterface $response, $args): ResponseInterface
+    public function getOne(ServerRequestInterface $request, ResponseInterface $response, EntityManager $em, $orderUuid): ResponseInterface
     {
-        $orderUuid = $args["orderUuid"];
         $searchParams = $request->getQueryParams();
-        $requestLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
+        $requestLanguage = $request->getAttribute('lang');
         $templatePayload = [];
 
         try {
-            $templatePayload["order"] = (new EntryTypeService(new \PromCMS\App\Models\Orders(), $requestLanguage))->getOne(["_uuid", "=", $orderUuid])->getData();
+            $order = $em->getRepository(Orders::class)->find([
+                '_uuid' => $orderUuid
+            ]);
+
+            if (!$order) {
+                throw new EntityNotFoundException();
+            }
+
+            $templatePayload["order"] = $order;
         } catch (\Exception $exception) {
             return $response->withStatus(404);
         }

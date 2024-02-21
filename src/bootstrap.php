@@ -20,17 +20,17 @@ return function (App $app) {
     }
 
     $fs = $container->get(\PromCMS\Core\Filesystem::class);
-    CartCard\PlayerImage::$fs = $fs->withUploads();
-    CartCard\ClubImage::$fs = $fs->withUploads();
+    $cardsFileSystem = $fs->createLocal('cards', \PromCMS\Core\Path::join($container->get('app.root'), 'private', 'cards'));
+
+    CartCard\PlayerImage::$fs = $cardsFileSystem;
+    CartCard\ClubImage::$fs = $cardsFileSystem;
+
     $container->set(Cart::class, new Cart($container));
 
+
     if (!empty($_ENV["LOGTAIL_TOKEN"])) {
-        $logtailToken = $_ENV["LOGTAIL_TOKEN"];
-
-        $logger = new \Monolog\Logger("adcards.cz");
-        $logger->pushHandler(new \Logtail\Monolog\LogtailHandler($logtailToken));
-
-        $container->set(\Monolog\Logger::class, $logger);
+        $token = $_ENV["LOGTAIL_TOKEN"];
+        $container->get(\PromCMS\Core\Logger::class)->pushHandler(new \Logtail\Monolog\LogtailHandler($token));
     }
 
     // Is being run after each request
