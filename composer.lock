@@ -874,16 +874,16 @@
         },
         {
             "name": "doctrine/orm",
-            "version": "2.18.0",
+            "version": "2.18.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/doctrine/orm.git",
-                "reference": "f2176a9ce56cafdfd1624d54bfdb076819083d5b"
+                "reference": "e6eef1a97d41f1ee244b6e69d7359d00cb3e4c4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/doctrine/orm/zipball/f2176a9ce56cafdfd1624d54bfdb076819083d5b",
-                "reference": "f2176a9ce56cafdfd1624d54bfdb076819083d5b",
+                "url": "https://api.github.com/repos/doctrine/orm/zipball/e6eef1a97d41f1ee244b6e69d7359d00cb3e4c4a",
+                "reference": "e6eef1a97d41f1ee244b6e69d7359d00cb3e4c4a",
                 "shasum": ""
             },
             "require": {
@@ -969,9 +969,9 @@
             ],
             "support": {
                 "issues": "https://github.com/doctrine/orm/issues",
-                "source": "https://github.com/doctrine/orm/tree/2.18.0"
+                "source": "https://github.com/doctrine/orm/tree/2.18.1"
             },
-            "time": "2024-01-31T15:53:12+00:00"
+            "time": "2024-02-22T12:22:44+00:00"
         },
         {
             "name": "doctrine/persistence",
@@ -2866,12 +2866,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/PromCMS/Core.git",
-                "reference": "deb69b6d255da20737da6aedc6158ee6a62bc0d0"
+                "reference": "e482c274bedbe43492b47a46ee38c0400d42a265"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/PromCMS/Core/zipball/deb69b6d255da20737da6aedc6158ee6a62bc0d0",
-                "reference": "deb69b6d255da20737da6aedc6158ee6a62bc0d0",
+                "url": "https://api.github.com/repos/PromCMS/Core/zipball/e482c274bedbe43492b47a46ee38c0400d42a265",
+                "reference": "e482c274bedbe43492b47a46ee38c0400d42a265",
                 "shasum": ""
             },
             "require": {
@@ -2931,9 +2931,9 @@
             "description": "Core for PromCMS",
             "support": {
                 "issues": "https://github.com/PromCMS/Core/issues",
-                "source": "https://github.com/PromCMS/Core/tree/v1.2.58-develop.0"
+                "source": "https://github.com/PromCMS/Core/tree/v1.2.58-develop.1"
             },
-            "time": "2024-02-21T06:33:45+00:00"
+            "time": "2024-02-22T14:52:24+00:00"
         },
         {
             "name": "psr/cache",

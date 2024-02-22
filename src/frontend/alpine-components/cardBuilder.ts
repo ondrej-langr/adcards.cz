@@ -110,7 +110,7 @@ const cardBackgroundSchema = z.object({
   id: zodNumeric,
   name: z.string(),
   imageSrc: z.string(),
-  textColor: z.object({ value: z.string() }).partial().nullable(),
+  textColor: z.object({ value: z.string() }).partial().nullish(),
 })
 const sportSchema = z.object({
   id: zodNumeric,
