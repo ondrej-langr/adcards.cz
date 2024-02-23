@@ -475,7 +475,6 @@ export default function cardBuilder(rawProps: CardBuilderProps): AlpineComponent
 
       if (!doNotAddErrorToFields) {
         if (!validationResponse.success) {
-          console.log(validationResponse.error.errors)
           for (const errorItem of validationResponse.error.errors) {
             this.errors ??= {}
 

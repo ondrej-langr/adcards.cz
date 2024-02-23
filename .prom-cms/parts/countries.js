@@ -1,6 +1,6 @@
 /**
  *
- * @type {(typeof import('@prom-cms/schema').databaseConfigModelSchema)['_input']}
+ * @type {NonNullable<(typeof import('@prom-cms/schema').GeneratorConfigInput)['database']['models']>[number]}
  */
 const countriesModel = {
   'title': 'Země',
@@ -15,7 +15,6 @@ const countriesModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': false,
-  'intl': false,
   'columns': [
     {
       name: 'name',

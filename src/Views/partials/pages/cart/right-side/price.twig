@@ -2,8 +2,8 @@
     <div class="price-partial">
         <span>{{ 'Mezisoučet'|t }}:</span>
         <span class="number">
-            {% if cart.promoCode.isset %}<strike>{{ cart.total.withoutPromo }} {{ 'Kč'|t }}</strike> {% endif %}
-            {{ cart.total.withPromo }} {{ 'Kč'|t }}
+            {% if cart.getPromoCode() %}<strike>{{ cart.getTotalPrice(false) }} {{ 'Kč'|t }}</strike> {% endif %}
+            {{ cart.getTotalPrice() }} {{ 'Kč'|t }}
         </span>
     </div>
     <div class="price-partial">
@@ -15,7 +15,7 @@
     <div class="price-full">
         <span>{{ 'Cena celkem'|t }}:</span>
         <span class="number">
-            <span x-text='{{ cart.total.withPromo }} + getShippingRate()'>---</span>
+            <span x-text='{{ cart.getTotalPrice() }} + getShippingRate()'>---</span>
             {{ 'Kč'|t }}
         </span>
     </div>

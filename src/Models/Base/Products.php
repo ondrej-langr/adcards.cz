@@ -36,6 +36,9 @@ class Products extends Entity
   #[ORM\ManyToMany(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'images_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Obrázky', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\Doctrine\Common\Collections\Collection $images;
   
+  #[ORM\Column(name: 'excerpt', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Shrnutí', type: 'longText', editable: false, hide: false, localized: true)]
+  protected ?string $excerpt;
+  
   #[ORM\Column(name: 'description', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Popisek', type: 'longText', editable: false, hide: false, localized: true)]
   protected ?string $description;
   
@@ -108,6 +111,17 @@ class Products extends Entity
   function setImages(\Doctrine\Common\Collections\Collection $images): static
   {
     $this->images = $images;
+    return $this;
+  }
+  
+  function getExcerpt(): ?string
+  {
+    return $this->excerpt;
+  }
+  
+  function setExcerpt(?string $excerpt): static
+  {
+    $this->excerpt = $excerpt;
     return $this;
   }
   

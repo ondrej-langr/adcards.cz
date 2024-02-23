@@ -1356,7 +1356,6 @@ img[loading="lazy"]:not([data-ll-status="loaded"]) {
     cursor: pointer;
     position: relative;
     display: flex;
-    overflow: hidden;
     opacity: 1
 }
 

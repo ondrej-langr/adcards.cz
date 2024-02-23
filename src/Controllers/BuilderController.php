@@ -4,18 +4,15 @@ namespace PromCMS\App\Controllers;
 
 use DI\Container;
 use Doctrine\ORM\Query;
-use PromCMS\App\CardType;
 use PromCMS\App\CartCard;
+use PromCMS\App\Models\Base\CardType;
 use PromCMS\App\Models\CardMaterial;
 use PromCMS\App\Models\Countries;
-use PromCMS\App\Models\MainPageSlides;
 use PromCMS\App\Models\Sports;
-use PromCMS\Core\Config;
 use PromCMS\Core\Database\EntityManager;
 use PromCMS\Core\Database\Paginate;
 use PromCMS\Core\Database\Query\TranslationWalker;
 use PromCMS\Core\Http\Routing\AsRoute;
-use PromCMS\Core\Services\EntryTypeService;
 use PromCMS\Core\Services\LocalizationService;
 use PromCMS\Core\Services\RenderingService;
 use Psr\Http\Message\ResponseInterface;
@@ -83,7 +80,7 @@ class BuilderController
             ->setHint(TranslationWalker::HINT_LOCALE, $requestLanguage)
             ->getResult();
 
-        $materialIds = [];
+        $materials = [];
 
         $payload['materials'] = [];
         $payload['sizes'] = [];
@@ -94,11 +91,11 @@ class BuilderController
         foreach ($unfilteredMaterials as $material) {
             if (count($sizes = $material->getCardSizes())) {
                 $payload['materials'][] = $material;
-                $materialIds[$material->getId()] = $material->getId();
+                $materials[$material->getId()] = $material;
 
                 foreach ($sizes as $size) {
                     if (!isset($payload['sizes'][$size->getId()])) {
-                        $payload['sizes'][$size->getId()] = $size;
+                        $payload['sizes'][$size->getId()] = $size->toArray();
                     }
                 }
             }
@@ -143,7 +140,7 @@ class BuilderController
         }
 
         $values = [
-            "cardType" => CardType::PLAYER,
+            "cardType" => CardType::PLAYER->value,
             "rating" => '99',
             "position" => 'CAM',
             "stats" => CartCard\PlayerOrGoalKeeperStats::$DEFAULT_VALUES
@@ -152,25 +149,28 @@ class BuilderController
         $queryParams = $request->getQueryParams();
         $values["currentStep"] = 0;
 
+        $queryParams["materialId"] = trim($queryParams["materialId"] ?? '');
         // Check if preselected params are valid
-        if (isset($queryParams["materialId"]) && in_array(trim($queryParams["materialId"]), $materialIds)) {
-            $values["materialId"] = trim($queryParams["materialId"]);
+        if (!!$queryParams["materialId"] && isset($materials[intval($queryParams["materialId"])])) {
+            $queryMaterialId = intval($queryParams["materialId"]);
+            $material = $materials[$queryMaterialId];
+            if ($material->getCardSizes()->count()) {
+                $values["materialId"] = $material->getId();
+                $values["sizeId"] = $material->getCardSizes()[0]->getId();
+                $values["currentStep"] += 1;
 
-            $foundSizeIndex = array_search(intval($values["materialId"]), array_column($payload["sizes"], "material_id"));
+                if (isset($queryParams["sportId"]) && in_array(trim($queryParams["sportId"]), $sportIds)) {
+                    $values["sportId"] = trim($queryParams["sportId"]);
+                    $values["currentStep"] += 1;
 
-            $values["sizeId"] = $payload["sizes"][$foundSizeIndex]->getId();
-            $values["currentStep"] += 1;
+                    if (isset($queryParams["backgroundId"]) && in_array(trim($queryParams["backgroundId"]), $backgroundIds)) {
+                        $values["backgroundId"] = trim($queryParams["backgroundId"]);
+                        $values["currentStep"] += 1;
+                    }
+                }
+            }
         }
 
-        if (isset($queryParams["sportId"]) && in_array(trim($queryParams["sportId"]), $sportIds)) {
-            $values["sportId"] = trim($queryParams["sportId"]);
-            $values["currentStep"] += 1;
-        }
-
-        if (isset($queryParams["backgroundId"]) && in_array(trim($queryParams["backgroundId"]), $backgroundIds)) {
-            $values["backgroundId"] = trim($queryParams["backgroundId"]);
-            $values["currentStep"] += 1;
-        }
 
         $payload["state"] = [
             "form" => [

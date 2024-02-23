@@ -28,10 +28,10 @@ class PromoCodes extends Entity
   #[ORM\Column(name: 'enabled', nullable: true, unique: false, type: 'boolean'), PROM\PromModelColumn(title: 'Aktivní', type: 'boolean', editable: false, hide: false, localized: false)]
   protected ?bool $enabled;
   
-  #[PROM\PromModelColumn(title: 'Počet použití', type: 'number', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'usedtimes', nullable: true, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Počet použití', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $usedTimes;
   
-  #[PROM\PromModelColumn(title: 'Bylo vytvořeno pro newsletter?', type: 'boolean', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'wascreatedfornewsletter', nullable: true, unique: false, type: 'boolean'), PROM\PromModelColumn(title: 'Bylo vytvořeno pro newsletter?', type: 'boolean', editable: true, hide: false, localized: false)]
   protected ?bool $wasCreatedForNewsletter;
   
   function __construct()

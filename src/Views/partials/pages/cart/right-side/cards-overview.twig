@@ -5,7 +5,6 @@
         {% for itemId, item in cart.cards %}
             {{ include("@app/components/small-card.twig", {
                 "card": item,
-                "size": item.size,
                 "index": loop.index0
             }) }}
         {% endfor %}

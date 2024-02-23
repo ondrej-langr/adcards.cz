@@ -10,10 +10,10 @@
          x-data='cartForm({
             initialData: JSON.parse(`{{ { state }|json_encode }}`),
             validationSchema: JSON.parse(`{{ validationSchema|replace({"\n": "", "\r": "", "\t": ""}) }}`),
-            shippingMethods: JSON.parse(`{{ shippingMethods|json_encode|replace({"\n": "", "\r": "", "\t": ""}) }}`),
+            shippingMethods: JSON.parse(`{{ cart.getShippingMethods()|json_encode|replace({"\n": "", "\r": "", "\t": ""}) }}`),
             errorMessagesForRequiredFields: JSON.parse(`{{ errorMessagesForRequiredFields|json_encode|replace({"\n": "", "\r": "", "\t": ""}) }}`),
             cart: {
-                total: JSON.parse(`{{ cart.total|json_encode }}`)
+                total: JSON.parse(`{{ {withPromo: cart.getTotalPrice(), withoutPromo: cart.getTotalPrice(false) }|json_encode }}`)
             }
          })'>
         <div class="cart-inner">

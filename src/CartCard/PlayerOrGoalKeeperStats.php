@@ -2,12 +2,13 @@
 
 namespace PromCMS\App\CartCard;
 
-use PromCMS\App\CardType;
+
+use PromCMS\App\Models\Base\CardType;
 
 class PlayerOrGoalKeeperStats
 {
     static array $DEFAULT_VALUES = [
-        CardType::PLAYER =>
+        CardType::PLAYER->value =>
             [
                 [
                     'name' => 'pac',
@@ -34,7 +35,7 @@ class PlayerOrGoalKeeperStats
                     'value' => 99,
                 ],
             ],
-        CardType::GOAL_KEEPER =>
+        CardType::GOAL_KEEPER->value =>
             [
                 [
                     'name' => 'div',

@@ -56,6 +56,14 @@ const productsModel = {
       },
     },
     {
+      name: 'excerpt',
+      'required': false,
+      'hide': false,
+      localized: true,
+      'type': 'longText',
+      'title': 'Shrnutí',
+    },
+    {
       name: 'description',
       'required': false,
       'hide': false,

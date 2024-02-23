@@ -5,6 +5,7 @@ const relationFields = [
     'translations': false,
     'type': 'relationship',
     'multiple': false,
+    unique: false,
     'targetModelTableName': 'card_backgrounds',
     'labelConstructor': '{{name}}',
     'title': 'Pozadí karty',
@@ -31,7 +32,6 @@ const relationFields = [
   },
   {
     name: 'forOrder',
-    'required': true,
     'translations': false,
     'type': 'relationship',
     'multiple': false,
@@ -59,7 +59,6 @@ const cardsModel = {
   'draftable': false,
   'ignoreSeeding': false,
   'ownable': false,
-  'intl': false,
   'columns': [
     {
       name: 'playerImage',
@@ -179,6 +178,15 @@ const cardsModel = {
     },
     ...relationFields,
     {
+      name: 'cart',
+      'type': 'relationship',
+      'targetModelTableName': 'carts',
+      'labelConstructor': '{{id}}',
+      'title': 'Košík',
+      hide: true,
+      'inversedBy': 'cards',
+    },
+    {
       name: 'bonuses',
       'required': false,
       'translations': false,
@@ -206,6 +214,7 @@ const cardsModel = {
             'required': true,
             'type': 'number',
             title: 'Cena v Kč',
+            postfix: ' Kč',
             readonly: true,
           },
         ],

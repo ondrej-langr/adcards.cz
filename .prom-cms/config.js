@@ -10,6 +10,8 @@ import promoCodesModel from './parts/promo-codes.js'
 import cardBackgroundsModel from './parts/card-backgrounds.js'
 import sportsModel from './parts/sports.js'
 import orderedProductsModel from './parts/ordered-products.js'
+import cartModel from './parts/cart.js'
+import cartProducts from './parts/cart-products.js'
 
 /**
  *
@@ -46,6 +48,8 @@ const config = {
       promoCodesModel,
       sportsModel,
       orderedProductsModel,
+      cartModel,
+      cartProducts,
     ],
   },
 }

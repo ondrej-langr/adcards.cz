@@ -30,16 +30,16 @@ class Cards extends Entity
   #[ORM\Column(name: 'rating', nullable: true, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Hodnocení', type: 'number', editable: false, hide: false, localized: false)]
   protected ?int $rating;
   
-  #[PROM\PromModelColumn(title: 'Stats', type: 'json', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'stats', nullable: true, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Stats', type: 'json', editable: true, hide: false, localized: false)]
   protected ?array $stats;
   
   #[ORM\Column(name: 'cardtype', nullable: false, unique: false, type: 'string', enumType: CardType::class), PROM\PromModelColumn(title: 'Typ karty', type: 'enum', editable: false, hide: false, localized: false)]
   protected ?CardType $cardType;
   
-  #[PROM\PromModelColumn(title: 'Finální cena', type: 'number', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'finalprice', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Finální cena', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $finalPrice;
   
-  #[PROM\PromModelColumn(title: 'Měna', type: 'enum', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'currency', nullable: false, unique: false, type: 'string', enumType: Currency::class), PROM\PromModelColumn(title: 'Měna', type: 'enum', editable: true, hide: false, localized: false)]
   protected ?Currency $currency;
   
   #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardBackgrounds::class), ORM\JoinColumn(name: 'background_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Pozadí karty', type: 'relationship', editable: false, hide: false, localized: false)]
@@ -51,10 +51,13 @@ class Cards extends Entity
   #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardSizes::class), ORM\JoinColumn(name: 'size_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Velikost', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\CardSizes $size;
   
-  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Orders::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'fororder_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Orders::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'fororder_id', nullable: true, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Orders $forOrder;
   
-  #[PROM\PromModelColumn(title: 'Bonusové informace za příplatek', type: 'json', editable: true, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Carts::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'cart_id', nullable: true, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Košík', type: 'relationship', editable: false, hide: true, localized: false)]
+  protected ?\PromCMS\App\Models\Carts $cart;
+  
+  #[ORM\Column(name: 'bonuses', nullable: true, unique: false, type: 'array'), PROM\PromModelColumn(title: 'Bonusové informace za příplatek', type: 'json', editable: true, hide: false, localized: false)]
   protected ?array $bonuses;
   
   function __construct()
@@ -187,14 +190,25 @@ class Cards extends Entity
     return $this;
   }
   
-  function getForOrder(): \PromCMS\App\Models\Orders
+  function getForOrder(): ?\PromCMS\App\Models\Orders
   {
     return $this->forOrder;
   }
   
-  function setForOrder(\PromCMS\App\Models\Orders $forOrder): static
+  function setForOrder(?\PromCMS\App\Models\Orders $forOrder): static
   {
     $this->forOrder = $forOrder;
+    return $this;
+  }
+  
+  function getCart(): ?\PromCMS\App\Models\Carts
+  {
+    return $this->cart;
+  }
+  
+  function setCart(?\PromCMS\App\Models\Carts $cart): static
+  {
+    $this->cart = $cart;
     return $this;
   }
   

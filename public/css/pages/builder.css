@@ -234,6 +234,7 @@
 .builder.thank-you {
     text-align: center;
     margin: 2rem 0;
+    min-height: 40vh;
 
     .thank-you__title p {
         font-size: 1.5rem;
@@ -244,12 +245,12 @@
     max-width: 1200px;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
     flex-direction: row;
     flex-wrap: wrap;
     padding: 0 15px;
     width: 100%;
     margin: 3.5rem auto 0;
+    flex-flow: column;
 
     & h2 {
         color: var(---colors-brand-signature);

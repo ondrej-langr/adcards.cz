@@ -3,27 +3,30 @@
 namespace PromCMS\App\Controllers;
 
 use DI\Container;
-use League\Flysystem\Filesystem;
-use Monolog\Logger;
+use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use Opis\JsonSchema\Errors\ErrorFormatter;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Validator;
-use PromCMS\App\Cart;
+use PromCMS\App\Models\Base\OrderState;
+use PromCMS\App\Models\Cards;
+use PromCMS\App\Models\CartProducts;
+use PromCMS\App\Models\Carts;
+use PromCMS\App\Models\OrderedProducts;
+use PromCMS\App\Models\Orders;
+use PromCMS\App\Models\PromoCodes;
 use PromCMS\App\OrderStatus;
 use PromCMS\App\StaticMessages;
 use PromCMS\App\UUID;
-use PromCMS\Core\Config;
+use PromCMS\Core\Database\EntityManager;
 use PromCMS\Core\Http\Routing\AsApiRoute;
 use PromCMS\Core\Http\Routing\AsRoute;
+use PromCMS\Core\Logger;
 use PromCMS\Core\Mailer;
-use PromCMS\Core\Models\Files;
-use PromCMS\Core\Services\EntryTypeService;
-use PromCMS\Core\Services\LocalizationService;
+use PromCMS\Core\PromConfig;
 use PromCMS\Core\Services\RenderingService;
 use PromCMS\Core\Utils\FsUtils;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
-use Slim\Middleware\Session;
 
 class CartController
 {
@@ -35,7 +38,6 @@ class CartController
     private Container $container;
     private string $validationSchema;
     private Validator $validationSchemaValidator;
-    private Logger $logger;
 
     private function getRandomFileName($extension)
     {
@@ -48,8 +50,8 @@ class CartController
     {
         $parsedSchema = json_decode(FsUtils::readFile("@app/schemas/order.schema.json"));
 
-        $parsedSchema->properties->paymentMethod->enum = array_keys(Cart::$availablePaymentMethods);
-        $parsedSchema->properties->shippingMethod->enum = array_keys(Cart::$availableShipping);
+        $parsedSchema->properties->paymentMethod->enum = array_keys(Carts::$availablePaymentMethods);
+        $parsedSchema->properties->shippingMethod->enum = array_keys(Carts::$availableShipping);
 
         return json_encode($parsedSchema);
     }
@@ -58,7 +60,6 @@ class CartController
     {
         $this->container = $container;
         $this->validationSchema = $this->getValidationSchema();
-        $this->logger = $this->container->get(Logger::class);
         $validator = new Validator();
         $validator->setMaxErrors(20);
         $validator->resolver()->registerRaw($this->validationSchema, "checkout-validation");
@@ -66,37 +67,45 @@ class CartController
     }
 
     #[AsRoute('GET', '/kosik', 'cart')]
-    public function get(ServerRequestInterface $request, ResponseInterface $response, RenderingService $rendering): ResponseInterface
+    public function get(ServerRequestInterface $request, ResponseInterface $response, RenderingService $rendering, EntityManager $em): ResponseInterface
     {
-        $cart = $this->container->get(Cart::class);
+        $cart = $request->getAttribute('cart');
+
+        $cart->updatePickedBonuses($em);
+        $cart->checkForPromoCodeValidity();
+
+        $em->flush();
 
         return $rendering
             ->render(
                 $response,
                 '@app/pages/kosik.twig',
-                array_merge($cart->stateToTemplateVariables(), [
+                [
+                    "cart" => $cart,
                     "validationSchema" => $this->validationSchema,
-                    "shippingMethods" => Cart::$availableShipping,
                     "errorMessagesForRequiredFields" => self::$errorMessagesForRequiredFields
-                ])
+                ]
             );
     }
 
     #[AsApiRoute('POST', '/cart/checkout-order', 'finish-order')]
-    public function doCheckout_API(ServerRequestInterface $request, ResponseInterface $response, $args)
+    public function doCheckout_API(
+        ServerRequestInterface   $request,
+        ResponseInterface        $response,
+        Logger                   $logger,
+        \PromCMS\Core\Filesystem $fs,
+        RenderingService         $rendering,
+        PromConfig               $config,
+        Mailer                   $mailer,
+        EntityManager            $em
+    )
     {
-        /**
-         * @var $fs Filesystem
-         * @var $session Session
-         */
-        $cart = $this->container->get(Cart::class);
-        $fs = $this->container->get("filesystem");
-
+        /** @var Carts $cart */
+        $cart = $request->getAttribute('cart');
         if (empty($cart->getProducts()) && empty($cart->getCards())) {
             return $response->withStatus(400);
         }
 
-        $rendering = $this->container->get(RenderingService::class);
         $parsedData = $request->getParsedBody();
 
         // This will be json when incoming so it needs to be parsed
@@ -112,8 +121,8 @@ class CartController
         $validationResult = $this->validationSchemaValidator->validate($parsedDataAsObject, $this->validationSchema);
 
         if (!$validationResult->isValid()) {
-            // TODO - this is consuming a lot of resources (fetching items from database)
-            $resultPayload = array_merge($cart->stateToTemplateVariables(), [
+            $resultPayload = [
+                'cart' => $cart,
                 "data" => $parsedData,
                 "state" => [
                     "form" => [
@@ -121,10 +130,10 @@ class CartController
                         "values" => $parsedData
                     ]
                 ]
-            ]);
+            ];
 
-            $resultPayload["shippingMethods"] = Cart::$availableShipping;
-            $resultPayload["paymentMethods"] = Cart::$availablePaymentMethods;
+            $resultPayload["shippingMethods"] = Carts::$availableShipping;
+            $resultPayload["paymentMethods"] = Carts::$availablePaymentMethods;
             $formatter = new ErrorFormatter();
             $missingFields = $formatter->formatFlat(
                 $validationResult->error(),
@@ -146,15 +155,13 @@ class CartController
 
             return $response->withHeader("HX-Retarget", "#app-cart");
         }
+        $projectBaseUrl = $config->getProject()->url->__toString();
 
         // Prepare
         $orderUuid = UUID::create();
-        $currentLanguage = $this->container->get(LocalizationService::class)->getCurrentLanguage();
-        $ordersService = new EntryTypeService(new \PromCMS\App\Models\Orders());
-        $config = $this->container->get(Config::class);
         $userEmailTemplatePayload = [
-            "baseUrl" => $config->app->baseUrl,
-            "buttonUrl" => $config->app->baseUrl . "/objednavky/$orderUuid",
+            "baseUrl" => $projectBaseUrl,
+            "buttonUrl" => "$projectBaseUrl/objednavky/$orderUuid",
             "texts" => [
                 "preview" => 'Děkujeme za objednávku na adcards.cz!',
                 "summary" => "Děkujeme za objednávku na adcards.cz! Objednávku u nás registrujeme a brzy Vás budeme kontaktovat o změně stavu. Mezitím si můžete zkontrolovat Vaši objednávku níže.",
@@ -180,272 +187,182 @@ class CartController
             ],
         ];
 
-        // Create order payload
-        $orderPayload = new \stdClass();
-        $orderPayload->_uuid = $orderUuid;
-        $orderPayload->currency = "CZK";
-        $orderPayload->firstName = $parsedData["firstname"];
-        $orderPayload->lastName = $parsedData["lastname"];
-        $orderPayload->email = $parsedData["email"];
-        $orderPayload->phone = $parsedData["phone"];
-        $orderPayload->street = $parsedData["street"];
-        $orderPayload->building_number = $parsedData["houseNumber"];
-        $orderPayload->city = $parsedData["city"];
-        $orderPayload->postal_code = $parsedData["postalCode"];
-        $orderPayload->note = $parsedData["note"];
-        $orderPayload->shipping_method = $parsedData["shippingMethod"];
-        $orderPayload->shipping_rate = intval(Cart::$availableShipping[$parsedData["shippingMethod"]]["rate"]);
-        $orderPayload->payment_method = $parsedData["paymentMethod"];
-        // We set every order as unpaid,
-        $orderPayload->status = OrderStatus::UNPAID;
+        $em->beginTransaction();
 
-        // Process payment
-        $userEmailTemplatePayload['payment']['value'] = Cart::$availablePaymentMethods[$orderPayload->payment_method]['title'];
-
-        // parse shipping into readable format, but still leave that parsable
-        $shippingMetadata = Cart::$availableShipping[$parsedData["shippingMethod"]];
-        $userEmailTemplatePayload['shipping']['value'] = Cart::$availableShipping[$orderPayload->shipping_method]['title'];
-        if (!empty($shippingMetadata["metadataRequiredFields"])) {
-            $shippingMethodMetadata = implode(
-                ", ",
-                array_map(
-                    fn($metadataFieldName) => $parsedData["shippingMetadata"][$metadataFieldName],
-                    $shippingMetadata["metadataRequiredFields"]
-                )
-            );
-
-            $orderPayload->shipping_method .= "; $shippingMethodMetadata";
-            $userEmailTemplatePayload['shipping']['value'] .= "; $shippingMethodMetadata";
-        }
-        $userEmailTemplatePayload['shipping']['price']['value'] = "$orderPayload->shipping_rate Kč";
-
-        // Process price
-        $subtotal = $cart->getTotal(true);
-        $orderPayload->total_cost = $subtotal + $orderPayload->shipping_rate;
-        $orderPayload->currency = "CZK";
-
-        $userEmailTemplatePayload['subtotal']['value'] = "$subtotal Kč";
-        $userEmailTemplatePayload['price']['value'] = "$orderPayload->total_cost Kč";
-
-        // Process promo code
-        if ($promoCode = $cart->getPromoCode()) {
-            $orderPayload->promo_code_value = $promoCode["code"];
-            $orderPayload->promo_code_amount = intval($promoCode["amount"]);
-
-            $userEmailTemplatePayload['subtotal']['value'] = "<s>" . $cart->getTotal(false) . " Kč</s>" . $subtotal . " Kč";
-        }
-
-        // Process cards
-        $createdCards = [];
-        $cardsInCart = $cart->getCards();
-        if (!empty($cardsInCart)) {
-            $cardsService = new EntryTypeService(new \PromCMS\App\Models\Cards());
-            $orderPayload->cards = ["data" => []];
-
-            foreach ($cardsInCart as $cardIndex => $cardInCart) {
-                $cardPayload = new \stdClass();
-                $cardInCartAsArray = $cardInCart->asArray();
-
-                $cardPayload->name = $cardInCartAsArray["name"];
-                $cardPayload->background_id = intval($cardInCartAsArray["background_id"]);
-                $cardPayload->size_id = intval($cardInCart->getSizeId());
-                $cardPayload->card_type = $cardInCartAsArray["cardType"];
-                $cardPayload->final_price = $cardInCart->getPrice();
-                $cardPayload->bonuses = ['data' => []];
-
-                $size = (new \PromCMS\App\Models\CardSizes())
-                    ->query()
-                    ->setLanguage($currentLanguage)
-                    ->join(function ($size) use ($currentLanguage) {
-                        return (new \PromCMS\App\Models\CardMaterial())->query()
-                            ->setLanguage($currentLanguage)
-                            ->getOneById(intval($size["material_id"]))
-                            ->getData();
-                    }, 'material')
-                    ->select(['material'])
-                    ->getOneById($cardPayload->size_id)
-                    ->getData();
-                $sizeMaterialBonuses = $size['material']['bonuses']['data'] ?? [];
-                $cardBonuses = $cardInCart->getBonuses();
-
-                foreach ($sizeMaterialBonuses as $bonus) {
-                    if (!empty($cardBonuses[$bonus['name']])) {
-                        $cardPayload->bonuses['data'][] = [
-                            'name' => $bonus['name'],
-                            'value' => $cardBonuses[$bonus['name']],
-                            'price' => $bonus['price']
-                        ];
-                        $cardPayload->final_price += $bonus['price'];
-                    }
-                }
-
-                // Handle non real player as that has more fields to process
-                //if ($cardInCartAsArray["cardType"] !== "realPlayer") {
-                $cardPayload->club_image_id = null;
-                $humanCardIndex = $cardIndex + 1;
-
-                // Process player image
-                $uploadedPlayerImagePath = $cardInCartAsArray["playerImagePathname"];
-                $extension = pathinfo(basename($uploadedPlayerImagePath), PATHINFO_EXTENSION);
-                $filename = "hrac.$extension";
-                $randomFileName = "hrac-" . $this->getRandomFileName($extension);
-
-                $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$randomFileName";
-                $playerImageEntity = Files::create([
-                    'filepath' => $filepath,
-                    'filename' => $filename,
-                    'mimeType' => $fs->mimeType($uploadedPlayerImagePath),
-                ]);
-                $fs->move(
-                    $uploadedPlayerImagePath,
-                    $filepath
-                );
-                $cardPayload->player_image = $playerImageEntity->id;
-
-                if (!empty($cardInCartAsArray["clubImagePathname"])) {
-                    $uploadedClubImagePath = $cardInCartAsArray["clubImagePathname"];
-                    $extension = pathinfo(basename($uploadedClubImagePath), PATHINFO_EXTENSION);
-                    $filename = "klub.$extension";
-                    $randomFileName = "klub-" . $this->getRandomFileName($extension);
-
-                    $filepath = "/Objednávky/$orderUuid/Karty/$humanCardIndex/$randomFileName";
-                    $clubImageEntity = Files::create([
-                        'filepath' => $filepath,
-                        'filename' => $filename,
-                        'mimeType' => $fs->mimeType($uploadedClubImagePath),
-                    ]);
-                    $fs->move(
-                        $uploadedClubImagePath,
-                        $filepath
-                    );
-                    $cardPayload->club_image_id = $clubImageEntity->id;
-                }
-
-                // Process other data
-                $cardPayload->rating = $cardInCartAsArray["rating"];
-                $cardPayload->stats = [
-                    "data" => $cardInCartAsArray["stats"]
-                ];
-                $cardPayload->country_id = intval($cardInCartAsArray["country_id"]);
-                //}
-
-                $cardPayload->currency = "CZK";
-
-                $createdCard = $cardsService->create((array)$cardPayload);
-                $createdCards[] = $createdCard;
-                $orderPayload->cards["data"][] = [
-                    "card_id" => $createdCard->id
-                ];
-
-                // Delete image
-                $cardInCart->setPlayerImage(null);
-                $cardInCart->setClubImage(null);
-                $materialName = $size['material']['name'];
-                $sizeWidth = $size['width'];
-                $sizeHeight = $size['height'];
-
-                $userEmailTemplatePayload['cards'][] = [
-                    'title' => $createdCard->name,
-                    'subtitle' => "<span class='uppercase'>$materialName (" . $sizeWidth . "x" . $sizeHeight . "cm)</span>", // TODO
-                    'price' => "Cena: <b>$createdCard->final_price Kč</b>",
-                    'bonuses' => $cardPayload->bonuses['data'] ?? [],
-                    'img' => [
-                        "src" => $config->app->baseUrl . "/api/entry-types/files/items/$createdCard->background_id/raw?w=90"
-                    ]
-                ];
-            }
-        }
-
-        // Process products
-        $products = $cart->getProducts();
-        if (!empty($products)) {
-            $mappedProducts = [];
-
-            foreach ($products as $productInCartId => $productInCartInfo) {
-                $mappedProducts[] = [
-                    "product_id" => intval($productInCartId),
-                    "count" => intval($productInCartInfo["count"])
-                ];
-
-                $userEmailTemplatePayload['products'][] = [
-                    'title' => $productInCartInfo['product']['name'] . " " . $productInCartInfo["count"] . "x",
-                    'price' => "Cena: <b>" . $productInCartInfo['price']['total'] . " Kč</b>",
-                    'img' => [
-                        'src' => $config->app->baseUrl . "/api/entry-types/files/items/$productInCartId/raw?w=90"
-                    ]
-                ];
-            }
-
-            $orderPayload->products = ["data" => $mappedProducts];
-        }
-
-        // Finally create order
-        $createdOrder = $ordersService->create((array)$orderPayload);
-
-        foreach ($createdCards as $createdCard) {
-            $createdCard->update([
-                "order_id" => $createdOrder->id
-            ]);
-        }
-
-        // Don`t forget to destroy cart!
-        $cart->destroyState();
-
-        $mailer = $this->container->get(Mailer::class);
         try {
+            $order = new Orders();
+
+            $order
+                ->set_uuid($orderUuid)
+                ->setFirstName($parsedData["firstname"])
+                ->setLastName($parsedData["lastname"])
+                ->setEmail($parsedData["email"])
+                ->setPhone($parsedData["phone"])
+                ->setStreet($parsedData["street"])
+                ->setBuildingNumber($parsedData["houseNumber"])
+                ->setCity($parsedData["city"])
+                ->setPostalCode($parsedData["postalCode"])
+                ->setNote($parsedData["note"])
+                ->setShippingMethod($parsedData["shippingMethod"])
+                ->setShippingRate(intval(Carts::$availableShipping[$parsedData["shippingMethod"]]["rate"]))
+                ->setPaymentMethod($parsedData["paymentMethod"])
+                ->setStatus(OrderState::UNPAID);
+
+            $userEmailTemplatePayload['payment']['value'] = Carts::$availablePaymentMethods[$order->getPaymentMethod()]['title'];
+
+            // parse shipping into readable format, but still leave that parsable
+            $shippingMetadata = Carts::$availableShipping[$parsedData["shippingMethod"]];
+            $userEmailTemplatePayload['shipping']['value'] = Carts::$availableShipping[$order->getShippingMethod()]['title'];
+            if (!empty($shippingMetadata["metadataRequiredFields"])) {
+                $shippingMethodMetadata = implode(
+                    ", ",
+                    array_map(
+                        fn($metadataFieldName) => $parsedData["shippingMetadata"][$metadataFieldName],
+                        $shippingMetadata["metadataRequiredFields"]
+                    )
+                );
+
+                $order->setShippingMethod(($order->getShippingMethod() ?? '') . "; $shippingMethodMetadata");
+                $userEmailTemplatePayload['shipping']['value'] .= "; $shippingMethodMetadata";
+            }
+            $userEmailTemplatePayload['shipping']['price']['value'] = $order->getShippingRate() . " Kč";
+
+            // Process price
+            $subtotal = $cart->getTotalPrice();
+            $order->setTotalCost($subtotal + $order->getShippingRate());
+
+            $userEmailTemplatePayload['subtotal']['value'] = "$subtotal Kč";
+            $userEmailTemplatePayload['price']['value'] = $order->getTotalCost() . " Kč";
+
+            // Process promo code
+            if ($promoCode = $cart->getPromoCode()) {
+                $order->setPromoCodeValue($promoCode->getCode());
+                $order->setPromoCodeAmount($promoCode->getAmount());
+
+                $userEmailTemplatePayload['subtotal']['value'] = "<s>" . $cart->getTotalPrice(false) . " Kč</s>" . $subtotal . " Kč";
+            }
+
+            if ($cart->getCards()->count()) {
+                /** @var Cards $cardInCart */
+                foreach ($cart->getCards() as $cardInCart) {
+                    $size = $cardInCart->getSize();
+                    $materialName = $cardInCart->getSize()->getMaterial()->getName();
+                    $sizeWidth = $size->getWidth();
+                    $sizeHeight = $size->getHeight();
+                    $backgroundId = $cardInCart->getBackground()->getId();
+                    $cardInCart->setFinalPrice($cardInCart->createPrice());
+
+                    // Move it from cart to order
+                    $cardInCart->setCart(null)->setForOrder($order);
+                    $order->getCards()->add($cardInCart);
+
+                    $userEmailTemplatePayload['cards'][] = [
+                        'title' => $cardInCart->getName(),
+                        'subtitle' => "<span class='uppercase'>$materialName (" . $sizeWidth . "x" . $sizeHeight . "cm)</span>", // TODO
+                        'price' => "Cena: <b>" . $cardInCart->getFinalPrice() . " Kč</b>",
+                        'bonuses' => $cardInCart->getBonuses()['data'] ?? [],
+                        'img' => [
+                            "src" => "$projectBaseUrl/api/library/files/items/$backgroundId?w=90"
+                        ]
+                    ];
+                }
+            }
+
+            if (count($products = $cart->getProducts())) {
+                /** @var CartProducts $productInCart */
+                foreach ($products as $productInCart) {
+                    $productInOrder = new OrderedProducts();
+
+                    $productInOrder->setForOrder($order);
+                    $order->getProducts()->add($productInOrder);
+
+                    $productInOrder->setProduct($productInCart->getProduct());
+                    $productInOrder->setCount($productInCart->getCount());
+
+                    $em->persist($productInOrder);
+                    $em->remove($productInCart);
+
+                    $productTemplateData = [
+                        'title' => $productInOrder->getProduct()->getName() . " " . $productInOrder->getCount() . "x",
+                        'price' => "Cena: <b>" . $productInOrder->getTotalPrice() . " Kč</b>",
+                    ];
+
+                    if ($productImage = ($productInOrder->getProduct()->getImages() ?? [])[0]) {
+                        $productImageId = $productImage->getId();
+                        $productTemplateData['img'] = [
+                            'src' => "$projectBaseUrl/api/library/files/items/$productImageId?w=90"
+                        ];
+                    }
+
+                    $userEmailTemplatePayload['products'][] = $productTemplateData;
+                }
+            }
+
+            $promoCode
+                ?->setUsedTimes(($promoCode->getUsedTimes() ?? 0) + 1)
+                ->setEnabled(!$promoCode->getWasCreatedForNewsletter());
+
+            $em->persist($order);
+            $em->remove($cart);
+
+            $orderId = $order->getId();
+
+            if (!$orderId) {
+                throw new \Exception('No id!');
+            }
+
             $userEmailContent = $rendering->getEnvironment()->render('@app/OrderCreated.html', $userEmailTemplatePayload);
-            $mailer->addAddress($orderPayload->email);
+            $mailer->addAddress($order->getEmail());
             $mailer->isHTML(true);
-            $mailer->Subject = "Objednávka #$createdOrder->id na adcards.cz";
+            $mailer->Subject = "Objednávka #$orderId na adcards.cz";
             $mailer->Body = $userEmailContent;
             $mailer->send();
-        } catch (\Exception $error) {
-            $this->container->get(Logger::class)->error("Failed to send or render email templates for user order confirm", [
-                "error" => $error
-            ]);
-        }
 
-        try {
-            $adminEmailContent = $rendering->getEnvironment()->render('@app/CommonWithButton.html', [
-                "baseUrl" => $config->app->baseUrl,
-                "buttonUrl" => $config->app->baseUrl . "/admin/entry-types/orders/entries/$createdOrder->id",
-                "texts" => [
-                    "button" => "Zobrazit objednávku",
-                    "preview" => 'Nová objednávka',
-                    "content" => "Na stránce adcards.cz byla vytvořena nová objednávka"
-                ]
-            ]);
-            $mailer->addAddress("info@adcards.cz");
-            $mailer->isHTML(true);
-            $mailer->Subject = "Nová objednávka #$createdOrder->id na adcards.cz";
-            $mailer->Body = $adminEmailContent;
-            $mailer->send();
-        } catch (\Exception $error) {
-            $this->container->get(Logger::class)->error("Failed to send or render email templates for order admin confirm", [
-                "error" => $error
-            ]);
-        }
-
-        try {
-            if ($promoCode) {
-                (new \PromCMS\App\Models\PromoCodes())->query()->updateById($promoCode['id'], [
-                    'enabled' => !$promoCode->wasCreatedForNewsletter,
-                    'usedTimes' => ($promoCode->usedTimes ?? 0) + 1
+            // We don't have send admin files necessary, if it fails then just continue
+            try {
+                $adminEmailContent = $rendering->getEnvironment()->render('@app/CommonWithButton.html', [
+                    "baseUrl" => $projectBaseUrl,
+                    "buttonUrl" => "$projectBaseUrl/admin/entities/orders/$orderId",
+                    "texts" => [
+                        "button" => "Zobrazit objednávku",
+                        "preview" => 'Nová objednávka',
+                        "content" => "Na stránce adcards.cz byla vytvořena nová objednávka"
+                    ]
+                ]);
+                $mailer->addAddress("info@adcards.cz");
+                $mailer->isHTML(true);
+                $mailer->Subject = "Nová objednávka #$orderId na adcards.cz";
+                $mailer->Body = $adminEmailContent;
+                $mailer->send();
+            } catch (\Exception $error) {
+                $logger->error("Failed to send or render email templates for order admin confirm", [
+                    "error" => $error
                 ]);
             }
+
+            $resp = $response->withHeader("HX-Location", "/objednavky/$orderUuid" . "?payment=true");
+
+            $em->commit();
+
+            return $resp;
         } catch (\Exception $error) {
-            $this->container->get(Logger::class)->error("Failed to update promoCode", [
+            if ($em->getConnection()->isTransactionActive()) {
+                $em->getConnection()->rollBack();
+            }
+
+            $logger->error("Failed to create an order", [
                 "error" => $error
             ]);
-        }
 
-        return $response->withHeader("HX-Location", "/objednavky/$orderUuid" . "?payment=true");
+            throw $error;
+        }
     }
 
     #[AsApiRoute('POST', '/cart/promo-code/toggle', 'toggle-promo-code')]
-    public function doTogglePromoCode_API(ServerRequestInterface $request, ResponseInterface $response): ResponseInterface
+    public function doTogglePromoCode_API(ServerRequestInterface $request, ResponseInterface $response, RenderingService $renderingService, EntityManager $em): ResponseInterface
     {
-        $cart = $this->container->get(Cart::class);
+        /** @var Carts $cart */
+        $cart = $request->getAttribute('cart');
         $body = $request->getParsedBody();
 
         if (!isset($body["code"])) {
@@ -466,9 +383,12 @@ class CartController
 
             $resultPayload["state"]["successes"][] = StaticMessages::PROMO_CODE_REMOVED;
         } else {
-            $successfullyAdded = $cart->setPromoCode($body["code"]);
+            $promoCode = $em->getRepository(PromoCodes::class)->findOneBy([
+                'code' => $body["code"]
+            ]);
 
-            if ($successfullyAdded) {
+            if ($promoCode) {
+                $cart->setPromoCode($promoCode);
                 $resultPayload["state"]["successes"][] = StaticMessages::PROMO_CODE_ADDED;
             } else {
                 // In twig we check if "promoCode" is in array - keep this key here, otherview it will be rendered as
@@ -477,8 +397,12 @@ class CartController
             }
         }
 
-        $resultPayload = array_merge($resultPayload, $cart->stateToTemplateVariables());
-        $this->container->get(RenderingService::class)->render($response, $template, $resultPayload);
+        $em->flush();
+
+        $resultPayload = array_merge($resultPayload, [
+            'cart' => $cart
+        ]);
+        $renderingService->render($response, $template, $resultPayload);
 
         return $response;
     }

@@ -37,6 +37,7 @@
                         method="POST"
                         hx-target='#builder-root'
                         hx-post="{{ url_for('createNewCard') }}"
+                        hx-encoding='multipart/form-data'
                         hx-swap="outerHTML"
                         class='ignore-form-styles'
                         @submit='handleSubmit'
@@ -59,7 +60,7 @@
                                :value="stat.value" />
                     </template>
 
-                    <template x-if='getMaterial()?.bonuses?.length'>
+                    <template x-if='getMaterial()?.bonuses?.data?.length'>
                         <div>
                             <hr />
                             <h4 class='mt-4'>

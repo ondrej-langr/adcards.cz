@@ -9,7 +9,7 @@
             <h2 class='mb-4'>Doplňky za zvýhoďněnou cenu:</h2>
             <div class='d-flex justify-content-center align-items-start'>
                 {% for product in recommended.products %}
-                    {{ include("@app/components/product.twig", product) }}
+                    {{ include("@app/components/product.twig", product.toArray()) }}
                 {% endfor %}
             </div>
         </div>

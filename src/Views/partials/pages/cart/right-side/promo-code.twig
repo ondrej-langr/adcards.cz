@@ -14,7 +14,7 @@
             <div class='w-100'>
                 <input required type="text" class="form-control promo" id="promo-code-input"
                        placeholder="{{ 'Zadejte promokód'|t }}" name='code'
-                       {% if cart.promoCode.isset %}value="{{ cart.promoCode.value }} ( - {{ cart.promoCode.percentage }}%)"
+                       {% if cart.getPromoCode() %}value="{{ cart.getPromoCode().code }} ( - {{ cart.getPromoCode().amount }}%)"
                        disabled{% endif %}>
 
                 {% if state.errors.promoCode %}
@@ -26,7 +26,7 @@
 
             <button type="submit" class='flex-none' style='width: auto;margin-top: 0;height: 66px;'>
                 <span class='hx-hide-on-request'>
-                    {% if cart.promoCode.isset %}
+                    {% if cart.getPromoCode() %}
                         {{ "Odebrat"|t }}
                     {% else %}
                         {{ "Přidat"|t }}

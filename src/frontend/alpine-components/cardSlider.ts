@@ -19,7 +19,7 @@ export const cardSlider = (): AlpineComponent<any> => {
         slidesToShow: 5,
         slidesToScroll: 1,
         // When centered alone slide it causes that slide to be placed at the end, this kind of fixes it...
-        centerMode: totalRealSlidesCount > 1,
+        centerMode: totalRealSlidesCount > 5,
         centerPadding: '30px',
         autoplay: true,
         arrows: true,
@@ -34,6 +34,7 @@ export const cardSlider = (): AlpineComponent<any> => {
           breakpoint: 1400,
           settings: {
             slidesToShow: 3,
+            centerMode: totalRealSlidesCount > 3,
           },
         }, {
           breakpoint: 768,
@@ -46,6 +47,7 @@ export const cardSlider = (): AlpineComponent<any> => {
           breakpoint: 640,
           settings: {
             slidesToShow: 1,
+            centerMode: true,
           },
         }],
       })

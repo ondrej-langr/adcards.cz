@@ -31,7 +31,7 @@
                  </div>
                  <h4>{{ item.name }}</h4>
                  {% if item.description %}
-                     <p>{{ item.description }}</p>
+                     <p style='margin-bottom: 1rem '>{{ item.description }}</p>
                  {% endif %}
              </a>
          {% endfor %}
@@ -56,7 +56,7 @@
                 id: background.getId(),
                 name:  background.getName(),
                 imageSrc: "/api/library/files/items/" ~ background.getImage().getId() ~ "?w=350&q=90",
-                textColor: background.getColor()
+                textColor: background.getTextColor()
             })
         }),
         state

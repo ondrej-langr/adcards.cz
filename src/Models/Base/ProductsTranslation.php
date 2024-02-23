@@ -27,6 +27,9 @@ class ProductsTranslation extends Entity
   #[ORM\Column(name: 'name', nullable: false, unique: true, type: 'string'), PROM\PromModelColumn(title: 'Název', type: 'string', editable: false, hide: false, localized: true)]
   protected ?string $name;
   
+  #[ORM\Column(name: 'excerpt', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Shrnutí', type: 'longText', editable: false, hide: false, localized: true)]
+  protected ?string $excerpt;
+  
   #[ORM\Column(name: 'description', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Popisek', type: 'longText', editable: false, hide: false, localized: true)]
   protected ?string $description;
   
@@ -48,6 +51,17 @@ class ProductsTranslation extends Entity
   function setName(string $name): static
   {
     $this->name = $name;
+    return $this;
+  }
+  
+  function getExcerpt(): ?string
+  {
+    return $this->excerpt;
+  }
+  
+  function setExcerpt(?string $excerpt): static
+  {
+    $this->excerpt = $excerpt;
     return $this;
   }
   

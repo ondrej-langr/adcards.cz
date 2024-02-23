@@ -3,21 +3,21 @@
         <div class="card-body" x-show='_materialId === {{ material.id }}'
              {% if (state.form.values.materialId != material.id) %}style='display: none'{% endif %}
         >
-            {% for size in material.sizes %}
+            {% for size in material.getCardSizes() %}
                 <div class="checkbox-around col-6 col-lg-6 col-sm-6 col-xl-3">
-                    <input type="radio" value="{{ size.id }}" id="size-{{ size.id }}" name="size"
+                    <input type="radio" value="{{ size.getId() }}" id="size-{{ size.getId() }}" name="size"
                            x-model.number='_sizeId' />
-                    <label for="size-{{ size.id }}">
+                    <label for="size-{{ size.getId() }}">
                         <div class="label-image">
-                            {% set currentImage = getImage(size.image, 65) %}
+                            {% set currentImage = getImage(size.getImage(), 65) %}
                             <img alt='' src="{{ currentImage.src }}" width="{{ currentImage.width }}"
                                  height="{{ currentImage.height }}" class='h-auto'>
                         </div>
                         <div class="info">
 										<span class="label-name">
-											<small>{{ size.width }}x{{ size.height }}cm</small>
+											<small>{{ size.getWidth() }}x{{ size.getHeight() }}cm</small>
 										</span>
-                            <span class="label-price">{{ size.price }}
+                            <span class="label-price">{{ size.getPrice() }}
                                 {{ 'Kč'|t }}</span>
                         </div>
                     </label>

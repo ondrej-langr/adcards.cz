@@ -49,10 +49,10 @@ class Orders extends Entity
   #[ORM\Column(name: 'note', nullable: true, unique: false, type: 'text'), PROM\PromModelColumn(title: 'Note', type: 'longText', editable: false, hide: false, localized: false)]
   protected ?string $note;
   
-  #[PROM\PromModelColumn(title: 'Doprava', type: 'string', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'shippingmethod', nullable: false, unique: false, type: 'string'), PROM\PromModelColumn(title: 'Doprava', type: 'string', editable: true, hide: false, localized: false)]
   protected ?string $shippingMethod;
   
-  #[PROM\PromModelColumn(title: 'Cena za dopravu', type: 'number', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'shippingrate', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Cena za dopravu', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $shippingRate;
   
   #[ORM\Column(name: 'paymentmethod', nullable: false, unique: false, type: 'string'), PROM\PromModelColumn(title: 'Typ platby', type: 'string', editable: false, hide: false, localized: false)]
@@ -61,10 +61,10 @@ class Orders extends Entity
   #[ORM\Column(name: 'status', nullable: false, unique: false, type: 'string', enumType: OrderState::class), PROM\PromModelColumn(title: 'Stav', type: 'enum', editable: false, hide: false, localized: false)]
   protected ?OrderState $status;
   
-  #[PROM\PromModelColumn(title: 'Celková částka', type: 'number', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'totalcost', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Celková částka', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $totalCost;
   
-  #[PROM\PromModelColumn(title: 'ID PayPal transakce', type: 'string', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'paypaltransactionid', nullable: true, unique: false, type: 'string'), PROM\PromModelColumn(title: 'ID PayPal transakce', type: 'string', editable: true, hide: false, localized: false)]
   protected ?string $paypalTransactionId;
   /**
   * @var ArrayCollection<int, \PromCMS\App\Models\Cards>
@@ -79,10 +79,10 @@ class Orders extends Entity
   #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\OrderedProducts::class, mappedBy: 'forOrder'), PROM\PromModelColumn(title: 'Produkty', type: 'relationship', editable: true, hide: false, localized: false)]
   protected ?\Doctrine\Common\Collections\Collection $products;
   
-  #[PROM\PromModelColumn(title: 'Slevový kód - název', type: 'string', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'promocodevalue', nullable: true, unique: false, type: 'string'), PROM\PromModelColumn(title: 'Slevový kód - název', type: 'string', editable: true, hide: false, localized: false)]
   protected ?string $promoCodeValue;
   
-  #[PROM\PromModelColumn(title: 'Slevový kód - hodnota', type: 'number', editable: true, hide: false, localized: false)]
+  #[ORM\Column(name: 'promocodeamount', nullable: true, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Slevový kód - hodnota', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $promoCodeAmount;
   
   function __construct()
