@@ -84,6 +84,38 @@ const productsModel = {
         editor: { placement: 'aside' },
       },
     },
+
+
+    {
+      name: 'usedForOrders',
+      'required': false,
+      'translations': false,
+      'type': 'relationship',
+      'title': 'Produkty',
+      multiple: true,
+      readonly: true,
+      hide: true,
+      admin: {
+        isHidden: true,
+      },
+      'labelConstructor': '{{id}}',
+      targetModelTableName: 'ordered_products',
+      'mappedBy': 'product',
+    },
+
+    {
+      name: 'usedForCarts',
+      hide: true,
+      admin: {
+        isHidden: true,
+      },
+      'type': 'relationship',
+      'multiple': true,
+      'targetModelTableName': 'cart_products',
+      'labelConstructor': '#{{id}}',
+      'title': 'Košíky',
+      'mappedBy': 'product',
+    },
   ],
 }
 

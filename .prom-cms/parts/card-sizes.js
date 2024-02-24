@@ -77,6 +77,19 @@ const cardSizesModel = {
         'fieldType': 'small-image',
       },
     },
+    {
+      name: 'cards',
+      hide: true,
+      admin: {
+        isHidden: true,
+      },
+      'type': 'relationship',
+      'multiple': true,
+      'targetModelTableName': 'cards',
+      'labelConstructor': '#{{id}}',
+      'title': 'Karty',
+      'mappedBy': 'size',
+    },
   ],
 }
 

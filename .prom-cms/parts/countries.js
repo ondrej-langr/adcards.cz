@@ -48,6 +48,19 @@ const countriesModel = {
         },
       },
     },
+    {
+      name: 'cards',
+      hide: true,
+      admin: {
+        isHidden: true,
+      },
+      'type': 'relationship',
+      'multiple': true,
+      'targetModelTableName': 'cards',
+      'labelConstructor': '#{{id}}',
+      'title': 'Karty',
+      'mappedBy': 'country',
+    },
   ],
 }
 

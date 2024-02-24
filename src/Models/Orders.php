@@ -12,4 +12,17 @@ use PromCMS\Core\Database\Models\Mapping as PROM;
 #[ORM\Entity, ORM\Table(name: 'orders'), PROM\PromModel(ignoreSeeding: true), ORM\HasLifecycleCallbacks]
 class Orders extends Base\Orders
 {
+  
+  function getSubtotal()
+  {
+    return $this->getTotalCost() - $this->getShippingRate();
+  }
+  
+  function getSubtotalWithoutPromoCode()
+  {
+    if (!$this->getPromoCodeAmount()) {
+      return $this->getSubtotal();
+    }
+    return round($this->getSubtotal() / ((100 - $this->getPromoCodeAmount()) / 100), 0);
+  }
 }

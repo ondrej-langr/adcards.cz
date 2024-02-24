@@ -139,7 +139,6 @@ class CardController
                 ->setCardType($cardType)
                 ->setCountry($country)
                 ->setRating(intval($body["rating"]))
-                ->setCurrency(Currency::CZK)
                 ->setFinalPrice(0)
                 ->setPlayerImage($playerImage)
                 ->setClubImage($clubImage)

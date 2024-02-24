@@ -68,6 +68,20 @@ const cardBackgroundsModel = {
         'fieldType': 'big-image',
       },
     },
+    {
+      name: 'cards',
+      'type': 'relationship',
+      'multiple': true,
+      hide: true,
+      admin: {
+        isHidden: true,
+      },
+      foreignKey: 'id',
+      'targetModelTableName': 'cards',
+      'labelConstructor': '#{{id}}',
+      'title': 'Karty',
+      'mappedBy': 'background',
+    },
   ],
 }
 

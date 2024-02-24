@@ -12,4 +12,9 @@ use PromCMS\Core\Database\Models\Mapping as PROM;
 #[ORM\Entity, ORM\Table(name: 'promo_codes'), PROM\PromModel(ignoreSeeding: true), ORM\HasLifecycleCallbacks]
 class PromoCodes extends Base\PromoCodes
 {
+  
+  function canBeApplied()
+  {
+    return $this->enabled && $this->getMaxUses() > $this->getUsedTimes();
+  }
 }

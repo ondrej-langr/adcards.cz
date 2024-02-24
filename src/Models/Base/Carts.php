@@ -15,7 +15,7 @@ use PromCMS\Core\Database\Models\Abstract\Entity;
 #[ORM\MappedSuperclass]
 class Carts extends Entity
 {
-  use \PromCMS\Core\Database\Models\Trait\Sharable;
+  use \PromCMS\Core\Database\Models\Trait\Timestamps;
   use \PromCMS\Core\Database\Models\Trait\NumericId;
   
   #[ORM\Column(name: 'sessionid', nullable: false, unique: true, type: 'string'), PROM\PromModelColumn(title: 'Session', type: 'string', editable: false, hide: false, localized: false)]
@@ -33,7 +33,7 @@ class Carts extends Entity
   #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\Cards::class, mappedBy: 'cart'), PROM\PromModelColumn(title: 'Karty', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\Doctrine\Common\Collections\Collection $cards;
   
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\PromoCodes::class), ORM\JoinColumn(name: 'promocode_id', nullable: true, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Promo Kod', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\PromoCodes::class, inversedBy: 'carts'), ORM\JoinColumn(name: 'promocode_id', nullable: true, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Promo Kod', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\PromoCodes $promoCode;
   
   function __construct()

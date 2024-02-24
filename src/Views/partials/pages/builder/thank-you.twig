@@ -2,6 +2,20 @@
     <div class='thank-you__title'>
         <h1>A je to v košíku!</h1>
         <p>Vaše karta je připravená v košíku. Stačí jen dokončit objednávku</p>
+
+        <div class='flex flex-wrap justify-content-center text-white my-5' style='gap: 1rem'>
+            <a class='appearance-button' href='{{ url_for('builder') }}'>
+                Vytvořit kartu
+            </a>
+
+            <a class='appearance-button' href='{{ url_for('products') }}'>
+                Obchod
+            </a>
+
+            <a class='appearance-button' href='{{ url_for('cart') }}'>
+                Košík
+            </a>
+        </div>
     </div>
 
     {% if recommended.products|length %}

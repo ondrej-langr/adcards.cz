@@ -3,8 +3,6 @@
  * @type {const}
  */
 export const orderStatuses = {
-  // This is for newly created order (which may need to be paid)
-  CREATED: 'vytvořeno',
   // This is for when user selected payment by gateway (such as paypal)
   UNPAID: 'nezaplaceno',
   // This is for when user has paid the order (or has chosen the bank transfer)
@@ -217,7 +215,7 @@ const ordersModel = {
       'type': 'relationship',
       'title': 'Karty',
       readonly: true,
-      'labelConstructor': '{{name}} - {{sizeId}} - {{finalPrice}}Kč',
+      'labelConstructor': '{{name}} - {{size.material.name}} - {{finalPrice}}Kč',
       'targetModelTableName': 'cards',
       multiple: true,
       'mappedBy': 'forOrder',
@@ -231,7 +229,7 @@ const ordersModel = {
       'title': 'Produkty',
       multiple: true,
       readonly: true,
-      'labelConstructor': '{{id}} č',
+      'labelConstructor': '{{ product.name }} {{count}}x',
       targetModelTableName: 'ordered_products',
       'mappedBy': 'forOrder',
     },
@@ -257,7 +255,7 @@ const ordersModel = {
       'type': 'number',
       'title': 'Slevový kód - hodnota',
       readonly: true,
-      suffix: ' Kč',
+      suffix: ' %',
       admin: {
         editor: {
           width: 6,

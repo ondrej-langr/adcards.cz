@@ -9,6 +9,7 @@ namespace PromCMS\App\Models\Base;
 
 use Doctrine\ORM\Mapping as ORM;
 use PromCMS\Core\Database\Models\Mapping as PROM;
+use Doctrine\Common\Collections\ArrayCollection;
 use PromCMS\Core\Database\Models\Abstract\Entity;
 
 #[ORM\MappedSuperclass]
@@ -32,14 +33,22 @@ class CardSizes extends Entity
   
   #[ORM\ManyToOne(targetEntity: \PromCMS\Core\Database\Models\File::class), ORM\JoinColumn(name: 'image_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Náhledový obrázek', type: 'file', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\Core\Database\Models\File $image;
+  /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\Cards>
+  */
+  
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\Cards::class, mappedBy: 'size'), PROM\PromModelColumn(title: 'Karty', type: 'relationship', editable: false, hide: true, localized: false)]
+  protected ?\Doctrine\Common\Collections\Collection $cards;
   
   function __construct()
   {
+    $this->cards = new ArrayCollection();
   }
   
   #[ORM\PostLoad]
   function __prom__initCollections()
   {
+    $this->cards ??= new ArrayCollection();
   }
   
   function getWidth(): int
@@ -94,6 +103,17 @@ class CardSizes extends Entity
   function setImage(\PromCMS\Core\Database\Models\File $image): static
   {
     $this->image = $image;
+    return $this;
+  }
+  
+  function getCards(): ?\Doctrine\Common\Collections\Collection
+  {
+    return $this->cards;
+  }
+  
+  function setCards(?\Doctrine\Common\Collections\Collection $cards): static
+  {
+    $this->cards = $cards;
     return $this;
   }
 }

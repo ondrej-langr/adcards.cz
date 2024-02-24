@@ -4,7 +4,7 @@
         <h4>Výběr platby</h4>
     </div>
 
-    {% for paymentId, paymentItem in paymentMethods %}
+    {% for paymentId, paymentItem in cart.getPaymentMethods() %}
         <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
             <input type="radio"
                    name='paymentMethod'

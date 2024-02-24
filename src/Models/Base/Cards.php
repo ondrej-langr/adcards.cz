@@ -39,16 +39,13 @@ class Cards extends Entity
   #[ORM\Column(name: 'finalprice', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Finální cena', type: 'number', editable: true, hide: false, localized: false)]
   protected ?int $finalPrice;
   
-  #[ORM\Column(name: 'currency', nullable: false, unique: false, type: 'string', enumType: Currency::class), PROM\PromModelColumn(title: 'Měna', type: 'enum', editable: true, hide: false, localized: false)]
-  protected ?Currency $currency;
-  
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardBackgrounds::class), ORM\JoinColumn(name: 'background_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Pozadí karty', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\CardBackgrounds::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'background_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Pozadí karty', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\CardBackgrounds $background;
   
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Countries::class), ORM\JoinColumn(name: 'country_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Země', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Countries::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'country_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Země', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Countries $country;
   
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\CardSizes::class), ORM\JoinColumn(name: 'size_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Velikost', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\CardSizes::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'size_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Velikost', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\CardSizes $size;
   
   #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Orders::class, inversedBy: 'cards'), ORM\JoinColumn(name: 'fororder_id', nullable: true, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
@@ -143,17 +140,6 @@ class Cards extends Entity
   function setFinalPrice(int $finalPrice): static
   {
     $this->finalPrice = $finalPrice;
-    return $this;
-  }
-  
-  function getCurrency(): Currency
-  {
-    return $this->currency;
-  }
-  
-  function setCurrency(Currency $currency): static
-  {
-    $this->currency = $currency;
     return $this;
   }
   

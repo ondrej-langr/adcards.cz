@@ -8,7 +8,6 @@ namespace PromCMS\App\Models\Base;
 
 enum OrderState : string
 {
-  case CREATED = 'vytvořeno';
   case UNPAID = 'nezaplaceno';
   case NOT_VERIFIED = 'nepotvrzeno';
   case VERIFIED = 'potvrzeno';

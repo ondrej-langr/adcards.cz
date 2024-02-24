@@ -1,16 +1,16 @@
 import { Preview, Text } from '@react-email/components'
 import * as React from 'react'
-import { Layout } from './components/Layout'
-import { WhiteSection } from './components/WhiteSection'
-import { Button } from './components/Button'
+import { Layout } from './_components/Layout'
+import { WhiteSection } from './_components/WhiteSection'
+import { Button } from './_components/Button'
 
 const defaultProps = {
   baseUrl: '{{ baseUrl }}',
   buttonUrl: '{{ buttonUrl }}',
   texts: {
-    preview: '{{texts.preview}}',
-    content: '{{texts.content}}',
-    button: '{{texts.button}}',
+    preview: '{{texts.preview|raw}}',
+    content: '{{texts.content|raw}}',
+    button: '{{texts.button|raw}}',
   },
 }
 

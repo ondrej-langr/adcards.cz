@@ -3,11 +3,13 @@
 namespace PromCMS\App\Controllers;
 
 use DI\Container;
-use PromCMS\App\Cart;
+use Doctrine\ORM\Query;
 use PromCMS\App\Models\Base\OrderState;
+use PromCMS\App\Models\Carts;
 use PromCMS\App\Models\Orders;
 use PromCMS\App\PayPal;
 use PromCMS\Core\Database\EntityManager;
+use PromCMS\Core\Database\Query\TranslationWalker;
 use PromCMS\Core\Exceptions\EntityNotFoundException;
 use PromCMS\Core\Http\Routing\AsApiRoute;
 use PromCMS\Core\Http\Routing\AsRoute;
@@ -180,9 +182,15 @@ class OrdersController
         $templatePayload = [];
 
         try {
-            $order = $em->getRepository(Orders::class)->find([
-                '_uuid' => $orderUuid
-            ]);
+            $order = $em->createQueryBuilder()
+                ->from(Orders::class, 'o')
+                ->select('o')
+                ->where('o._uuid = :uuid')
+                ->setParameter(':uuid', $orderUuid)
+                ->getQuery()
+                ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
+                ->setHint(TranslationWalker::HINT_LOCALE, $requestLanguage)
+                ->getOneOrNullResult();
 
             if (!$order) {
                 throw new EntityNotFoundException();
@@ -193,37 +201,12 @@ class OrdersController
             return $response->withStatus(404);
         }
 
-        if (!empty($templatePayload["order"]["cards"]["data"])) {
-            $orderedCards = $templatePayload["order"]["cards"]["data"];
-            $orderedCards = (new EntryTypeService(new \PromCMS\App\Models\Cards()))->getMany(["id", "IN", array_column($orderedCards, "card_id")])["data"];
-
-            $templatePayload["order"]["cards"] = array_map(function ($orderedCard) use ($requestLanguage) {
-                $orderedCard["size"] = (new EntryTypeService(new \PromCMS\App\Models\CardSizes(), $requestLanguage))->getOne(["id", "=", intval($orderedCard["size_id"])])->getData();
-                $orderedCard["background"] = (new EntryTypeService(new \PromCMS\App\Models\CardBackgrounds(), $requestLanguage))->getOne(["id", "=", intval($orderedCard["background_id"])])->getData();
-                $orderedCard["size"]["material"] = (new EntryTypeService(new \PromCMS\App\Models\CardMaterial(), $requestLanguage))->getOne(["id", "=", intval($orderedCard["size"]["material_id"])])->getData();
-
-                return $orderedCard;
-            }, $orderedCards);
-        }
-
-        $orderedProducts = $templatePayload["order"]["products"]["data"];
-        if (!empty($orderedProducts)) {
-            $orderedProducts = (new EntryTypeService(new \PromCMS\App\Models\Products(), $requestLanguage))->getMany(["id", "IN", array_column($orderedProducts, "product_id")])["data"];
-
-            $templatePayload["order"]["products"] = array_map(function ($product) use ($templatePayload) {
-                // Find previous metadata under order - there is count and product_id
-                $orderProductMetadata = $templatePayload["order"]["products"]["data"][array_search($product["id"], array_column($templatePayload["order"]["products"]["data"], "product_id"))];
-
-                return array_merge($orderProductMetadata, ["product" => $product]);
-            }, $orderedProducts);
-        }
-
         $templatePayload["payPal"] = [
             "clientId" => $_ENV["PAYPAL_CLIENT_ID"]
         ];
 
-        $templatePayload["shippingMethods"] = Cart::$availableShipping;
-        $templatePayload["paymentMethods"] = Cart::$availablePaymentMethods;
+        $templatePayload["shippingMethods"] = Carts::$availableShipping;
+        $templatePayload["paymentMethods"] = Carts::$availablePaymentMethods;
         $templatePayload["showThankYou"] = isset($searchParams["thank-you"]);
         $templatePayload["showPaymentDialog"] = isset($searchParams["payment"]);
 

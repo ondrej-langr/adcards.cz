@@ -45,6 +45,18 @@ class Products extends Entity
   #[ORM\Column(name: 'isbonus', nullable: true, unique: false, type: 'boolean'), PROM\PromModelColumn(title: 'Zvýhodněný produkt ke kartám', type: 'boolean', editable: false, hide: false, localized: false)]
   protected ?bool $isBonus;
   /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\OrderedProducts>
+  */
+  
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\OrderedProducts::class, mappedBy: 'product'), PROM\PromModelColumn(title: 'Produkty', type: 'relationship', editable: true, hide: true, localized: false)]
+  protected ?\Doctrine\Common\Collections\Collection $usedForOrders;
+  /**
+  * @var ArrayCollection<int, \PromCMS\App\Models\CartProducts>
+  */
+  
+  #[ORM\OneToMany(targetEntity: \PromCMS\App\Models\CartProducts::class, mappedBy: 'product'), PROM\PromModelColumn(title: 'Košíky', type: 'relationship', editable: false, hide: true, localized: false)]
+  protected ?\Doctrine\Common\Collections\Collection $usedForCarts;
+  /**
   * @var ArrayCollection<int, \PromCMS\App\Models\ProductsTranslation>
   */
   
@@ -54,6 +66,8 @@ class Products extends Entity
   function __construct()
   {
     $this->images = new ArrayCollection();
+    $this->usedForOrders = new ArrayCollection();
+    $this->usedForCarts = new ArrayCollection();
     $this->translations = new ArrayCollection();
   }
   
@@ -61,6 +75,8 @@ class Products extends Entity
   function __prom__initCollections()
   {
     $this->images ??= new ArrayCollection();
+    $this->usedForOrders ??= new ArrayCollection();
+    $this->usedForCarts ??= new ArrayCollection();
     $this->translations ??= new ArrayCollection();
   }
   /**
@@ -144,6 +160,28 @@ class Products extends Entity
   function setIsBonus(?bool $isBonus): static
   {
     $this->isBonus = $isBonus;
+    return $this;
+  }
+  
+  function getUsedForOrders(): ?\Doctrine\Common\Collections\Collection
+  {
+    return $this->usedForOrders;
+  }
+  
+  function setUsedForOrders(?\Doctrine\Common\Collections\Collection $usedForOrders): static
+  {
+    $this->usedForOrders = $usedForOrders;
+    return $this;
+  }
+  
+  function getUsedForCarts(): ?\Doctrine\Common\Collections\Collection
+  {
+    return $this->usedForCarts;
+  }
+  
+  function setUsedForCarts(?\Doctrine\Common\Collections\Collection $usedForCarts): static
+  {
+    $this->usedForCarts = $usedForCarts;
     return $this;
   }
 }

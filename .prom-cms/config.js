@@ -27,6 +27,31 @@ const config = {
       'de',
       'sk',
     ],
+    security: {
+      roles: [
+        {
+          name: 'Admin Editor',
+          slug: 'admin-editor',
+          modelPermissions: {
+            [cardBackgroundsModel.tableName]: 'allow-all',
+            [cardMaterialModel.tableName]: 'allow-all',
+            [cardSizesModel.tableName]: 'allow-all',
+            [cardsModel.tableName]: 'allow-all',
+            [countriesModel.tableName]: 'allow-all',
+            [mainPageSlidesModel.tableName]: 'allow-all',
+            [newsletterSubscriptionsModel.tableName]: 'allow-all',
+            [ordersModel.tableName]: 'allow-all',
+            [productsModel.tableName]: 'allow-all',
+            [promoCodesModel.tableName]: 'allow-all',
+            [sportsModel.tableName]: 'allow-all',
+            [orderedProductsModel.tableName]: {
+              r: 'allow-all',
+            },
+            prom__general_translations: 'allow-all',
+          },
+        },
+      ],
+    },
   },
   database: {
     connections: [

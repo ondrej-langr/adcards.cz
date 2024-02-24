@@ -3,7 +3,7 @@
         <h4>Výběr dopravy</h4>
     </div>
 
-    {% for shippingKey, shippingItem in shippingMethods %}
+    {% for shippingKey, shippingItem in cart.getShippingMethods() %}
         <div class="checkbox-around col-lg-6 col-sm-6 col-xl-6">
             <input type="radio"
                    name="shippingMethod"
@@ -21,7 +21,7 @@
         </div>
     {% endfor %}
 
-    {% for shippingKey, shippingItem in shippingMethods %}
+    {% for shippingKey, shippingItem in cart.getShippingMethods() %}
         {% if shippingItem.bonusContentAfterSelect is not same as(null) %}
             <div class="form-group shipping-around w100 w100-mob"
                  x-show="shippingMethod === '{{ shippingKey }}'" style='display: none'>

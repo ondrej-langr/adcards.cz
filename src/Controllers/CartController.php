@@ -3,7 +3,6 @@
 namespace PromCMS\App\Controllers;
 
 use DI\Container;
-use MongoDB\Driver\Exception\ExecutionTimeoutException;
 use Opis\JsonSchema\Errors\ErrorFormatter;
 use Opis\JsonSchema\Errors\ValidationError;
 use Opis\JsonSchema\Validator;
@@ -14,7 +13,6 @@ use PromCMS\App\Models\Carts;
 use PromCMS\App\Models\OrderedProducts;
 use PromCMS\App\Models\Orders;
 use PromCMS\App\Models\PromoCodes;
-use PromCMS\App\OrderStatus;
 use PromCMS\App\StaticMessages;
 use PromCMS\App\UUID;
 use PromCMS\Core\Database\EntityManager;
@@ -35,16 +33,8 @@ class CartController
         "*" => 'Toto políčko je povinné',
         "shippingMetadata" => "Dokončete výběr",
     ];
-    private Container $container;
     private string $validationSchema;
     private Validator $validationSchemaValidator;
-
-    private function getRandomFileName($extension)
-    {
-        $newBasename = bin2hex(random_bytes(8)) . '-' . time();
-
-        return sprintf('%s.%0.8s', $newBasename, $extension);
-    }
 
     private function getValidationSchema(): string
     {
@@ -56,9 +46,8 @@ class CartController
         return json_encode($parsedSchema);
     }
 
-    public function __construct(Container $container)
+    public function __construct()
     {
-        $this->container = $container;
         $this->validationSchema = $this->getValidationSchema();
         $validator = new Validator();
         $validator->setMaxErrors(20);
@@ -88,16 +77,15 @@ class CartController
             );
     }
 
-    #[AsApiRoute('POST', '/cart/checkout-order', 'finish-order')]
+    #[AsApiRoute('POST', '/cart/checkout', 'finish-order')]
     public function doCheckout_API(
-        ServerRequestInterface   $request,
-        ResponseInterface        $response,
-        Logger                   $logger,
-        \PromCMS\Core\Filesystem $fs,
-        RenderingService         $rendering,
-        PromConfig               $config,
-        Mailer                   $mailer,
-        EntityManager            $em
+        ServerRequestInterface $request,
+        ResponseInterface      $response,
+        Logger                 $logger,
+        RenderingService       $rendering,
+        PromConfig             $config,
+        Mailer                 $mailer,
+        EntityManager          $em
     )
     {
         /** @var Carts $cart */
@@ -106,6 +94,7 @@ class CartController
             return $response->withStatus(400);
         }
 
+        $cart->checkForPromoCodeValidity();
         $parsedData = $request->getParsedBody();
 
         // This will be json when incoming so it needs to be parsed
@@ -132,8 +121,6 @@ class CartController
                 ]
             ];
 
-            $resultPayload["shippingMethods"] = Carts::$availableShipping;
-            $resultPayload["paymentMethods"] = Carts::$availablePaymentMethods;
             $formatter = new ErrorFormatter();
             $missingFields = $formatter->formatFlat(
                 $validationResult->error(),
@@ -229,17 +216,19 @@ class CartController
 
             // Process price
             $subtotal = $cart->getTotalPrice();
-            $order->setTotalCost($subtotal + $order->getShippingRate());
+            $total = $subtotal + $order->getShippingRate();
+            $order->setTotalCost($total);
 
             $userEmailTemplatePayload['subtotal']['value'] = "$subtotal Kč";
-            $userEmailTemplatePayload['price']['value'] = $order->getTotalCost() . " Kč";
+            $userEmailTemplatePayload['price']['value'] = $total . " Kč";
 
             // Process promo code
             if ($promoCode = $cart->getPromoCode()) {
                 $order->setPromoCodeValue($promoCode->getCode());
                 $order->setPromoCodeAmount($promoCode->getAmount());
+                $subtotalWithoutPromo = $cart->getTotalPrice(false);
 
-                $userEmailTemplatePayload['subtotal']['value'] = "<s>" . $cart->getTotalPrice(false) . " Kč</s>" . $subtotal . " Kč";
+                $userEmailTemplatePayload['subtotal']['value'] = "<s>$subtotalWithoutPromo Kč</s>" . $subtotal . " Kč";
             }
 
             if ($cart->getCards()->count()) {
@@ -249,12 +238,19 @@ class CartController
                     $materialName = $cardInCart->getSize()->getMaterial()->getName();
                     $sizeWidth = $size->getWidth();
                     $sizeHeight = $size->getHeight();
-                    $backgroundId = $cardInCart->getBackground()->getId();
+                    $backgroundImageId = $cardInCart->getBackground()->getImage()->getId();
                     $cardInCart->setFinalPrice($cardInCart->createPrice());
 
                     // Move it from cart to order
                     $cardInCart->setCart(null)->setForOrder($order);
                     $order->getCards()->add($cardInCart);
+
+                    // Set final price for each used bonus to record prices
+                    $cardInCart->setBonuses([
+                        'data' => array_map(fn($item) => array_merge($item, [
+                            'price' => $size->getMaterial()->getBonusPrice($item['name'])
+                        ]), $cardInCart->getBonuses()['data'] ?? [])
+                    ]);
 
                     $userEmailTemplatePayload['cards'][] = [
                         'title' => $cardInCart->getName(),
@@ -262,7 +258,7 @@ class CartController
                         'price' => "Cena: <b>" . $cardInCart->getFinalPrice() . " Kč</b>",
                         'bonuses' => $cardInCart->getBonuses()['data'] ?? [],
                         'img' => [
-                            "src" => "$projectBaseUrl/api/library/files/items/$backgroundId?w=90"
+                            "src" => "$projectBaseUrl/api/library/files/items/$backgroundImageId?w=90"
                         ]
                     ];
                 }
@@ -299,11 +295,11 @@ class CartController
             }
 
             $promoCode
-                ?->setUsedTimes(($promoCode->getUsedTimes() ?? 0) + 1)
-                ->setEnabled(!$promoCode->getWasCreatedForNewsletter());
+                ?->setUsedTimes(($promoCode->getUsedTimes() ?? 0) + 1);
 
             $em->persist($order);
             $em->remove($cart);
+            $em->flush();
 
             $orderId = $order->getId();
 
@@ -311,7 +307,7 @@ class CartController
                 throw new \Exception('No id!');
             }
 
-            $userEmailContent = $rendering->getEnvironment()->render('@app/OrderCreated.html', $userEmailTemplatePayload);
+            $userEmailContent = $rendering->getEnvironment()->render('@app/email/OrderCreated.html', $userEmailTemplatePayload);
             $mailer->addAddress($order->getEmail());
             $mailer->isHTML(true);
             $mailer->Subject = "Objednávka #$orderId na adcards.cz";
@@ -320,7 +316,7 @@ class CartController
 
             // We don't have send admin files necessary, if it fails then just continue
             try {
-                $adminEmailContent = $rendering->getEnvironment()->render('@app/CommonWithButton.html', [
+                $adminEmailContent = $rendering->getEnvironment()->render('@app/email/CommonWithButton.html', [
                     "baseUrl" => $projectBaseUrl,
                     "buttonUrl" => "$projectBaseUrl/admin/entities/orders/$orderId",
                     "texts" => [
@@ -387,8 +383,7 @@ class CartController
                 'code' => $body["code"]
             ]);
 
-            if ($promoCode) {
-                $cart->setPromoCode($promoCode);
+            if ($cart->applyPromoCode($promoCode)) {
                 $resultPayload["state"]["successes"][] = StaticMessages::PROMO_CODE_ADDED;
             } else {
                 // In twig we check if "promoCode" is in array - keep this key here, otherview it will be rendered as

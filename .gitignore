@@ -4,6 +4,8 @@ cache
 uploads
 vendor
 public/dist
+src/Views/email/
+!src/Views/email/contact-us/
 .database
 node_modules
 .DS_Store

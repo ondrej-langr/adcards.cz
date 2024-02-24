@@ -1,13 +1,13 @@
 import { Preview } from '@react-email/components'
 import * as React from 'react'
-import { Layout } from './components/Layout'
-import { WhiteSection } from './components/WhiteSection'
+import { Layout } from './_components/Layout'
+import { WhiteSection } from './_components/WhiteSection'
 
 const defaultProps = {
   baseUrl: '{{ baseUrl }}',
   texts: {
-    preview: '{{texts.preview}}',
-    content: '{{texts.content}}',
+    preview: '{{texts.preview|raw}}',
+    content: '{{texts.content|raw}}',
   },
 }
 

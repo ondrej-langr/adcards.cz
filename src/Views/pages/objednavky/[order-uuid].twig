@@ -5,30 +5,33 @@
 {% endblock %}
 
 {% block content %}
-    {% set shippingKeyAndMetadata = order.shipping_method|split("; ") %}
+    {% set shippingKeyAndMetadata = order.getShippingMethod()|split("; ") %}
     {% set shippingMetadata = shippingMethods[shippingKeyAndMetadata[0]] %}
     <div class='order-underpage' id='order-underpage'>
         <div class='text-center thank-you-page-title'>
             <h3 class='text-muted'>
-                {% if order.status|lower == "nezaplaceno" %}
+                {% if order.getStatus().value|lower == "nezaplaceno" %}
                     {{ "Děkujeme! Stačí už jen zaplatit!"|t }} 💸
-                {% elseif order.status|lower != "dokončeno" %}
+                {% elseif order.getStatus().value|lower != "dokončeno" %}
                     {{ "Děkujeme! Vyčkejte na odeslání objednávky"|t }}🥁
                 {% else %}
                     {{ "Děkujeme! Objednávka dokončena"|t }} 🎉
                 {% endif %}
             </h3>
-            <h1>{{ "Přehled objednávky"|t }}: <span class='text-brands-signature'>#{{ order.id }}</span></h1>
+            <h1>{{ "Přehled objednávky"|t }}: <span class='text-brands-signature'>#{{ order.getId() }}</span></h1>
         </div>
         {% set orderPageProps = {
-            order,
+            order: {
+                status: order.getStatus().value,
+                currency: 'CZK'
+            },
             initialPaymentDialogShown: showPaymentDialog ? true : false,
             thankYouMessageShown: showThankYou ? true : false,
             payPal: {
                 clientId: payPal.clientId,
                 routes: {
-                    create: url_for('paypal-create-order', { orderUuid: order._uuid }),
-                    capture: url_for('paypal-capture-order', { orderUuid: order._uuid })
+                    create: url_for('paypal-create-order', { orderUuid: order.get_uuid() }),
+                    capture: url_for('paypal-capture-order', { orderUuid: order.get_uuid() })
                 }
             }
         } %}
@@ -40,12 +43,13 @@
                 <section>
                     <h2>{{ "Informace o objednávce"|t }}</h2>
                     <ul>
-                        <li>{{ "Číslo objednávky"|t }}: #{{ order.id }}</li>
-                        <li>{{ "Datum objednání"|t }}: {{ order.created_at|date("j.n. Y @ h:i") }}</li>
-                        <li>{{ "Aktuální stav"|t }}: {{ order.status|t }}</li>
-                        {% if order.promo_code_amount %}
+                        <li>{{ "Číslo objednávky"|t }}: #{{ order.getId() }}</li>
+                        <li>{{ "Datum objednání"|t }}: {{ order.getCreatedAt()|date("j.n. Y @ h:i") }}</li>
+                        <li>{{ "Aktuální stav"|t }}: {{ order.getStatus().value|t }}</li>
+                        {% if order.getPromoCodeAmount() %}
                             <li>
-                                {{ "Slevový kód"|t }}: {{ order.promo_code_value }} (-{{ order.promo_code_amount }}%)
+                                {{ "Slevový kód"|t }}: {{ order.getPromoCodeValue() }}
+                                (-{{ order.getPromoCodeAmount() }}%)
                             </li>
                         {% endif %}
                     </ul>
@@ -53,9 +57,9 @@
                 <section>
                     <h2>{{ "Adresa"|t }}</h2>
                     <ul>
-                        <li class='mb-2'>{{ order.firstName }} {{ order.lastName }}</li>
-                        <li>{{ order.street }} {{ order.building_number }}</li>
-                        <li>{{ order.city }}, {{ order.postal_code }}</li>
+                        <li class='mb-2'>{{ order.getFirstName() }} {{ order.getLastName() }}</li>
+                        <li>{{ order.getStreet() }} {{ order.getBuildingNumber() }}</li>
+                        <li>{{ order.getCity() }}, {{ order.getPostalCode() }}</li>
                     </ul>
                 </section>
                 <section>
@@ -65,8 +69,8 @@
                         {% if shippingKeyAndMetadata[1] %}
                             <li>{{ "Doplňující informace"|t }}: {{ shippingKeyAndMetadata[1] }}</li>
                         {% endif %}
-                        {% if order.shipping_rate %}
-                            <li>{{ "Cena za dopravu"|t }}: {{ order.shipping_rate }} Kč</li>
+                        {% if order.getShippingRate() %}
+                            <li>{{ "Cena za dopravu"|t }}: {{ order.getShippingRate() }} Kč</li>
                         {% endif %}
                     </ul>
                 </section>
@@ -74,54 +78,53 @@
                     <h2>{{ "Platební informace"|t }}</h2>
                     <ul>
                         <li class='mb-2'>
-                            {{ "Typ platby"|t }}: {{ paymentMethods[order.payment_method].title|t }}
+                            {{ "Typ platby"|t }}: {{ paymentMethods[order.getPaymentMethod()].title|t }}
                         </li>
                         <li>
-                            {{ "Zaplaceno"|t }}: {{ (order.status|lower == "nezaplaceno" ? "ne" : "ano")|t|upper }}
+                            {{ "Zaplaceno"|t }}:
+                            {{ (order.getStatus().value|lower == "nezaplaceno" ? "ne" : "ano")|t|upper }}
                         </li>
-                        {% if order.status|lower == "nezaplaceno" %}
+                        {% if order.getStatus().value|lower == "nezaplaceno" %}
                             <li>
                                 <div class="alternate-alert warning mb-2 mt-3" role="alert">
                                     {{ "Zaplaťte objednávku do sedmi dní. Pokud tak neučiníte bude objednávka automaticky stornována!"|t }}
                                 </div>
 
-                                {% if order.payment_method == "paypal" %}
+                                {% if order.getPaymentMethod() == "paypal" %}
                                     <button @click='modalOpen = !modalOpen'>
                                         {{ "Zaplatit kartou nebo pomocí PayPal učtu"|t }}
                                     </button>
                                 {% endif %}
-
                             </li>
                         {% endif %}
                     </ul>
                 </section>
-                {% if order.note %}
+                {% if order.getNote() %}
                     <section>
                         <h2>{{ "Poznámka"|t }}</h2>
                         <p>
-                            {{ order.note }}
+                            {{ order.getNote() }}
                         </p>
                     </section>
                 {% endif %}
             </div>
             <div>
-                {% if order.cards|length > 0 %}
+                {% if order.getCards()|length > 0 %}
                     <section>
                         <h2>{{ "Objednané karty"|t }}</h2>
-                        {% for item in order.cards %}
+                        {% for item in order.getCards() %}
                             {{ include("@app/components/small-card.twig", {
                                 "card": item,
-                                "size": item.size,
                                 "index": loop.index0,
                                 readOnly: true
                             }) }}
                         {% endfor %}
                     </section>
                 {% endif %}
-                {% if order.products|length > 0 %}
+                {% if order.getProducts()|length > 0 %}
                     <section>
                         <h2>{{ "Objednané produkty"|t }}</h2>
-                        {% for item in order.products %}
+                        {% for item in order.getProducts() %}
                             {{ include("@app/components/small-product.twig", {
                                 orderedProduct: item,
                                 readOnly: true
@@ -133,29 +136,26 @@
                     <div class='d-flex justify-content-between text-muted'>
                         <p>Mezisoučet: </p>
                         <p>
-                            {% set priceTotalWithoutShipping = order.total_cost - order.shipping_rate %}
-                            {% if order.promo_code_amount %}
-                                {% set totalDiscount = (priceTotalWithoutShipping / (1 - order.promo_code_amount)) * -1 %}
-                                <s>{{ (priceTotalWithoutShipping + totalDiscount)|round(0, 'floor') }}
-                                    Kč</s>
+                            {% if order.getPromoCodeAmount() %}
+                                <s>{{ order.getSubtotalWithoutPromoCode() }} Kč</s>
                             {% endif %}
-                            {{ priceTotalWithoutShipping }} Kč
+                            {{ order.getSubtotal() }} Kč
                         </p>
                     </div>
-                    {% if order.shipping_rate %}
+                    {% if order.getShippingRate() %}
                         <div class='d-flex justify-content-between mb-3'>
                             <p>{{ "Cena za dopravu"|t }}:</p>
-                            <p>{{ order.shipping_rate }} Kč</p>
+                            <p>{{ order.getShippingRate() }} Kč</p>
                         </div>
                     {% endif %}
                     <div class='d-flex justify-content-between'>
                         <p class='font-weight-bold'>{{ "Celková částka"|t }}:</p>
-                        <p class='text-brands-signature font-weight-bold'>{{ order.total_cost }} Kč</p>
+                        <p class='text-brands-signature font-weight-bold'>{{ order.getTotalCost() }} Kč</p>
                     </div>
                 </section>
             </div>
 
-            {% if order.payment_method != "bank-transfer" %}
+            {% if order.getPaymentMethod() != "bank-transfer" %}
                 {# Payment dialog #}
                 <dialog class='payment-dialog' :style='{ display: modalOpen ? "flex" : "none" }'
                         {% if showPaymentDialog == false %}style='display: none'{% endif %}>
@@ -163,7 +163,7 @@
                         <div class='payment-dialog__content-inner'>
                             <img class='payment-dialog__logo' src="/images/logo_AD.png" />
                             <h3 class='text-center mb-4'>{{ "Platba objednávky"|t }} <span
-                                        class='text-brands-signature'>#{{ order.id }}</span>
+                                        class='text-brands-signature'>#{{ order.getId() }}</span>
                             </h3>
                             <div x-show='errors.payPal' x-text='errors.payPal' class='alternate-alert error'></div>
                             <div x-ref='payPalButtons' class='paypal-buttons'>

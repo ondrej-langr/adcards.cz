@@ -18,6 +18,10 @@
     display: none;
 }
 
+main {
+    min-height: 80vh;
+}
+
 .overlay {
     position: absolute;
     backdrop-filter: blur(3px);

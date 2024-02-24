@@ -19,7 +19,7 @@ class OrderedProducts extends Entity
   #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Orders::class, inversedBy: 'products'), ORM\JoinColumn(name: 'fororder_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Objednávka', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Orders $forOrder;
   
-  #[ORM\OneToOne(targetEntity: \PromCMS\App\Models\Products::class), ORM\JoinColumn(name: 'product_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Produkt', type: 'relationship', editable: false, hide: false, localized: false)]
+  #[ORM\ManyToOne(targetEntity: \PromCMS\App\Models\Products::class, inversedBy: 'usedForOrders'), ORM\JoinColumn(name: 'product_id', nullable: false, unique: false, referencedColumnName: 'id'), PROM\PromModelColumn(title: 'Produkt', type: 'relationship', editable: false, hide: false, localized: false)]
   protected ?\PromCMS\App\Models\Products $product;
   
   #[ORM\Column(name: 'count', nullable: false, unique: false, type: 'integer'), PROM\PromModelColumn(title: 'Počet', type: 'number', editable: false, hide: false, localized: false)]

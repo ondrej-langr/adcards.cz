@@ -9,6 +9,7 @@ const relationFields = [
     'targetModelTableName': 'card_backgrounds',
     'labelConstructor': '{{name}}',
     'title': 'Pozadí karty',
+    'inversedBy': 'cards',
   },
   {
     name: 'country',
@@ -19,6 +20,7 @@ const relationFields = [
     'targetModelTableName': 'countries',
     'labelConstructor': '{{name}}',
     'title': 'Země',
+    inversedBy: 'cards',
   },
   {
     name: 'size',
@@ -29,6 +31,7 @@ const relationFields = [
     'targetModelTableName': 'card_sizes',
     'labelConstructor': '{{width}}x{{height}}cm',
     'title': 'Velikost',
+    'inversedBy': 'cards',
   },
   {
     name: 'forOrder',
@@ -47,7 +50,7 @@ const relationFields = [
  * @type {(typeof import('@prom-cms/schema').databaseConfigModelSchema)['_input']}
  */
 const cardsModel = {
-  'title': 'Objednané karty',
+  'title': 'Karty',
   'tableName': 'cards',
   admin: {
     icon: 'Id',
@@ -156,24 +159,6 @@ const cardsModel = {
       'type': 'number',
       'title': 'Finální cena',
       suffix: ' Kč',
-      readonly: true,
-    },
-    {
-      name: 'currency',
-      'required': true,
-      'editable': false,
-      'unique': false,
-      'hide': false,
-      'translations': false,
-      'type': 'enum',
-      'enum': {
-        name: 'Currency',
-        values: {
-          CZK: 'CZK',
-          EUR: 'EUR',
-        },
-      },
-      'title': 'Měna',
       readonly: true,
     },
     ...relationFields,

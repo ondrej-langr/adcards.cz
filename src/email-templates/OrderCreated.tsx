@@ -1,9 +1,9 @@
 import { Preview, Text, Heading, Container, Row, Column, Img } from '@react-email/components'
 import * as React from 'react'
-import { Layout } from './components/Layout'
-import { Button } from './components/Button'
-import { WhiteSection } from './components/WhiteSection'
-import { TwigExpr, TwigFor, TwigIf } from './components/TwigExpr'
+import { Layout } from './_components/Layout'
+import { Button } from './_components/Button'
+import { WhiteSection } from './_components/WhiteSection'
+import { TwigExpr, TwigFor, TwigIf } from './_components/TwigExpr'
 import { FC, PropsWithChildren, ReactNode } from 'react'
 
 const defaultProps = {
@@ -60,7 +60,7 @@ const Product: FC<PropsWithChildren<{
   priceOutlet: ReactNode,
 }>> = ({ priceOutlet, imgSrc, titleOutlet, subtitleOutlet, children }) => <Row className={'mb-6'}>
   <Column className={'w-[90px] align-top'}>
-    <TwigIf condition={imgSrc}>
+    <TwigIf condition={imgSrc.replace('{{', '').replace('}}', '')}>
       <div className={'relative w-[90px] h-[90px]'}>
         <Img src={imgSrc} width={90}
              height={90} className={'absolute top-0 left-0 w-100 h-100 object-contain'} />
