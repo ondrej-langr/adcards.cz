@@ -55,9 +55,9 @@ devDependencies:
   '@prettier/plugin-php':
     specifier: ^0.20.1
     version: 0.20.1(prettier@3.2.5)
-  '@prom-cms/api-client':
-    specifier: ^0.14.1
-    version: 0.14.1(axios@0.27.2)(react@18.2.0)
+  '@prom-cms/admin':
+    specifier: ^0.21.5
+    version: 0.21.5(@types/react@18.2.57)(postcss@8.4.35)(tailwindcss@3.4.1)
   '@prom-cms/cli':
     specifier: ^0.22.17
     version: 0.22.17(@types/node@18.19.17)(@types/react@18.2.57)(postcss@8.4.35)(react@18.2.0)(tailwindcss@3.4.1)
@@ -65,8 +65,8 @@ devDependencies:
     specifier: ^0.9.0
     version: 0.9.0(react@18.2.0)
   '@prom-cms/vite':
-    specifier: ^0.3.1
-    version: 0.3.1(axios@0.27.2)(vite@5.1.4)
+    specifier: ^0.3.2
+    version: 0.3.2(axios@0.27.2)(vite@5.1.4)
   '@react-email/components':
     specifier: ^0.0.15
     version: 0.0.15(@types/react@18.2.57)(react-email@2.1.0)(react@18.2.0)
@@ -2394,8 +2394,8 @@ packages:
       prettier: 3.2.5
     dev: true
 
-  /@prom-cms/admin@0.21.1(@types/react@18.2.57)(postcss@8.4.35)(tailwindcss@3.4.1):
-    resolution: {integrity: sha512-eO0B1G5E2qf9DqrvYBbwaTaCiJhXglu8wkHjyKX35367koiIS2J5WgLkCBfR+9LeomiTP7aJJqqrh7aVLkYZMg==}
+  /@prom-cms/admin@0.21.5(@types/react@18.2.57)(postcss@8.4.35)(tailwindcss@3.4.1):
+    resolution: {integrity: sha512-T+sRPTDluZKTeYxBV056RDprGzEWwH9msj16rnQz7e69NrXw0XQL0wH8K0KKbVjTfCJOEFTEMsxsdgnMlwv/0A==}
     dependencies:
       '@emotion/react': 11.11.3(@types/react@18.2.57)(react@18.2.0)
       '@headlessui/react': 1.6.6(react-dom@18.2.0)(react@18.2.0)
@@ -2404,7 +2404,7 @@ packages:
       '@mantine/hooks': 7.5.3(react@18.2.0)
       '@mantine/notifications': 7.5.3(@mantine/core@7.5.3)(@mantine/hooks@7.5.3)(react-dom@18.2.0)(react@18.2.0)
       '@popperjs/core': 2.11.0
-      '@prom-cms/api-client': 0.14.1(axios@0.27.2)(react@18.2.0)
+      '@prom-cms/api-client': 0.15.0(axios@0.27.2)(react@18.2.0)
       '@prom-cms/schema': 0.9.0(react@18.2.0)
       '@svgr/webpack': 6.5.1
       '@tailwindcss/typography': 0.5.10(tailwindcss@3.4.1)
@@ -2461,8 +2461,8 @@ packages:
       - tailwindcss
     dev: true
 
-  /@prom-cms/api-client@0.14.1(axios@0.27.2)(react@18.2.0):
-    resolution: {integrity: sha512-SY+6mfw6gCFKh5vp19Jxipto6BNU2RFzgpsMJBwTyqN84iS2KV7ShCi9WTR9NhHoYCNELU92F9dnAcDTX7Va1Q==}
+  /@prom-cms/api-client@0.15.0(axios@0.27.2)(react@18.2.0):
+    resolution: {integrity: sha512-+51svLeIVkAtlaUmKqSTCD1aZShGoJUzOnRqmm+RNmX8ahR+EoRUqS/25lWBZe2qdbulPMc1xTskRmK3hz6pFw==}
     peerDependencies:
       axios: ^0.27
     dependencies:
@@ -2477,7 +2477,7 @@ packages:
     hasBin: true
     dependencies:
       '@faker-js/faker': 7.6.0
-      '@prom-cms/admin': 0.21.1(@types/react@18.2.57)(postcss@8.4.35)(tailwindcss@3.4.1)
+      '@prom-cms/admin': 0.21.5(@types/react@18.2.57)(postcss@8.4.35)(tailwindcss@3.4.1)
       '@prom-cms/prettier-config': 0.1.1(prettier@3.2.5)
       '@prom-cms/schema': 0.9.0(react@18.2.0)
       chalk: 5.3.0
@@ -2537,8 +2537,8 @@ packages:
       - react
     dev: true
 
-  /@prom-cms/vite@0.3.1(axios@0.27.2)(vite@5.1.4):
-    resolution: {integrity: sha512-hE+Xl+vpM2MfDjtic30bzV3U6dfRwvRR2e5SlWutEWKtTgX33e33zdnHypkOsgjJb4nIDoVXKdt0uHYJIECdXA==}
+  /@prom-cms/vite@0.3.2(axios@0.27.2)(vite@5.1.4):
+    resolution: {integrity: sha512-IsJC22S0GDHBvs1u4Ar/w+xVvZSO4jIFXyqK/w5EBeL1IYwBDgq9/SBBEd73+PpI/KMBYmKbSQEQoW6XrW/WgA==}
     peerDependencies:
       axios: ^0.27
       vite: ^4 || ^5
@@ -2570,8 +2570,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
-      react: ^18.2.0
-      react-dom: ^18.2.0
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -2891,8 +2891,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
-      react: ^18.2.0
-      react-dom: ^18.2.0
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -2935,8 +2935,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
-      react: ^18.2.0
-      react-dom: ^18.2.0
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -2962,8 +2962,8 @@ packages:
     peerDependencies:
       '@types/react': '*'
       '@types/react-dom': '*'
-      react: ^18.2.0
-      react-dom: ^18.2.0
+      react: ^16.8 || ^17.0 || ^18.0
+      react-dom: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -3045,7 +3045,7 @@ packages:
     resolution: {integrity: sha512-vyL82j40hcFicA+M4Ex7hVkB9vHgSse1ZWomAqV2Je3RleKGO5iM8KMOEtfoSB0PnIelMd2lATjTGMYqN5ylTg==}
     peerDependencies:
       '@types/react': '*'
-      react: ^18.2.0
+      react: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
@@ -3089,7 +3089,7 @@ packages:
     resolution: {integrity: sha512-ibay+VqrgcaI6veAojjofPATwledXiSmX+C0KrBk/xgpX9rBzPV3OsfwlhQdUOFbh+LKQorLYT+xTXW9V8yd0g==}
     peerDependencies:
       '@types/react': '*'
-      react: ^18.2.0
+      react: ^16.8 || ^17.0 || ^18.0
     peerDependenciesMeta:
       '@types/react':
         optional: true
