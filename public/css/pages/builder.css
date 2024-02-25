@@ -161,7 +161,7 @@
     padding-left: 0;
 
     & h3 {
-        font-size: 3rem;
+        font-size: 2rem;
         margin-bottom: 2.5rem;
         margin-top: 3.5rem;
         padding: 0 15px;
@@ -170,6 +170,10 @@
     @media screen and (min-width: 640px) {
         & {
             margin-bottom: 4rem;
+
+            h3 {
+                font-size: 3rem;
+            }
         }
     }
 
