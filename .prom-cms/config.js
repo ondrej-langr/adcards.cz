@@ -12,6 +12,7 @@ import sportsModel from './parts/sports.js'
 import orderedProductsModel from './parts/ordered-products.js'
 import cartModel from './parts/cart.js'
 import cartProducts from './parts/cart-products.js'
+import faqModel from './parts/faqModel.js'
 
 /**
  *
@@ -47,6 +48,7 @@ const config = {
             [orderedProductsModel.tableName]: {
               r: 'allow-all',
             },
+            [faqModel.tableName]: 'allow-all',
             prom__general_translations: 'allow-all',
           },
         },
@@ -75,6 +77,7 @@ const config = {
       orderedProductsModel,
       cartModel,
       cartProducts,
+      faqModel,
     ],
   },
 }

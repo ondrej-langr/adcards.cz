@@ -51,15 +51,16 @@ class ProductsController
 
         $items = $em->createQueryBuilder()
             ->from(Products::class, 'p')
-            ->select('p')
-            ->addOrderBy('p.order', 'DESC')
-            ->addOrderBy('p.id', 'DESC')
+            ->select('p', 'COALESCE(p.order,p.id) as order')
+            ->orderBy('order', 'ASC')
             ->where($em->getExpressionBuilder()->eq('p.isBonus', ':isBonus'))
             ->setParameter(':isBonus', false)
             ->getQuery()
             ->setHint(Query::HINT_CUSTOM_OUTPUT_WALKER, TranslationWalker::class)
             ->setHint(TranslationWalker::HINT_LOCALE, $currentLanguage)
             ->getResult();
+
+        $items = array_map(fn($item) => $item[0], $items);
 
         return $renderingService->render($response, '@app/pages/produkty.twig', [
             "products" => $items
