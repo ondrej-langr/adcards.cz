@@ -50,6 +50,7 @@ const config = {
             },
             [faqModel.tableName]: 'allow-all',
             prom__general_translations: 'allow-all',
+            prom__files: 'allow-all',
           },
         },
       ],

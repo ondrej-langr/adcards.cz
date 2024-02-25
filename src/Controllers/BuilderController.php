@@ -57,10 +57,14 @@ class BuilderController
             "isSearch" => true
         ];
 
-        $payload["countries"] = Paginate::fromQuery($em->createQueryBuilder(Countries::class, 'c')
-            ->where('c.name = :query')
-            ->setParameter(':query', "%$query%")
-            ->getQuery())->execute($page, $limit)->getItems();
+        $payload["countries"] = Paginate::fromQuery(
+            $em->createQueryBuilder()
+                ->from(Countries::class, 'c')
+                ->select('c')
+                ->where('c.name LIKE :query')
+                ->setParameter(':query', "%$query%")
+                ->getQuery()
+        )->execute($page, $limit)->getItems();
 
         return $this->container->get(RenderingService::class)->render($response, '@app/partials/pages/builder/form/countries-list.twig', $payload);
     }
